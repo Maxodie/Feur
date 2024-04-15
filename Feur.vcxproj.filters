@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Feur">
+      <UniqueIdentifier>{372F857C-2366-860D-CC52-6C10B868020F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feur\Core">
+      <UniqueIdentifier>{EF6DDF3D-5BD8-93B4-A416-455A10C07109}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feur\Core\Input">
+      <UniqueIdentifier>{2E95A5C5-9A20-138A-A331-967E0F3C6F8A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feur\Core\Window">
+      <UniqueIdentifier>{F697A49A-E290-C3EC-0BC3-A871F71AA3F8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Windows">
+      <UniqueIdentifier>{64FBD71A-50F4-F66C-7926-DCF1657ED678}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Windows\SDL">
+      <UniqueIdentifier>{563D8A73-42CC-133D-EBEA-2738D75824E3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Feur.h" />
+    <ClInclude Include="src\Feur\Core\Application.h">
+      <Filter>Feur\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Feur\Core\EntryPoint.h">
+      <Filter>Feur\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Feur\Core\Input\Input.h">
+      <Filter>Feur\Core\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Feur\Core\Input\KeyCode.h">
+      <Filter>Feur\Core\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Feur\Core\Window\Window.h">
+      <Filter>Feur\Core\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Feur\constant.h">
+      <Filter>Feur</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Feur\game.h">
+      <Filter>Feur</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\SDL\WindowsInput.h">
+      <Filter>Platform\Windows\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\SDL\WindowsWindow.h">
+      <Filter>Platform\Windows\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fepch.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Feur\Core\Application.c">
+      <Filter>Feur\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Feur\Core\Input\Input.c">
+      <Filter>Feur\Core\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Feur\Core\Window\Window.c">
+      <Filter>Feur\Core\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Feur\main.c">
+      <Filter>Feur</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\SDL\WindowsInput.c">
+      <Filter>Platform\Windows\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\SDL\WindowsWindow.c">
+      <Filter>Platform\Windows\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fepch.c" />
+  </ItemGroup>
+</Project>
