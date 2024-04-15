@@ -2,8 +2,6 @@
 .vs/
 bin/
 bin-int/
-vendor/SDL2/
-SDL2/
 
 # Files
 *.user
