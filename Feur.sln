@@ -7,9 +7,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sandbox", "Sandbox\Sandbox.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Feur", "Feur\Feur.vcxproj", "{372F857C-2366-860D-CC52-6C10B868020F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDL2", "Feur\vendor\SDL2\Intermediate\ProjectFiles\vs2022\SDL2.vcxproj", "{3ABE8B7C-26F5-8C0D-CFE1-7210BBF7080F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDL2", "Feur\vendor\SDL2\SDL\Intermediate\ProjectFiles\vs2022\SDL2.vcxproj", "{3ABE8B7C-26F5-8C0D-CFE1-7210BBF7080F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDL2main", "Feur\vendor\SDL2\Intermediate\ProjectFiles\vs2022\SDL2main.vcxproj", "{1FBB913C-0B88-EC47-34A1-DAEF20CD21D6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDL2main", "Feur\vendor\SDL2\SDL\Intermediate\ProjectFiles\vs2022\SDL2main.vcxproj", "{1FBB913C-0B88-EC47-34A1-DAEF20CD21D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

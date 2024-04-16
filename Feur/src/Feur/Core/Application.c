@@ -4,14 +4,14 @@
 
 //TEMp include
 #include <SDL.h>
+#include "Feur/Core/Window/Window.h"//need to stock the window in app data or something
 
-bool g_IsAppRunning = true;
+BOOL g_IsAppRunning = TRUE;
 //Temp window
-SDL_Window* g_Window;
 SDL_Renderer* g_Renderer;
 
 void Start();
-bool InitWindow();
+BOOL InitWindowTemp();
 void PullWindowEvent();
 void Render();
 
@@ -31,22 +31,22 @@ void RunApp_impl()
 void Start()
 {
 	InitInputAPI();
-	InitWindow();
+	InitWindowTemp();
 }
 
-bool InitWindow()
+BOOL InitWindowTemp()
 {
 	
 
-	g_Renderer = SDL_CreateRenderer(g_Window, -1, 0);
+	g_Renderer = SDL_CreateRenderer(g_WindowData.nativeWindow, -1, 0);
 
 	if (!g_Renderer)
 	{
 		fprintf(stderr, "Error creating SDL Renderer.\n");
-		return false;
+		return FALSE;
 	}
 	//
-	return true;
+	return TRUE;
 }
 
 void PullWindowEvent()

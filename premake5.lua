@@ -12,18 +12,18 @@ workspace "Feur"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
-IncludeDir["SDL2"] = "Feur/vendor/SDL2/include"
+IncludeDir["SDL2"] = "Feur/vendor/SDL2/SDL/include"
 
 IncludeLib = {}
 group "Dependencies"
-	include "Feur/vendor/SDL2/SDL2.lua"
-	include "Feur/vendor/SDL2/SDL2main.lua"
+	include "Feur/vendor/SDL2/SDL/SDL2.lua"
+	include "Feur/vendor/SDL2/SDL/SDL2main.lua"
 
 project "Feur"
 	location "Feur"
 	kind "StaticLib"
 	language "C"
-	cdialect "C99"
+	cdialect "C17"
 	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -66,23 +66,21 @@ project "Feur"
 
 		defines
 		{
-			"NT_PLATFORM_WINDOWS",
-			"NT_BUILD_DLL",
-			"GLFW_INCLUDE_NONE"
+			"FE_PLATFORM_WINDOWS",
 		}
 
 	filter "configurations:Debug"
-		defines "NT_DEBUG"
+		defines "FE_DEBUG"
 		runtime "Debug"
 		symbols "on"
 
 	filter "configurations:Release"
-		defines "NT_RELEASE"
+		defines "FE_RELEASE"
 		runtime "Release"
 		symbols "on"
 
 	filter "configurations:Dist"
-		defines "NT_DIST"
+		defines "FE_DIST"
 		runtime "Release"
 		symbols "on"
 
@@ -90,7 +88,7 @@ project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C"
-	cdialect "C99"
+	cdialect "C17"
 	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -123,20 +121,20 @@ project "Sandbox"
 
 		defines
 		{
-			"NT_PLATFORM_WINDOWS"
+			"FE_PLATFORM_WINDOWS"
 		}
 
 	filter "configurations:Debug"
-		defines "NT_DEBUG"
+		defines "FE_DEBUG"
 		runtime "Debug"
 		symbols "on"
 
 	filter "configurations:Release"
-		defines "NT_RELEASE"
+		defines "FE_RELEASE"
 		runtime "Release"
 		optimize "on"
 
 	filter "configurations:Dist"
-		defines "NT_DIST"
+		defines "FE_DIST"
 		runtime "Release"
 		optimize "on"

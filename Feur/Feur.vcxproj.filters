@@ -53,6 +53,7 @@
       <Filter>Platform\Windows\SDL</Filter>
     </ClInclude>
     <ClInclude Include="src\fepch.h" />
+    <ClInclude Include="src\Feur\Core\Core.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Feur\Core\Application.c">

@@ -1,5 +1,7 @@
 #pragma once
 
+//Core
+#include "Feur/Core/Core.h"
 
 //Window
 #include "Feur/Core/Window/Window.h"

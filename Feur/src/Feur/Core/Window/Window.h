@@ -1,18 +1,20 @@
-#pragma once
+﻿#pragma once
 
-typedef enum { API_SDL }Input_API_Type;//TODO : put this as window api and put it in window
+typedef enum { API_SDL } Window_API_Type;
+
+typedef struct 
+{
+	void* nativeWindow;
+} WindowData;
 
 typedef struct
 {
-	bool (*CreateWindow)(uint8_t);
-	bool (*GetKeyDown)(uint8_t);
+	Window_API_Type API_Type;
+	BOOL(*CreateWindow)();//give the windowData for the creation ?
 } Window_API;
 
-typedef struct {
-	Input_API_Type windowAPI;
-} WindowData;
 
-WindowData g_WindowData;
-
+Window_API window_API = { .API_Type = API_SDL }; // set sdl directly here because there is only sdl so ¯\_(ツ)_ / ¯
+WindowData g_WindowData = { 0 };
 void InitWindow();
-void CreateWindow();
+BOOL CreateWindow();
