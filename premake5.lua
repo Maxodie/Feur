@@ -13,9 +13,11 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
 IncludeDir["SDL2"] = "Feur/vendor/SDL2/SDL/include"
+IncludeDir["GLFW"] = "Feur/vendor/GLFW/include"
 
 IncludeLib = {}
 group "Dependencies"
+	include "Feur/vendor/GLFW"
 	include "Feur/vendor/SDL2/SDL/SDL2.lua"
 	include "Feur/vendor/SDL2/SDL/SDL2main.lua"
 
@@ -52,13 +54,15 @@ project "Feur"
 	{
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
-		"%{IncludeDir.SDL2}"
+		"%{IncludeDir.SDL2}",
+		"%{IncludeDir.GLFW}"
 	}
 
 	links
 	{
 		"SDL2",
-		"SDL2main"
+		"SDL2main",
+		"GLFW"
 	}
 
 	filter "system:windows"

@@ -19,6 +19,9 @@
     <Filter Include="Platform\Windows">
       <UniqueIdentifier>{64FBD71A-50F4-F66C-7926-DCF1657ED678}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Platform\Windows\GLFW">
+      <UniqueIdentifier>{2375CBE4-8FE1-86DF-58D5-1E3DC400A947}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Platform\Windows\SDL">
       <UniqueIdentifier>{563D8A73-42CC-133D-EBEA-2738D75824E3}</UniqueIdentifier>
     </Filter>
@@ -26,6 +29,9 @@
   <ItemGroup>
     <ClInclude Include="src\Feur.h" />
     <ClInclude Include="src\Feur\Core\Application.h">
+      <Filter>Feur\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Feur\Core\Core.h">
       <Filter>Feur\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Feur\Core\EntryPoint.h">
@@ -46,14 +52,19 @@
     <ClInclude Include="src\Feur\game.h">
       <Filter>Feur</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Windows\SDL\WindowsInput.h">
+    <ClInclude Include="src\Platform\Windows\GLFW\GLFWWindowsWindow.h">
+      <Filter>Platform\Windows\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\GLFW\GLFWWindowInput.h">
+      <Filter>Platform\Windows\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\SDL\SDLWindowsInput.h">
       <Filter>Platform\Windows\SDL</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Windows\SDL\WindowsWindow.h">
+    <ClInclude Include="src\Platform\Windows\SDL\SDLWindowsWindow.h">
       <Filter>Platform\Windows\SDL</Filter>
     </ClInclude>
     <ClInclude Include="src\fepch.h" />
-    <ClInclude Include="src\Feur\Core\Core.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Feur\Core\Application.c">
@@ -68,10 +79,16 @@
     <ClCompile Include="src\Feur\main.c">
       <Filter>Feur</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Windows\SDL\WindowsInput.c">
+    <ClCompile Include="src\Platform\Windows\GLFW\GLFWWindowInput.c">
+      <Filter>Platform\Windows\GLFW</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\GLFW\GLFWWindowsWindow.c">
+      <Filter>Platform\Windows\GLFW</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\SDL\SDLWindowsInput.c">
       <Filter>Platform\Windows\SDL</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Windows\SDL\WindowsWindow.c">
+    <ClCompile Include="src\Platform\Windows\SDL\SDLWindowsWindow.c">
       <Filter>Platform\Windows\SDL</Filter>
     </ClCompile>
     <ClCompile Include="src\fepch.c" />

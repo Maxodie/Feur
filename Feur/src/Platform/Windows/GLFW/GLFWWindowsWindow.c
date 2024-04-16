@@ -1,15 +1,13 @@
 #include "fepch.h"
-#include "Platform/Windows/SDL/WindowsWindow.h"
+#include "Platform/Windows/GLFW/GLFWWindowsWindow.h"
 #include "Feur/Core/Window/Window.h"
-#include <SDL.h>
+#include <GLFW/glfw3.h>
 
 BOOL CreateSDLWindow_impl()
 {
-	g_WindowData.nativeWindow = SDL_CreateWindow(
-		NULL,
-		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+	g_WindowData.nativeWindow = glfwCreateWindow(
 		800, 600,//TODO: wtf is hardcode??
-		SDL_WINDOW_BORDERLESS
+		NULL, NULL, NULL
 	);
 
 	if (!g_WindowData.nativeWindow)
