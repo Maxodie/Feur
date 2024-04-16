@@ -145,7 +145,7 @@
     <ClInclude Include="src\Feur\constant.h" />
     <ClInclude Include="src\Feur\game.h" />
     <ClInclude Include="src\Platform\Windows\GLFW\GLFWWindowsWindow.h" />
-    <ClInclude Include="src\Platform\Windows\GLFW\GLFWWindowInput.h" />
+    <ClInclude Include="src\Platform\Windows\GLFW\GLFWWindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\SDL\SDLWindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\SDL\SDLWindowsWindow.h" />
     <ClInclude Include="src\fepch.h" />
@@ -155,7 +155,7 @@
     <ClCompile Include="src\Feur\Core\Input\Input.c" />
     <ClCompile Include="src\Feur\Core\Window\Window.c" />
     <ClCompile Include="src\Feur\main.c" />
-    <ClCompile Include="src\Platform\Windows\GLFW\GLFWWindowInput.c" />
+    <ClCompile Include="src\Platform\Windows\GLFW\GLFWWindowsInput.c" />
     <ClCompile Include="src\Platform\Windows\GLFW\GLFWWindowsWindow.c" />
     <ClCompile Include="src\Platform\Windows\SDL\SDLWindowsInput.c" />
     <ClCompile Include="src\Platform\Windows\SDL\SDLWindowsWindow.c" />

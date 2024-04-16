@@ -3,7 +3,7 @@
 #include "Feur/Core/Window/Window.h"
 #include <SDL.h>
 
-BOOL CreateGLFWWindow_impl()
+BOOL CreateSDLWindow_impl()
 {
 	g_WindowData.nativeWindow = SDL_CreateWindow(
 		NULL,

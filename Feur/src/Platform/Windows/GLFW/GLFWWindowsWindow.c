@@ -3,7 +3,7 @@
 #include "Feur/Core/Window/Window.h"
 #include <GLFW/glfw3.h>
 
-BOOL CreateSDLWindow_impl()
+BOOL CreateGLFWWindow_impl()
 {
 	g_WindowData.nativeWindow = glfwCreateWindow(
 		800, 600,//TODO: wtf is hardcode??

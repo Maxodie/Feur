@@ -55,7 +55,7 @@
     <ClInclude Include="src\Platform\Windows\GLFW\GLFWWindowsWindow.h">
       <Filter>Platform\Windows\GLFW</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Windows\GLFW\GLFWWindowInput.h">
+    <ClInclude Include="src\Platform\Windows\GLFW\GLFWWindowsInput.h">
       <Filter>Platform\Windows\GLFW</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Windows\SDL\SDLWindowsInput.h">
@@ -79,7 +79,7 @@
     <ClCompile Include="src\Feur\main.c">
       <Filter>Feur</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Windows\GLFW\GLFWWindowInput.c">
+    <ClCompile Include="src\Platform\Windows\GLFW\GLFWWindowsInput.c">
       <Filter>Platform\Windows\GLFW</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\GLFW\GLFWWindowsWindow.c">
