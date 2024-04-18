@@ -7,5 +7,4 @@ typedef struct FE_App
 
 FE_App g_fe_App;
 
-//void(*Update_impl)();
 void RunApp_impl();
