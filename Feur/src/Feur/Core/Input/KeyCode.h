@@ -1,5 +1,7 @@
 #pragma once
-#pragma once
+
+
+typedef Uint16 FE_KeyCode;
 
 //Key Codes imported from SDL2
 

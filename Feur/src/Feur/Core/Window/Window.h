@@ -11,6 +11,8 @@ typedef struct Window_API
 {
 	Window_API_Type API_Type;
 	BOOL(*CreateWindow)();//give the windowData for the creation ?
+	void(*PollEvent)();
+	void(*DestroyWindow)();
 } Window_API;
 
 

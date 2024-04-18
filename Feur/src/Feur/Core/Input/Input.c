@@ -27,7 +27,7 @@ void InitInputAPI()
 	}
 }
 
-BOOL IsInputPressed(uint8_t key_code)
+BOOL IsInputPressed(FE_KeyCode key_code)
 {
 	return (*g_Input_API.GetKeyPressed)(key_code);
 }

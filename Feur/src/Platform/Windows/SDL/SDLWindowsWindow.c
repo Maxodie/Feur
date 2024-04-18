@@ -5,6 +5,7 @@
 
 BOOL CreateSDLWindow_impl()
 {
+	SDL_Init(SDL_INIT_EVERYTHING);
 	g_WindowData.nativeWindow = SDL_CreateWindow(
 		NULL,
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
@@ -19,4 +20,16 @@ BOOL CreateSDLWindow_impl()
 	}
 
 	return TRUE;
+}
+
+void SDLPollEvent_impl()
+{
+	SDL_Event event;
+	SDL_PollEvent(&event);
+}
+
+void SDLDestroyWindow_impl(WindowData* windowData)
+{
+	SDL_DestroyWindow(windowData->nativeWindow);
+	SDL_Quit();
 }

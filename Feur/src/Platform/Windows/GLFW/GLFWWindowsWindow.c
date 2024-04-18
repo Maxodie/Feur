@@ -5,16 +5,28 @@
 
 BOOL CreateGLFWWindow_impl()
 {
+	glfwInit();
 	g_WindowData.nativeWindow = glfwCreateWindow(
 		800, 600,//TODO: wtf is hardcode??
-		NULL, NULL, NULL
+		"window", NULL, NULL
 	);
 
 	if (!g_WindowData.nativeWindow)
 	{
-		fprintf(stderr, "Error creating SDL Window.\n");
+		fprintf(stderr, "Error creating GLFW Window.\n");
 		return FALSE;
 	}
 
 	return TRUE;
+}
+
+void GLFWPollEvent_impl()
+{
+	glfwPollEvents();
+}
+
+void GLFWDestroyWindow_impl(WindowData* windowData)
+{
+	glfwDestroyWindow(windowData->nativeWindow);
+	glfwTerminate();
 }

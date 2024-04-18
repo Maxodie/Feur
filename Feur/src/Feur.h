@@ -7,8 +7,8 @@
 #include "Feur/Core/Window/Window.h"
 
 //Inputs
-#include "Feur/Core/Input/Input.h"
 #include "Feur/Core/Input/KeyCode.h"
+#include "Feur/Core/Input/Input.h"
 
 //Application
 #include "Feur/Core/Application.h"
