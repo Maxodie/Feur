@@ -3,17 +3,20 @@
 #include "Feur/Core/Window/Window.h"
 #include <SDL.h>
 
-BOOL CreateSDLWindow_impl()
+BOOL CreateSDLWindow_impl(WindowData* windowData)
 {
+	windowData->w = 800;
+	windowData->h = 600;
+
 	SDL_Init(SDL_INIT_EVERYTHING);
-	g_WindowData.nativeWindow = SDL_CreateWindow(
+	windowData->nativeWindow = SDL_CreateWindow(
 		NULL,
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		800, 600,//TODO: wtf is hardcode??
+		windowData->w, windowData->h,
 		SDL_WINDOW_BORDERLESS
 	);
 
-	if (!g_WindowData.nativeWindow)
+	if (!windowData->nativeWindow)
 	{
 		fprintf(stderr, "Error creating SDL Window.\n");
 		return FALSE;

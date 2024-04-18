@@ -30,7 +30,6 @@ void RunApp_impl()
 		Render();
 	}
 }
-
 void Start()
 {
 	LoadWindow();
@@ -41,19 +40,18 @@ void Start()
 void LoadWindow()
 {
 	InitWindow();
-	g_Window_API.CreateWindow();
+	g_Window_API.CreateWindow(&g_fe_App.windowData);
 }
 
 BOOL InitWindowTemp()
 {
-	SDL_Init(SDL_INIT_EVERYTHING);
-	//g_Renderer = SDL_CreateRenderer(g_WindowData.nativeWindow, -1, 0);
+	g_Renderer = SDL_CreateRenderer(g_fe_App.windowData.nativeWindow, -1, 0);
 
-	/*if (!g_Renderer)
+	if (!g_Renderer)
 	{
 		fprintf(stderr, "Error creating SDL Renderer.\n");
 		return FALSE;
-	}*/
+	}
 	
 	return TRUE;
 }
@@ -85,10 +83,10 @@ void PullWindowEvent()
 
 void Render()
 {
-	/*
+	
 	SDL_SetRenderDrawColor(g_Renderer, 50, 50, 50, 255);
 	SDL_RenderClear(g_Renderer);
 
 	//TODO : start drawing GameObjects
-	SDL_RenderPresent(g_Renderer);*/
+	SDL_RenderPresent(g_Renderer);
 }

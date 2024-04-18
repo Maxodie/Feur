@@ -3,15 +3,19 @@
 #include "Feur/Core/Window/Window.h"
 #include <GLFW/glfw3.h>
 
-BOOL CreateGLFWWindow_impl()
+BOOL CreateGLFWWindow_impl(WindowData* windowData)
 {
 	glfwInit();
-	g_WindowData.nativeWindow = glfwCreateWindow(
-		800, 600,//TODO: wtf is hardcode??
+
+	windowData->w = 800;
+	windowData->h = 600;
+
+	windowData->nativeWindow = glfwCreateWindow(
+		windowData->w, windowData->h,
 		"window", NULL, NULL
 	);
 
-	if (!g_WindowData.nativeWindow)
+	if (!windowData->nativeWindow)
 	{
 		fprintf(stderr, "Error creating GLFW Window.\n");
 		return FALSE;

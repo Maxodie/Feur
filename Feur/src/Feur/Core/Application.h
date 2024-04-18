@@ -1,4 +1,11 @@
 #pragma once
-#include <stdio.h>
+
+typedef struct FE_App
+{
+	WindowData windowData;
+} FE_App;
+
+FE_App g_fe_App;
+
 //void(*Update_impl)();
 void RunApp_impl();

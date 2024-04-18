@@ -24,7 +24,7 @@ void InitWindow()
 	}
 }
 
-BOOL CreateWindow()
+BOOL CreateWindow(WindowData* windowData)
 {
-	return (*g_Window_API.CreateWindow)();//put the app windowData mb?
+	return (*g_Window_API.CreateWindow)(windowData);//put the app windowData mb?
 }
