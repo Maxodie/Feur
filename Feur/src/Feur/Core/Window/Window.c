@@ -6,7 +6,7 @@
 void InitWindow()
 {
 
-	g_Window_API.API_Type = WINDOW_API_SDL;
+	g_Window_API.API_Type = WINDOW_API_GLFW;
 	switch (g_Window_API.API_Type)
 	{
 	case WINDOW_API_SDL:

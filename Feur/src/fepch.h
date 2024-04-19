@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 #include <time.h>
-#include <stdarg.h>d
+#include <stdarg.h>
 #include <assert.h>
 
 #include "Feur/Core/Core.h"

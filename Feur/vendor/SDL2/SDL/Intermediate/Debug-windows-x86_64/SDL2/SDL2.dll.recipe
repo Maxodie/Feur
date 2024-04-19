@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>E:\C\TestSDL\FEUR\Feur\Feur\vendor\SDL2\SDL\Binaries\Debug-windows-x86_64\SDL2.dll</FullPath>
+      <FullPath>E:\C\CProjects\FEUR\Feur\Feur\vendor\SDL2\SDL\Binaries\Debug-windows-x86_64\SDL2.dll</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

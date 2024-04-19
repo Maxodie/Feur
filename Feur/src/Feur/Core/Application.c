@@ -33,7 +33,7 @@ void Start()
 {
 	LoadWindow();
 	InitInputAPI();
-	InitWindowTemp();
+	//InitWindowTemp();
 }
 
 void LoadWindow()
@@ -83,9 +83,9 @@ void PullWindowEvent()
 void Render()
 {
 	
-	SDL_SetRenderDrawColor(g_Renderer, 50, 50, 50, 255);
+	/*SDL_SetRenderDrawColor(g_Renderer, 50, 50, 50, 255);
 	SDL_RenderClear(g_Renderer);
 
 	//TODO : start drawing GameObjects
-	SDL_RenderPresent(g_Renderer);
+	SDL_RenderPresent(g_Renderer);*/
 }

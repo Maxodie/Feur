@@ -43,6 +43,9 @@
     <ClInclude Include="src\Feur\Core\Input\KeyCode.h">
       <Filter>Feur\Core\Input</Filter>
     </ClInclude>
+    <ClInclude Include="src\Feur\Core\Log.h">
+      <Filter>Feur\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Feur\Core\Window\Window.h">
       <Filter>Feur\Core\Window</Filter>
     </ClInclude>
@@ -52,10 +55,10 @@
     <ClInclude Include="src\Feur\game.h">
       <Filter>Feur</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Windows\GLFW\GLFWWindowsWindow.h">
+    <ClInclude Include="src\Platform\Windows\GLFW\GLFWWindowsInput.h">
       <Filter>Platform\Windows\GLFW</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Windows\GLFW\GLFWWindowsInput.h">
+    <ClInclude Include="src\Platform\Windows\GLFW\GLFWWindowsWindow.h">
       <Filter>Platform\Windows\GLFW</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Windows\SDL\SDLWindowsInput.h">
@@ -65,7 +68,6 @@
       <Filter>Platform\Windows\SDL</Filter>
     </ClInclude>
     <ClInclude Include="src\fepch.h" />
-    <ClInclude Include="src\Feur\Core\Log.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Feur\Core\Application.c">
@@ -73,6 +75,9 @@
     </ClCompile>
     <ClCompile Include="src\Feur\Core\Input\Input.c">
       <Filter>Feur\Core\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Feur\Core\Log.c">
+      <Filter>Feur\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Feur\Core\Window\Window.c">
       <Filter>Feur\Core\Window</Filter>
@@ -93,6 +98,5 @@
       <Filter>Platform\Windows\SDL</Filter>
     </ClCompile>
     <ClCompile Include="src\fepch.c" />
-    <ClCompile Include="src\Feur\Core\Log.c" />
   </ItemGroup>
 </Project>
