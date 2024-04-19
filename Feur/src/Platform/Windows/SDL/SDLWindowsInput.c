@@ -2,12 +2,12 @@
 #include "Platform/Windows/SDL/SDLWindowsInput.h"
 #include <SDL.h>
 
-BOOL SDLWindowsIsInputPressed_impl(FE_KeyCode key_code)
+BOOL SDLWindowsIsInputPressed_impl(const FE_KeyCode key_code)
 {
 	return SDL_GetKeyboardState(NULL)[key_code];
 }
 
-BOOL SDLWindowsIsInputDown_impl(FE_KeyCode key_code)
+BOOL SDLWindowsIsInputDown_impl(const FE_KeyCode key_code)
 {
 	//assert(false,"\n----------\nERROR : Get Key Down for windows not implemented yet.\n----------\n");
 	assert(FALSE);
