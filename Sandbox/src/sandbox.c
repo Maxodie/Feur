@@ -4,11 +4,7 @@ void Update()
 {
 	if (IsInputPressed(FE_KEYCODE_H))
 	{
-		printf("te");
+		int test = 5;
+		FE_LOG_WARNING("test");
 	}
-}
-
-void RunApp()
-{
-
 }

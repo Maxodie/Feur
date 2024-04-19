@@ -2,6 +2,7 @@
 
 //Core
 #include "Feur/Core/Core.h"
+#include "Feur/Core/Log.h"
 
 //Window
 #include "Feur/Core/Window/Window.h"

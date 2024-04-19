@@ -4,7 +4,6 @@
 //TEMp include
 #include <SDL.h>
 #include <GLFW/glfw3.h>
-#include "Feur/Core/Window/Window.h"//need to stock the window in app data or something
 #include "Feur/Core/Input/Input.h"
 
 BOOL g_IsAppRunning = TRUE;
