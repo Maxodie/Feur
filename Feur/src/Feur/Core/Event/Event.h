@@ -25,14 +25,13 @@ typedef struct FE_EventData {
 typedef struct FE_Event {
 	FE_EventType eventType;
 	FE_EventCategory eventCategory;
+	FE_EventData eventData;
 	BOOL isHandled;
-	FE_EventData eventData;// pas bien ):
 } FE_Event;
 
 typedef struct FE_EventDispatcher {
-	FE_EventType eventType;
-
 	FE_Event event;
+	FE_EventType eventType;
 }FE_EventDispatcher;
 
 void DispatchEvent(FE_EventDispatcher* eventDispatcher, FE_EventType eventType, void(*f)(FE_EventData*));
