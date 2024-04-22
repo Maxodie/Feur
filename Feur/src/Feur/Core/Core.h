@@ -14,3 +14,5 @@ typedef unsigned int Uint32;
 
 #define FALSE 0
 #define TRUE 1
+
+#define BIT(x) 1 << x

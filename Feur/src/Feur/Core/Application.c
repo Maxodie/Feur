@@ -1,6 +1,6 @@
 #include "fepch.h"
 #include "Feur/Core/Application.h"
-
+#include "Feur/Core/Event/Event.h"
 //TEMp include
 #include <SDL.h>
 #include <GLFW/glfw3.h>
@@ -16,12 +16,13 @@ BOOL InitWindowTemp();
 void LoadWindow();
 void PullWindowEvent();
 void Render();
-
+void AppOnEvent(FE_Event event);
+void OnWindowResizing(FE_EventData* windowResizeEvent);
 
 void RunApp_impl()
 {
 	Start();
-	
+
 	while (g_IsAppRunning)
 	{
 		PullWindowEvent();
@@ -40,6 +41,8 @@ void LoadWindow()
 {
 	InitWindow();
 	g_Window_API.CreateWindow(&g_fe_App.windowData);
+
+	g_fe_App.windowData.EventCallback = AppOnEvent;
 }
 
 BOOL InitWindowTemp()
@@ -51,8 +54,30 @@ BOOL InitWindowTemp()
 		fprintf(stderr, "Error creating SDL Renderer.\n");
 		return FALSE;
 	}
-	
+
 	return TRUE;
+}
+
+void AppOnEvent(FE_Event event)
+{
+	FE_EventDispatcher eventDispatcher = { .eventType = event.eventType, .event = event, .f = OnWindowResizing };//put function in dispatchEvent function
+	DispatchEvent(&eventDispatcher, event.eventType);
+
+	/*switch (eventType)
+	{
+	case FE_Event_WindowResize:
+
+		break;
+	default:
+		break;
+	}*/
+
+	//TODO layer system with event handling
+}
+
+void OnWindowResizing(FE_EventData* eventData)
+{
+	FE_CORE_LOG_DEBUG("Test de resize : with %d, height %d", eventData->w, eventData->h);
 }
 
 void PullWindowEvent()

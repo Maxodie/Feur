@@ -6,6 +6,7 @@ typedef struct WindowData
 {
 	int w, h;
 	void* nativeWindow;
+	void (*EventCallback)(Fe_Event);//bind glfw window events in app start on the onEvent
 } WindowData;
 
 typedef struct Window_API

@@ -139,6 +139,7 @@
     <ClInclude Include="src\Feur\Core\Application.h" />
     <ClInclude Include="src\Feur\Core\Core.h" />
     <ClInclude Include="src\Feur\Core\EntryPoint.h" />
+    <ClInclude Include="src\Feur\Core\Event\Event.h" />
     <ClInclude Include="src\Feur\Core\Input\Input.h" />
     <ClInclude Include="src\Feur\Core\Input\KeyCode.h" />
     <ClInclude Include="src\Feur\Core\Log.h" />
@@ -153,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Feur\Core\Application.c" />
+    <ClCompile Include="src\Feur\Core\Event\Event.c" />
     <ClCompile Include="src\Feur\Core\Input\Input.c" />
     <ClCompile Include="src\Feur\Core\Log.c" />
     <ClCompile Include="src\Feur\Core\Window\Window.c" />

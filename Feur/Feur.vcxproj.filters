@@ -68,6 +68,7 @@
       <Filter>Platform\Windows\SDL</Filter>
     </ClInclude>
     <ClInclude Include="src\fepch.h" />
+    <ClInclude Include="src\Feur\Core\Event\Event.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Feur\Core\Application.c">
@@ -98,5 +99,6 @@
       <Filter>Platform\Windows\SDL</Filter>
     </ClCompile>
     <ClCompile Include="src\fepch.c" />
+    <ClCompile Include="src\Feur\Core\Event\Event.c" />
   </ItemGroup>
 </Project>
