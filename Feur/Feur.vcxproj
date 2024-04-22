@@ -76,7 +76,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>fepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;FE_PLATFORM_WINDOWS;FE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;FE_PLATFORM_WINDOWS;FE_ENABLE_ASSERTS;FE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\SDL2\SDL\include;..;vendor\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -97,7 +97,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>fepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;FE_PLATFORM_WINDOWS;FE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;FE_PLATFORM_WINDOWS;FE_RELEASE;FE_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\SDL2\SDL\include;..;vendor\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -144,8 +144,6 @@
     <ClInclude Include="src\Feur\Core\Input\KeyCode.h" />
     <ClInclude Include="src\Feur\Core\Log.h" />
     <ClInclude Include="src\Feur\Core\Window\Window.h" />
-    <ClInclude Include="src\Feur\constant.h" />
-    <ClInclude Include="src\Feur\game.h" />
     <ClInclude Include="src\Platform\Windows\GLFW\GLFWWindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\GLFW\GLFWWindowsWindow.h" />
     <ClInclude Include="src\Platform\Windows\SDL\SDLWindowsInput.h" />
@@ -158,7 +156,6 @@
     <ClCompile Include="src\Feur\Core\Input\Input.c" />
     <ClCompile Include="src\Feur\Core\Log.c" />
     <ClCompile Include="src\Feur\Core\Window\Window.c" />
-    <ClCompile Include="src\Feur\main.c" />
     <ClCompile Include="src\Platform\Windows\GLFW\GLFWWindowsInput.c" />
     <ClCompile Include="src\Platform\Windows\GLFW\GLFWWindowsWindow.c" />
     <ClCompile Include="src\Platform\Windows\SDL\SDLWindowsInput.c" />

@@ -78,12 +78,21 @@ project "Feur"
 		}
 
 	filter "configurations:Debug"
+		defines
+		{
+			"FE_DEBUG",
+			"FE_ENABLE_ASSERTS"
+		}
 		defines "FE_DEBUG"
 		runtime "Debug"
 		symbols "on"
 
 	filter "configurations:Release"
-		defines "FE_RELEASE"
+		defines
+		{
+			"FE_RELEASE",
+			"FE_ENABLE_ASSERTS"
+		}
 		runtime "Release"
 		symbols "on"
 
@@ -133,12 +142,20 @@ project "Sandbox"
 		}
 
 	filter "configurations:Debug"
-		defines "FE_DEBUG"
+		defines
+		{
+			"FE_DEBUG",
+			"FE_ENABLE_ASSERTS"
+		}
 		runtime "Debug"
 		symbols "on"
 
 	filter "configurations:Release"
-		defines "FE_RELEASE"
+		defines
+		{
+			"FE_RELEASE",
+			"FE_ENABLE_ASSERTS"
+		}
 		runtime "Release"
 		optimize "on"
 

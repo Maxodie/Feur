@@ -17,7 +17,8 @@ void LoadWindow();
 void PullWindowEvent();
 void Render();
 void AppOnEvent(FE_Event event);
-void OnWindowResizing(FE_EventData* windowResizeEvent);
+BOOL OnWindowResizing(FE_EventData* windowResizeEvent);
+BOOL OnWindowClose(FE_EventData* windowResizeEvent);
 
 void RunApp_impl()
 {
@@ -60,8 +61,9 @@ BOOL InitWindowTemp()
 
 void AppOnEvent(FE_Event event)
 {
-	FE_EventDispatcher eventDispatcher = { .eventType = event.eventType, .event = event, .f = OnWindowResizing };//put function in dispatchEvent function
-	DispatchEvent(&eventDispatcher, event.eventType);
+	FE_EventDispatcher eventDispatcher = { .eventType = event.eventType, .event = event };//put function in dispatchEvent function
+	DispatchEvent(&eventDispatcher, FE_Event_WindowResize, OnWindowResizing);
+	DispatchEvent(&eventDispatcher, FE_Event_WindowClose, OnWindowClose);
 
 	/*switch (eventType)
 	{
@@ -75,9 +77,22 @@ void AppOnEvent(FE_Event event)
 	//TODO layer system with event handling
 }
 
-void OnWindowResizing(FE_EventData* eventData)
+BOOL OnWindowResizing(FE_EventData* eventData)
 {
-	FE_CORE_LOG_DEBUG("Test de resize : with %d, height %d", eventData->w, eventData->h);
+	if(eventData->windowData->w == 0 || eventData->windowData->h == 0)
+	{
+		eventData->windowData->isMinimized = TRUE;
+		return FALSE;
+	}
+
+	eventData->windowData->isMinimized = FALSE;
+	return TRUE;
+}
+
+BOOL OnWindowClose(FE_EventData* eventData)
+{
+	g_IsAppRunning = FALSE;
+	return FALSE;
 }
 
 void PullWindowEvent()

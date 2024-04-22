@@ -19,7 +19,7 @@ typedef enum FE_EventCategory {
 } FE_EventCategory;
 
 typedef struct FE_EventData {
-	int w, h;
+	WindowData* windowData;
 } FE_EventData;
 
 typedef struct FE_Event {
@@ -31,10 +31,9 @@ typedef struct FE_Event {
 
 typedef struct FE_EventDispatcher {
 	FE_EventType eventType;
-	void(*f)(FE_EventData*);
 
 	FE_Event event;
 }FE_EventDispatcher;
 
-void DispatchEvent(FE_EventDispatcher* eventDispatcher, FE_EventType eventType);
+void DispatchEvent(FE_EventDispatcher* eventDispatcher, FE_EventType eventType, void(*f)(FE_EventData*));
 BOOL IsEventInCategory(const FE_EventCategory eventCategory, FE_Event* event);

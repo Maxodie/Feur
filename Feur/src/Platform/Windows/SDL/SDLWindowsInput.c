@@ -10,6 +10,6 @@ BOOL SDLWindowsIsInputPressed_impl(const FE_KeyCode key_code)
 BOOL SDLWindowsIsInputDown_impl(const FE_KeyCode key_code)
 {
 	//assert(false,"\n----------\nERROR : Get Key Down for windows not implemented yet.\n----------\n");
-	assert(FALSE);
+	FE_CORE_ASSERT(FALSE, "ERROR : Get Key Down for windows not implemented yet.");
 	return FALSE;
 }

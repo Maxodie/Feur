@@ -22,6 +22,6 @@ BOOL GLFWWindowsIsInputPressed_impl(const FE_KeyCode key_code)
 BOOL GLFWWindowsIsInputDown_impl(const FE_KeyCode key_code)
 {
 	//assert(false,"\n----------\nERROR : GLFW Get Key Down for windows not implemented yet.\n----------\n");
-	assert(FALSE);
+	FE_CORE_ASSERT(FALSE, "ERROR : GLFW Get Key Down for windows not implemented yet.");
 	return FALSE;
 }

@@ -1,12 +1,12 @@
 #include "fepch.h"
 #include "Event.h"
 
-void DispatchEvent(FE_EventDispatcher* eventDispatcher, FE_EventType eventType)
+void DispatchEvent(FE_EventDispatcher* eventDispatcher, FE_EventType eventType, void(*f)(FE_EventData*))
 {
 	if (eventDispatcher->eventType == eventType)
 	{
 		eventDispatcher->event.isHandled = TRUE;
-		eventDispatcher->f(&eventDispatcher->event.eventData);
+		f(&eventDispatcher->event.eventData);
 	}
 }
 
