@@ -6,7 +6,7 @@ typedef struct WindowData
 {
 	int w, h;
 	void* nativeWindow;
-	void (*EventCallback)(Fe_Event);//bind glfw window events in app start on the onEvent
+	void (*EventCallback)(FE_Event);//bind glfw window events in app start on the onEvent
 	BOOL isMinimized;
 } WindowData;
 
@@ -21,5 +21,5 @@ typedef struct Window_API
 
 Window_API g_Window_API;
 
-void InitWindow();
+void InitWindowAPI();
 BOOL CreateWindow(WindowData* windowData);

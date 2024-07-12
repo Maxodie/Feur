@@ -5,7 +5,7 @@
 
 BOOL GLFWWindowsIsInputPressed_impl(const FE_KeyCode key_code)
 {
-	const int state = glfwGetKey(g_fe_App.windowData.nativeWindow, key_code);
+	const int state = glfwGetKey(GetApp()->windowData.nativeWindow, key_code);
 	//assert(false,"\n----------\nERROR : GLFW Get Key for windows not implemented yet.\n----------\n");
 
 	return state == GLFW_PRESS;

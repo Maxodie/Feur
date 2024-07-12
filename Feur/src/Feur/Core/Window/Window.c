@@ -3,7 +3,7 @@
 #include "Platform/Windows/SDL/SDLWindowsWindow.h"
 #include "Platform/Windows/GLFW/GLFWWindowsWindow.h"
 
-void InitWindow()
+void InitWindowAPI()
 {
 
 	g_Window_API.API_Type = WINDOW_API_GLFW;
@@ -26,5 +26,5 @@ void InitWindow()
 
 BOOL CreateWindow(WindowData* windowData)
 {
-	return (*g_Window_API.CreateWindow)(windowData);//put the app windowData mb?
+	return (*g_Window_API.CreateWindow)(windowData);
 }

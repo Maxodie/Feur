@@ -68,6 +68,8 @@
       <Filter>Platform\Windows\SDL</Filter>
     </ClInclude>
     <ClInclude Include="src\fepch.h" />
+    <ClInclude Include="src\Feur\Core\Layer.h" />
+    <ClInclude Include="src\Feur\Core\LayerStack.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Feur\Core\Application.c">
@@ -98,5 +100,7 @@
       <Filter>Platform\Windows\SDL</Filter>
     </ClCompile>
     <ClCompile Include="src\fepch.c" />
+    <ClCompile Include="src\Feur\Core\Layer.c" />
+    <ClCompile Include="src\Feur\Core\LayerStack.c" />
   </ItemGroup>
 </Project>

@@ -11,6 +11,13 @@
 #include "Feur/Core/Input/KeyCode.h"
 #include "Feur/Core/Input/Input.h"
 
+//Event
+#include "Feur/Core/Event/Event.h"
+
+//Layer
+#include "Feur/Core/Layer.h"
+#include "Feur/Core/LayerStack.h"
+
 //Application
 #include "Feur/Core/Application.h"
 
