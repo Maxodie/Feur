@@ -3,6 +3,8 @@
 #include "Feur/Core/Event/Event.h"
 #include "Feur/Core/Input/Input.h"
 
+#include "nuklear/nuklear.h"
+
 static FE_App g_fe_App;
 
 static BOOL g_IsAppRunning = TRUE;

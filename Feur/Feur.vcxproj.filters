@@ -49,6 +49,12 @@
     <ClInclude Include="src\Feur\Core\Input\KeyCode.h">
       <Filter>Feur\Core\Input</Filter>
     </ClInclude>
+    <ClInclude Include="src\Feur\Core\Layer.h">
+      <Filter>Feur\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Feur\Core\LayerStack.h">
+      <Filter>Feur\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Feur\Core\Log.h">
       <Filter>Feur\Core</Filter>
     </ClInclude>
@@ -68,8 +74,6 @@
       <Filter>Platform\Windows\SDL</Filter>
     </ClInclude>
     <ClInclude Include="src\fepch.h" />
-    <ClInclude Include="src\Feur\Core\Layer.h" />
-    <ClInclude Include="src\Feur\Core\LayerStack.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Feur\Core\Application.c">
@@ -80,6 +84,12 @@
     </ClCompile>
     <ClCompile Include="src\Feur\Core\Input\Input.c">
       <Filter>Feur\Core\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Feur\Core\Layer.c">
+      <Filter>Feur\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Feur\Core\LayerStack.c">
+      <Filter>Feur\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Feur\Core\Log.c">
       <Filter>Feur\Core</Filter>
@@ -100,7 +110,5 @@
       <Filter>Platform\Windows\SDL</Filter>
     </ClCompile>
     <ClCompile Include="src\fepch.c" />
-    <ClCompile Include="src\Feur\Core\Layer.c" />
-    <ClCompile Include="src\Feur\Core\LayerStack.c" />
   </ItemGroup>
 </Project>

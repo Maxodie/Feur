@@ -15,13 +15,22 @@ IncludeDir = {}
 IncludeDir["SDL2"] = "Feur/vendor/SDL2/SDL/include"
 IncludeDir["Glad"] = "Feur/vendor/Glad/include"
 IncludeDir["GLFW"] = "Feur/vendor/GLFW/include"
+IncludeDir["nuklear"] = "Feur/vendor/Nuklear/"
 
 IncludeLib = {}
 group "Dependencies"
-	include "Feur/vendor/GLFW"
-	include "Feur/vendor/Glad"
-	include "Feur/vendor/SDL2/SDL/SDL2.lua"
-	include "Feur/vendor/SDL2/SDL/SDL2main.lua"
+	group "Window"
+		include "Feur/vendor/GLFW"
+		include "Feur/vendor/SDL2/SDL/SDL2.lua"
+		include "Feur/vendor/SDL2/SDL/SDL2main.lua"
+	
+	group "Rendering"
+		include "Feur/vendor/Glad"
+
+	group "GUI"
+		include "Feur/vendor/Nuklear/nuklear/nuklear.lua"
+
+group "Feur"
 
 project "Feur"
 	location "Feur"
@@ -44,7 +53,8 @@ project "Feur"
 
 	defines 
 	{
-		"_CRT_SECURE_NO_WARNINGS"
+		"_CRT_SECURE_NO_WARNINGS",
+		"NK_IMPLEMENTATION"
 	}
 
 	libdirs
@@ -58,7 +68,8 @@ project "Feur"
 		"%{prj.name}/vendor/spdlog/include",
 		"%{IncludeDir.SDL2}",
 		"%{IncludeDir.GLAD}",
-		"%{IncludeDir.GLFW}"
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.nuklear}"
 	}
 
 	links
@@ -115,11 +126,6 @@ project "Sandbox"
 	{
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.c"
-	}
-
-	libdirs
-	{
-		"%{IncludeLib.SDL2}"
 	}
 
 	includedirs

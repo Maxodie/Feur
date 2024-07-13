@@ -30,4 +30,4 @@ void QuitApp();
 
 const FE_App* GetApp();
 
-// TODO : some functions does not need to be imported on sandbox, put those function in other headers
+// TODO : some functions does not need to be imported on sandbox, put those function in other headers (_internal) and create utils to put list and weird nerd stuff
