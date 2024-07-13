@@ -1,6 +1,3 @@
 [submodule "glfw"]
 	path = Feur/vendor/GLFW
 	url = https://github.com/glfw/glfw.git
-[submodule "Feur/Nuklear"]
-	path = Feur/Nuklear
-	url = https://github.com/Immediate-Mode-UI/Nuklear
