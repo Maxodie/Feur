@@ -7,4 +7,5 @@ typedef struct Layer
 	void (*OnUpdate)();
 
 	void (*OnAttach)();
+	void (*OnDetach)();
 } Layer;

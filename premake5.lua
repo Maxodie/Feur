@@ -15,7 +15,7 @@ IncludeDir = {}
 IncludeDir["SDL2"] = "Feur/vendor/SDL2/SDL/include"
 IncludeDir["Glad"] = "Feur/vendor/Glad/include"
 IncludeDir["GLFW"] = "Feur/vendor/GLFW/include"
-IncludeDir["nuklear"] = "Feur/vendor/Nuklear/"
+IncludeDir["nuklear"] = "Feur/vendor"
 
 IncludeLib = {}
 group "Dependencies"
@@ -25,10 +25,10 @@ group "Dependencies"
 		include "Feur/vendor/SDL2/SDL/SDL2main.lua"
 	
 	group "Rendering"
-		include "Feur/vendor/Glad"
+		include "Feur/vendor/Glad/premake5.lua"
 
 	group "GUI"
-		include "Feur/vendor/Nuklear/nuklear/nuklear.lua"
+		include "Feur/vendor/Nuklear/nuklear.lua"
 
 group "Feur"
 
@@ -67,7 +67,7 @@ project "Feur"
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
 		"%{IncludeDir.SDL2}",
-		"%{IncludeDir.GLAD}",
+		"%{IncludeDir.Glad}",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.nuklear}"
 	}
@@ -131,7 +131,7 @@ project "Sandbox"
 	includedirs
 	{
 		"Feur/vendor/spdlog/include",
-		"Feur/src",
+		"Feur/src"
 	}
 
 	links

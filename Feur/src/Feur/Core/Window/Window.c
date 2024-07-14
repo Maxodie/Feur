@@ -3,28 +3,40 @@
 #include "Platform/Windows/SDL/SDLWindowsWindow.h"
 #include "Platform/Windows/GLFW/GLFWWindowsWindow.h"
 
+static Window_API windowAPI;
+
 void InitWindowAPI()
 {
-
-	g_Window_API.API_Type = WINDOW_API_GLFW;
-	switch (g_Window_API.API_Type)
+	windowAPI.API_Type = FE_WINDOW_API_GLFW;
+	switch (windowAPI.API_Type)
 	{
-	case WINDOW_API_SDL:
-		g_Window_API.CreateWindow = CreateSDLWindow_impl;
-		g_Window_API.DestroyWindow = SDLDestroyWindow_impl;
-		g_Window_API.PollEvent = SDLPollEvent_impl;
+	case FE_WINDOW_API_SDL:
+		windowAPI.CreateWindow = CreateSDLWindow_impl;
+		windowAPI.DestroyWindow = SDLDestroyWindow_impl;
+		windowAPI.PollEvent = SDLPollEvent_impl;
+		//windowAPI.Update = SDLUpdate_impl;
 		break;
-	case WINDOW_API_GLFW:
-		g_Window_API.CreateWindow = CreateGLFWWindow_impl;
-		g_Window_API.DestroyWindow = GLFWDestroyWindow_impl;
-		g_Window_API.PollEvent = GLFWPollEvent_impl;
+	case FE_WINDOW_API_GLFW:
+		windowAPI.CreateWindow = CreateGLFWWindow_impl;
+		windowAPI.DestroyWindow = GLFWDestroyWindow_impl;
+		windowAPI.PollEvent = GLFWPollEvent_impl;
+		windowAPI.Update = GLFWUpdate_impl;
 		break;
 	default:
 		break;
 	}
 }
 
-BOOL CreateWindow(WindowData* windowData)
+void CreateWindow(WindowData* windowData)
 {
-	return (*g_Window_API.CreateWindow)(windowData);
+	BOOL success = windowAPI.CreateWindow(windowData);
+
+	FE_CORE_ASSERT(success, "Window.c: Failed to create window");
+
+	CreateGraphicsContext(windowData);
+}
+
+Window_API* GetWindowAPI()
+{
+	return &windowAPI;
 }

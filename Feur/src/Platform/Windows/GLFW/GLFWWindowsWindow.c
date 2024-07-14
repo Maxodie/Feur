@@ -132,11 +132,17 @@ void GLFWSetKeyCallback(GLFWwindow* window, int key, int scancode, int action, i
 
 void GLFWPollEvent_impl()
 {
-	glfwPollEvents();
 }
 
 void GLFWDestroyWindow_impl(WindowData* windowData)
 {
 	glfwDestroyWindow(windowData->nativeWindow);
 	glfwTerminate();
+}
+
+void GLFWUpdate_impl(WindowData* windowData)
+{
+	glfwPollEvents();
+	windowData->graphicsContext.SwapBuffers(windowData);
+	//windowData->graphicsContext.SwapBuffers(windowData);
 }

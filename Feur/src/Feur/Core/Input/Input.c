@@ -1,5 +1,6 @@
 #include "fepch.h"
 #include "Feur/Core/Input/Input.h"
+#include "Feur/Core/Input/KeyCode.h"
 
 #include "Platform/Windows/SDL/SDLWindowsInput.h"
 #include "Platform/Windows/GLFW/GLFWWindowsInput.h"
@@ -7,17 +8,19 @@
 
 typedef enum { Pressed, Repeat, Released }keySate;
 
+Input_API g_Input_API;
+
 void InitInputAPI()
 {
-	switch (g_Window_API.API_Type)
+	switch (GetWindowAPI()->API_Type)
 	{
 
-	case WINDOW_API_SDL:
+	case FE_WINDOW_API_SDL:
 		g_Input_API.GetKeyPressed = SDLWindowsIsInputPressed_impl;
 		g_Input_API.GetKeyDown = SDLWindowsIsInputDown_impl;
 		break;
 
-	case WINDOW_API_GLFW:
+	case FE_WINDOW_API_GLFW:
 		g_Input_API.GetKeyPressed = GLFWWindowsIsInputPressed_impl;
 		g_Input_API.GetKeyDown = GLFWWindowsIsInputDown_impl;
 		break;
@@ -29,5 +32,5 @@ void InitInputAPI()
 
 BOOL IsInputPressed(const FE_KeyCode key_code)
 {
-	return (*g_Input_API.GetKeyPressed)(key_code);
+	return g_Input_API.GetKeyPressed(key_code);
 }

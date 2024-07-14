@@ -2,13 +2,11 @@
 
 typedef enum keySate keySate;
 
-typedef struct
+typedef struct Input_API
 {
 	BOOL (*GetKeyPressed)(FE_KeyCode);
 	BOOL (*GetKeyDown)(FE_KeyCode);
 } Input_API;
-
-Input_API g_Input_API;
 
 
 void InitInputAPI();

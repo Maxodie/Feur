@@ -13,3 +13,7 @@
 #include "Feur/Core/Layer.h"
 
 #include "Feur/Core/LayerStack.h"
+
+#include "Feur/Renderer/GraphicsContext.h"
+#include "Feur/Renderer/RendererAPI.h"
+#include "Feur/Renderer/Renderer.h"

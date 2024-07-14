@@ -2,12 +2,13 @@
 #include "Feur/Core/Application.h"
 #include "Feur/Core/Event/Event.h"
 #include "Feur/Core/Input/Input.h"
-
-#include "nuklear/nuklear.h"
+#include "Feur/Renderer/RenderCommand.h"
+#include "Feur/Nuklear/NuklearLayer.h"
 
 static FE_App g_fe_App;
 
 static BOOL g_IsAppRunning = TRUE;
+
 
 void StartApp_impl()
 {
@@ -38,9 +39,17 @@ void AppUpdate()
 
 void StartApp()
 {
+	InitRendererAPISelection();
 	LoadWindow();
 	InitInputAPI();
 	InitLayerStack(&g_fe_App.layerStack);
+
+	if (!InitRenderer())
+	{
+		FE_CORE_LOG_ERROR("Application.c : RenderCommandInit failed !");
+	}
+
+	CreateNewNuklearGUILayer("NuklearLayer");
 }
 
 void AddLayerApp(Layer* newLayer)
@@ -63,6 +72,7 @@ void LoadWindow()
 {
 	InitWindowAPI();
 	CreateWindow(&g_fe_App.windowData);
+	g_fe_App.windowData.graphicsContext.Init(&g_fe_App.windowData);
 
 	g_fe_App.windowData.EventCallback = AppOnEvent;
 }
@@ -95,6 +105,7 @@ BOOL OnWindowResizing(FE_EventData* eventData)
 	}
 
 	eventData->windowData->isMinimized = FALSE;
+	RendererOnWindowResize(eventData->windowData->w, eventData->windowData->h);
 	return TRUE;
 }
 
@@ -106,14 +117,15 @@ BOOL OnWindowClose(FE_EventData* eventData)
 
 void PullWindowEvent()
 {
-	g_Window_API.PollEvent();
-	
+	GetWindowAPI()->PollEvent();
 }
 
 void Render()
 {
-	
-	
+	RenderCommandClearScreenColor();
+	RenderCommandClear();
+
+	GetWindowAPI()->Update(&g_fe_App.windowData);
 }
 
 void ShutdownApp()
@@ -122,6 +134,8 @@ void ShutdownApp()
 	{
 		PopLayerStack(&g_fe_App.layerStack);
 	}
+
+	GetWindowAPI()->DestroyWindow(&g_fe_App.windowData);
 }
 
 void QuitApp()

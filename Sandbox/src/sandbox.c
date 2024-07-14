@@ -4,7 +4,7 @@ void UpdateSandboxLayerBase();
 void UpdateLayerBaseEventSandbox(FE_Event* event);
 void OnAttachSandboxLayerBase();
 
-Layer layer = { .layerName = "layer test", .OnUpdate = UpdateSandboxLayerBase, .OnAttach = OnAttachSandboxLayerBase , .OnUpdateLayerEvent = UpdateLayerBaseEventSandbox };
+
 
 void StartSandbox()
 {
