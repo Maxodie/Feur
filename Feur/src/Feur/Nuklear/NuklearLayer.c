@@ -4,10 +4,11 @@
 
 typedef struct NuklearGUILayerInterface
 {
-	void (*Update)();
-	void (*OnEvent)();
-	void (*OnAttach)();
+	void (*OnEvent)(FE_Event*);
+	void (*OnAttach)(Layer* layer);
 	void (*OnDetach)();
+	void (*OnRender)(Layer* layer);
+
 } NuklearGUILayerInterface;
 
 static NuklearGUILayerInterface nuklearGUILayerInterface;
@@ -19,30 +20,45 @@ void NuklearGUILayerInit()
 		nuklearGUILayerInterface.OnAttach = OpenGL_GLFW_NuklearGUILayerOnAttach_impl;
 		nuklearGUILayerInterface.OnDetach = OpenGL_GLFW_NuklearGUILayerOnDetach_impl;
 		nuklearGUILayerInterface.OnEvent = OpenGL_GLFW_NuklearGUILayerEvent_impl;
-		nuklearGUILayerInterface.Update = OpenGL_GLFW_NuklearGUILayerUpdate_impl;
+		nuklearGUILayerInterface.OnRender = OpenGL_GLFW_NuklearGUILayerRender_impl;
 	}
-}
-
-void NuklearGUILayerUpdate()
-{
 }
 
 void NuklearGUILayerEvent(FE_Event* event)
 {
+	nuklearGUILayerInterface.OnEvent(event);
 }
 
-void NuklearGUILayerOnAttach()
+void NuklearGUILayerUpdate()
 {
+
+}
+
+void NuklearGUILayerRender(Layer* layer)
+{
+	nuklearGUILayerInterface.OnRender(layer);
+}
+
+
+void NuklearGUILayerOnAttach(Layer* layer)
+{
+	nuklearGUILayerInterface.OnAttach(layer);
 }
 
 void NuklearGUILayerOnDetach()
 {
+	nuklearGUILayerInterface.OnDetach();
 }
 
-Layer CreateNewNuklearGUILayer(const char* layerName)
+Layer CreateNewNuklearGUILayer(char* layerName)
 {
-	return (Layer) {
-		.layerName = layerName, .OnAttach = NuklearGUILayerOnAttach,
-			.OnDetach = NuklearGUILayerOnDetach, .OnUpdate = NuklearGUILayerUpdate, .OnUpdateLayerEvent = NuklearGUILayerEvent
+	NuklearGUILayerInit();
+
+	Layer nuklearLayer = {
+	   .layerName = layerName, .OnAttach = NuklearGUILayerOnAttach,
+		   .OnDetach = NuklearGUILayerOnDetach, .OnUpdate = NuklearGUILayerUpdate, .OnUpdateLayerEvent = NuklearGUILayerEvent,
+		   .OnRender = NuklearGUILayerRender, .handledInfo = NULL
 	};
+
+	 return nuklearLayer;
 }

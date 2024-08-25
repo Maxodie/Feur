@@ -16,11 +16,17 @@
     <Filter Include="Feur\Core\Window">
       <UniqueIdentifier>{F697A49A-E290-C3EC-0BC3-A871F71AA3F8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feur\Nuklear">
+      <UniqueIdentifier>{58D10DFE-4434-9DA2-EDB9-D558D9FB6825}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Feur\Renderer">
       <UniqueIdentifier>{BD809AA7-2941-16DE-F27B-5F5B5EFB5ABA}</UniqueIdentifier>
     </Filter>
     <Filter Include="Platform">
       <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Nuklear">
+      <UniqueIdentifier>{4BACD781-37A5-F6D3-60D7-DB584C2FD6DF}</UniqueIdentifier>
     </Filter>
     <Filter Include="Platform\OpenGL">
       <UniqueIdentifier>{1E7D2C1D-8A08-9AE1-9319-1DD6FF23F6E1}</UniqueIdentifier>
@@ -67,6 +73,15 @@
     <ClInclude Include="src\Feur\Core\Window\Window.h">
       <Filter>Feur\Core\Window</Filter>
     </ClInclude>
+    <ClInclude Include="src\Feur\Nuklear\NuklearLayer.h">
+      <Filter>Feur\Nuklear</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Feur\Renderer\Buffers.h">
+      <Filter>Feur\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Feur\Renderer\GraphicsContext.h">
+      <Filter>Feur\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Feur\Renderer\RenderCommand.h">
       <Filter>Feur\Renderer</Filter>
     </ClInclude>
@@ -78,6 +93,15 @@
     </ClInclude>
     <ClInclude Include="src\Feur\Renderer\RendererAPI.h">
       <Filter>Feur\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Nuklear\OpenGLNuklearLayer.h">
+      <Filter>Platform\Nuklear</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffers.h">
+      <Filter>Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLGraphicsContext.h">
+      <Filter>Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h">
       <Filter>Platform\OpenGL</Filter>
@@ -95,8 +119,6 @@
       <Filter>Platform\Windows\SDL</Filter>
     </ClInclude>
     <ClInclude Include="src\fepch.h" />
-    <ClInclude Include="src\Platform\OpenGL\OpenGLGraphicsContext.h" />
-    <ClInclude Include="src\Feur\Renderer\GraphicsContext.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Feur\Core\Application.c">
@@ -120,6 +142,15 @@
     <ClCompile Include="src\Feur\Core\Window\Window.c">
       <Filter>Feur\Core\Window</Filter>
     </ClCompile>
+    <ClCompile Include="src\Feur\Nuklear\NuklearLayer.c">
+      <Filter>Feur\Nuklear</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Feur\Renderer\Buffers.c">
+      <Filter>Feur\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Feur\Renderer\GraphicsContext.c">
+      <Filter>Feur\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Feur\Renderer\RenderCommand.c">
       <Filter>Feur\Renderer</Filter>
     </ClCompile>
@@ -131,6 +162,15 @@
     </ClCompile>
     <ClCompile Include="src\Feur\Renderer\RendererAPI.c">
       <Filter>Feur\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Nuklear\OpenGLNuklearLayer.c">
+      <Filter>Platform\Nuklear</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffers.c">
+      <Filter>Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLGraphicsContext.c">
+      <Filter>Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.c">
       <Filter>Platform\OpenGL</Filter>
@@ -148,7 +188,5 @@
       <Filter>Platform\Windows\SDL</Filter>
     </ClCompile>
     <ClCompile Include="src\fepch.c" />
-    <ClCompile Include="src\Feur\Renderer\GraphicsContext.c" />
-    <ClCompile Include="src\Platform\OpenGL\OpenGLGraphicsContext.c" />
   </ItemGroup>
 </Project>

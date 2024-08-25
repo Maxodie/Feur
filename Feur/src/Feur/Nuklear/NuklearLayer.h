@@ -2,9 +2,10 @@
 
 void NuklearGUILayerInit();
 
-void NuklearGUILayerUpdate();
 void NuklearGUILayerEvent(FE_Event* event);
-void NuklearGUILayerOnAttach();
+void NuklearGUILayerUpdate();
+void NuklearGUILayerRender(Layer* layer);
+void NuklearGUILayerOnAttach(Layer* layer);
 void NuklearGUILayerOnDetach();
 
-Layer CreateNewNuklearGUILayer(const char* layerName);
+Layer CreateNewNuklearGUILayer(char* layerName);

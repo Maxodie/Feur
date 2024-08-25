@@ -144,5 +144,4 @@ void GLFWUpdate_impl(WindowData* windowData)
 {
 	glfwPollEvents();
 	windowData->graphicsContext.SwapBuffers(windowData);
-	//windowData->graphicsContext.SwapBuffers(windowData);
 }

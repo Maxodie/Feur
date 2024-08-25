@@ -4,3 +4,6 @@
 [submodule "Feur/vendor/Nuklear"]
 	path = Feur/vendor/Nuklear
 	url = https://github.com/Immediate-Mode-UI/Nuklear
+[submodule "Feur/vendor/Mathilda"]
+	path = Feur/vendor/Mathilda
+	url = https://github.com/Maxodie/Mathilda/

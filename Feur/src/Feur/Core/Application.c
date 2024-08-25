@@ -9,6 +9,7 @@ static FE_App g_fe_App;
 
 static BOOL g_IsAppRunning = TRUE;
 
+Layer nuklearGUILayer;
 
 void StartApp_impl()
 {
@@ -49,13 +50,14 @@ void StartApp()
 		FE_CORE_LOG_ERROR("Application.c : RenderCommandInit failed !");
 	}
 
-	CreateNewNuklearGUILayer("NuklearLayer");
+	nuklearGUILayer = CreateNewNuklearGUILayer("NuklearLayer");
+	AddLayerApp(&nuklearGUILayer);
 }
 
 void AddLayerApp(Layer* newLayer)
 {
 	PushLayerStack(&g_fe_App.layerStack, newLayer);
-	newLayer->OnAttach();
+	newLayer->OnAttach(newLayer);
 }
 
 void InsertLayerApp(Layer* newLayer, Uint32 position)
@@ -124,6 +126,13 @@ void Render()
 {
 	RenderCommandClearScreenColor();
 	RenderCommandClear();
+
+	Layer* layer;
+	for (int i = 0; i < g_fe_App.layerStack.count; i++)
+	{
+		layer = g_fe_App.layerStack.dataPtr[i];
+		layer->OnRender(layer);
+	}
 
 	GetWindowAPI()->Update(&g_fe_App.windowData);
 }

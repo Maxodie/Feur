@@ -16,6 +16,7 @@ IncludeDir["SDL2"] = "Feur/vendor/SDL2/SDL/include"
 IncludeDir["Glad"] = "Feur/vendor/Glad/include"
 IncludeDir["GLFW"] = "Feur/vendor/GLFW/include"
 IncludeDir["nuklear"] = "Feur/vendor"
+IncludeDir["Mathilda"] = "Feur/vendor/Mathilda/Mathilda/src"
 
 IncludeLib = {}
 group "Dependencies"
@@ -29,6 +30,9 @@ group "Dependencies"
 
 	group "GUI"
 		include "Feur/vendor/Nuklear/nuklear.lua"
+
+	group "Math"
+		include "Feur/vendor/Mathilda/premake5.lua"
 
 group "Feur"
 
@@ -54,7 +58,7 @@ project "Feur"
 	defines 
 	{
 		"_CRT_SECURE_NO_WARNINGS",
-		"NK_IMPLEMENTATION"
+		"HAVE_INLINE"
 	}
 
 	libdirs
@@ -69,7 +73,8 @@ project "Feur"
 		"%{IncludeDir.SDL2}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.nuklear}"
+		"%{IncludeDir.nuklear}",
+		"%{IncludeDir.Mathilda}"
 	}
 
 	links
@@ -131,12 +136,20 @@ project "Sandbox"
 	includedirs
 	{
 		"Feur/vendor/spdlog/include",
-		"Feur/src"
+		"%{IncludeDir.Glad}",
+		"Feur/src",
+		"%{IncludeDir.Mathilda}"
 	}
 
 	links
 	{
-		"Feur"
+		"Feur",
+		"Glad"
+	}
+
+	defines
+	{
+		"HAVE_INLINE"
 	}
 
 	filter "system:windows"

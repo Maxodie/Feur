@@ -2,6 +2,9 @@
 #include "Feur/Renderer/RendererAPI.h"
 #include "Platform/OpenGL/OpenGLRendererAPI.h"
 
+#include "Feur/Renderer/Buffers.h"
+#include "Platform/OpenGL/OpenGLBuffers.h"
+
 static RendererAPI rendererAPI;
 
 void InitRendererAPISelection()
@@ -15,6 +18,8 @@ void InitRendererAPISelection()
 		rendererAPI.DrawIndex = OpenGLDrawIndex_impl;
 		rendererAPI.SetViewport = OpenGLSetViewport_impl;
 		rendererAPI.Init = OpenGLInit_Impl;
+
+		GetRenderer_VertexArray_Buffer()->InitVaoBuffer = InitOpenGL_VertexArrayBuffer;
 		break;
 	default:
 		break;

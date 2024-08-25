@@ -2,8 +2,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include <stdint.h>
 #include <stdarg.h>
+#include <string.h>
+#include <math.h>
+#include <limits.h>
+#include <time.h>
 
 #include "Feur/Core/Log.h"
 #include "Feur/Core/Core.h"

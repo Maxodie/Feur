@@ -4,14 +4,20 @@
 
 void InitLayerStack(LayerStack* layerStack)
 {
+	FE_CORE_ASSERT(layerStack, "LayerStacks.c in InitLayerStack is null");
+
 	layerStack->dataPtr = NULL;
 	layerStack->count = 0;
 }
 
 void PopLayerStack(LayerStack* layerStack)
 {
+	FE_CORE_ASSERT(layerStack, "LayerStacks.c in PopLayerStack is null");
+
 	if (layerStack->dataPtr != NULL)
 	{
+		layerStack->dataPtr[layerStack->count - 1]->OnDetach();
+
 		layerStack->count--;
 
 		if (layerStack->count == 0)
@@ -27,12 +33,14 @@ void PopLayerStack(LayerStack* layerStack)
 			layerStack->dataPtr = temp;
 			return;
 		}
-
-		FE_CORE_LOG_DEBUG("test");
 	}
 }
 
 void InsertLayerStack(LayerStack* layerStack, Layer* value, Uint32 position) {
+
+	FE_CORE_ASSERT(layerStack, "LayerStacks.c in InsertLayerStack is null");
+	if (position > layerStack->count) return;
+
 	size_t i;
 	Layer** temp = layerStack->dataPtr;
 
@@ -52,17 +60,19 @@ void InsertLayerStack(LayerStack* layerStack, Layer* value, Uint32 position) {
 		layerStack->dataPtr[i] = layerStack->dataPtr[i - 1];
 	}
 
-	layerStack->dataPtr[position - 1] = value;
+	size_t positionItemId = (size_t)position - 1;
+	layerStack->dataPtr[positionItemId] = value;
 
-	for (i = 0; i < layerStack->count; i++)
+	/*for (i = 0; i < layerStack->count; i++)
 	{
-		FE_CORE_LOG_ERROR("%s ", layerStack->dataPtr[i]->layerName);
+		FE_CORE_LOG_ERROR("LayerStack: inserted layer %d | %s ", i, layerStack->dataPtr[i]->layerName);
 	}
-
+	*/
 }
 
 void PushLayerStack(LayerStack* layerStack, Layer* value)
 {
+	FE_CORE_ASSERT(layerStack, "LayerStacks.c in PushLayerStack is null");
 	Layer** temp = layerStack->dataPtr;
 
 	layerStack->dataPtr = layerStack->dataPtr == NULL ?
@@ -75,6 +85,10 @@ void PushLayerStack(LayerStack* layerStack, Layer* value)
 		return;
 	}
 
+	size_t lastItemId = layerStack->count;
 	layerStack->count++;
-	layerStack->dataPtr[layerStack->count - 1] = value;
+
+	layerStack->dataPtr[lastItemId] = value;
+
+	FE_LOG_DEBUG("Add %s layer to the stack", value->layerName);
 }
