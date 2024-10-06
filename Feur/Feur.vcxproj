@@ -76,8 +76,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>fepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;HAVE_INLINE;FE_PLATFORM_WINDOWS;FE_ENABLE_ASSERTS;FE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\SDL2\SDL\include;vendor\Glad\include;vendor\GLFW\include;vendor;vendor\Mathilda\Mathilda\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>HAVE_INLINE;_CRT_SECURE_NO_WARNINGS;FE_RENDER_SELECTED_API_VULKAN;FE_PLATFORM_WINDOWS;FE_ENABLE_ASSERTS;FE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\SDL2\SDL\include;vendor\Glad\include;vendor\VulkanSDK\1.3.290.0\Include;vendor\GLFW\include;vendor;vendor\Mathilda\Mathilda\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -89,6 +89,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
+      <AdditionalDependencies>Feur\vendor\VulkanSDK\1.3.290.0\Lib\vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
@@ -97,10 +98,14 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>fepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;HAVE_INLINE;FE_PLATFORM_WINDOWS;FE_RELEASE;FE_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\SDL2\SDL\include;vendor\Glad\include;vendor\GLFW\include;vendor;vendor\Mathilda\Mathilda\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>HAVE_INLINE;_CRT_SECURE_NO_WARNINGS;FE_RENDER_SELECTED_API_VULKAN;FE_PLATFORM_WINDOWS;FE_RELEASE;FE_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\SDL2\SDL\include;vendor\Glad\include;vendor\VulkanSDK\1.3.290.0\Include;vendor\GLFW\include;vendor;vendor\Mathilda\Mathilda\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
@@ -108,8 +113,11 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
+      <AdditionalDependencies>Feur\vendor\VulkanSDK\1.3.290.0\Lib\vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
@@ -118,10 +126,14 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>fepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;HAVE_INLINE;FE_PLATFORM_WINDOWS;FE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\SDL2\SDL\include;vendor\Glad\include;vendor\GLFW\include;vendor;vendor\Mathilda\Mathilda\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>HAVE_INLINE;_CRT_SECURE_NO_WARNINGS;FE_RENDER_SELECTED_API_VULKAN;FE_PLATFORM_WINDOWS;FE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\SDL2\SDL\include;vendor\Glad\include;vendor\VulkanSDK\1.3.290.0\Include;vendor\GLFW\include;vendor;vendor\Mathilda\Mathilda\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
@@ -129,8 +141,11 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
+      <AdditionalDependencies>Feur\vendor\VulkanSDK\1.3.290.0\Lib\vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
@@ -157,6 +172,11 @@
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffers.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLGraphicsContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
+    <ClInclude Include="src\Platform\Vulkan\VulkanBuffers.h" />
+    <ClInclude Include="src\Platform\Vulkan\VulkanGraphicsContext.h" />
+    <ClInclude Include="src\Platform\Vulkan\VulkanRendererAPI.h" />
+    <ClInclude Include="src\Platform\Vulkan\VulkanSetup.h" />
+    <ClInclude Include="src\Platform\Vulkan\VulkanValidationLayer.h" />
     <ClInclude Include="src\Platform\Windows\GLFW\GLFWWindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\GLFW\GLFWWindowsWindow.h" />
     <ClInclude Include="src\Platform\Windows\SDL\SDLWindowsInput.h" />
@@ -182,6 +202,11 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffers.c" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLGraphicsContext.c" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.c" />
+    <ClCompile Include="src\Platform\Vulkan\VulkanBuffers.c" />
+    <ClCompile Include="src\Platform\Vulkan\VulkanRendererAPI.c" />
+    <ClCompile Include="src\Platform\Vulkan\VulkanSetup.c" />
+    <ClCompile Include="src\Platform\Vulkan\VulkanGraphicsContext.c" />
+    <ClCompile Include="src\Platform\Vulkan\VulkanValidationLayer.c" />
     <ClCompile Include="src\Platform\Windows\GLFW\GLFWWindowsInput.c" />
     <ClCompile Include="src\Platform\Windows\GLFW\GLFWWindowsWindow.c" />
     <ClCompile Include="src\Platform\Windows\SDL\SDLWindowsInput.c" />
@@ -202,6 +227,9 @@
     </ProjectReference>
     <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">
       <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="vendor\Mathilda\Mathilda\Mathilda.vcxproj">
+      <Project>{A9207DCC-95ED-D7D7-BE06-C67FAA320D66}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

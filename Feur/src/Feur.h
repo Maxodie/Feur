@@ -7,6 +7,9 @@
 //Window
 #include "Feur/Core/Window/Window.h"
 
+//Renderer
+#include "Feur/Renderer/RendererAPI.h"
+
 //Inputs
 #include "Feur/Core/Input/KeyCode.h"
 #include "Feur/Core/Input/Input.h"

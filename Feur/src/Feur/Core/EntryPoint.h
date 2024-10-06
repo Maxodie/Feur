@@ -1,9 +1,9 @@
 #pragma once
 #include "Feur/Core/Application.h"
 
-extern void StartSandbox();
+extern void FE_API StartSandbox();
 
-int main(void)
+int FE_API main(void)
 {
 	StartApp_impl();
 

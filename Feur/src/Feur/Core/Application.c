@@ -11,12 +11,12 @@ static BOOL g_IsAppRunning = TRUE;
 
 Layer nuklearGUILayer;
 
-void StartApp_impl()
+void FE_API StartApp_impl()
 {
 	StartApp();
 }
 
-void RunApp_impl()
+void FE_API RunApp_impl()
 {
 	while (g_IsAppRunning)
 	{
@@ -29,7 +29,7 @@ void RunApp_impl()
 }
 
 
-void AppUpdate()
+void FE_API AppUpdate()
 {
 	for (int i = 0; i < g_fe_App.layerStack.count; i++)
 	{
@@ -38,14 +38,14 @@ void AppUpdate()
 }
 
 
-void StartApp()
+void FE_API StartApp()
 {
 	InitRendererAPISelection();
 	LoadWindow();
 	InitInputAPI();
 	InitLayerStack(&g_fe_App.layerStack);
 
-	if (!InitRenderer())
+	if (!InitRenderer(&g_fe_App.rendererAPIData))
 	{
 		FE_CORE_LOG_ERROR("Application.c : RenderCommandInit failed !");
 	}
@@ -54,23 +54,23 @@ void StartApp()
 	AddLayerApp(&nuklearGUILayer);
 }
 
-void AddLayerApp(Layer* newLayer)
+void FE_API AddLayerApp(Layer* newLayer)
 {
 	PushLayerStack(&g_fe_App.layerStack, newLayer);
 	newLayer->OnAttach(newLayer);
 }
 
-void InsertLayerApp(Layer* newLayer, Uint32 position)
+void FE_API InsertLayerApp(Layer* newLayer, Uint32 position)
 {
 	InsertLayerStack(&g_fe_App.layerStack, newLayer, position);
 }
 
-void PopLayerApp()
+void FE_API PopLayerApp()
 {
 	PopLayerStack(&g_fe_App.layerStack);
 }
 
-void LoadWindow()
+void FE_API LoadWindow()
 {
 	InitWindowAPI();
 	CreateWindow(&g_fe_App.windowData);
@@ -79,7 +79,7 @@ void LoadWindow()
 	g_fe_App.windowData.EventCallback = AppOnEvent;
 }
 
-void AppOnEvent(FE_Event event)
+void FE_API AppOnEvent(FE_Event event)
 {
 	FE_EventDispatcher eventDispatcher = { .eventType = event.eventType, .event = event };
 	DispatchEvent(&eventDispatcher, FE_Event_WindowResize, OnWindowResizing);
@@ -98,7 +98,7 @@ void AppOnEvent(FE_Event event)
 	}
 }
 
-BOOL OnWindowResizing(FE_EventData* eventData)
+BOOL FE_API OnWindowResizing(FE_EventData* eventData)
 {
 	if(eventData->windowData->w == 0 || eventData->windowData->h == 0)
 	{
@@ -111,18 +111,18 @@ BOOL OnWindowResizing(FE_EventData* eventData)
 	return TRUE;
 }
 
-BOOL OnWindowClose(FE_EventData* eventData)
+BOOL FE_API OnWindowClose(FE_EventData* eventData)
 {
 	g_IsAppRunning = FALSE;
 	return FALSE;
 }
 
-void PullWindowEvent()
+void FE_API PullWindowEvent()
 {
 	GetWindowAPI()->PollEvent();
 }
 
-void Render()
+void FE_API Render()
 {
 	RenderCommandClearScreenColor();
 	RenderCommandClear();
@@ -137,22 +137,23 @@ void Render()
 	GetWindowAPI()->Update(&g_fe_App.windowData);
 }
 
-void ShutdownApp()
+void FE_API ShutdownApp()
 {
 	for (int i = 0; i < g_fe_App.layerStack.count; i++)
 	{
 		PopLayerStack(&g_fe_App.layerStack);
 	}
 
+	RendererShutdown(&g_fe_App.rendererAPIData);
 	GetWindowAPI()->DestroyWindow(&g_fe_App.windowData);
 }
 
-void QuitApp()
+void FE_API QuitApp()
 {
 	g_IsAppRunning = FALSE;
 }
 
-const FE_App* GetApp()
+const FE_API FE_App* GetApp()
 {
 	return &g_fe_App;
 }

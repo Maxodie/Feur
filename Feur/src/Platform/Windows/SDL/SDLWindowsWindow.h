@@ -1,5 +1,5 @@
 #pragma once
 
-BOOL CreateSDLWindow_impl(WindowData* windowData);
-void SDLDestroyWindow_impl(WindowData* windowData);
-void SDLPollEvent_impl();
+BOOL FE_API CreateSDLWindow_impl(WindowData* windowData);
+void FE_API SDLDestroyWindow_impl(WindowData* windowData);
+void FE_API SDLPollEvent_impl();

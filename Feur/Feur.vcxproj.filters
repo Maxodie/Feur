@@ -31,6 +31,9 @@
     <Filter Include="Platform\OpenGL">
       <UniqueIdentifier>{1E7D2C1D-8A08-9AE1-9319-1DD6FF23F6E1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Platform\Vulkan">
+      <UniqueIdentifier>{6AE1DE2D-D66C-4CF2-DF7D-CFE64B88A8F2}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Platform\Windows">
       <UniqueIdentifier>{64FBD71A-50F4-F66C-7926-DCF1657ED678}</UniqueIdentifier>
     </Filter>
@@ -106,6 +109,18 @@
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h">
       <Filter>Platform\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\VulkanBuffers.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\VulkanGraphicsContext.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\VulkanRendererAPI.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\VulkanSetup.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Windows\GLFW\GLFWWindowsInput.h">
       <Filter>Platform\Windows\GLFW</Filter>
     </ClInclude>
@@ -119,6 +134,7 @@
       <Filter>Platform\Windows\SDL</Filter>
     </ClInclude>
     <ClInclude Include="src\fepch.h" />
+    <ClInclude Include="src\Platform\Vulkan\VulkanValidationLayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Feur\Core\Application.c">
@@ -175,6 +191,18 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.c">
       <Filter>Platform\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\VulkanBuffers.c">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\VulkanRendererAPI.c">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\VulkanSetup.c">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\VulkanGraphicsContext.c">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Windows\GLFW\GLFWWindowsInput.c">
       <Filter>Platform\Windows\GLFW</Filter>
     </ClCompile>
@@ -188,5 +216,6 @@
       <Filter>Platform\Windows\SDL</Filter>
     </ClCompile>
     <ClCompile Include="src\fepch.c" />
+    <ClCompile Include="src\Platform\Vulkan\VulkanValidationLayer.c" />
   </ItemGroup>
 </Project>

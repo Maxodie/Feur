@@ -3,7 +3,7 @@
 
 #include <glad/glad.h>
 
-BOOL OpenGLInit_Impl()
+BOOL FE_API OpenGLInit_impl(RendererAPIData* apiData)
 {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -13,21 +13,25 @@ BOOL OpenGLInit_Impl()
 	return TRUE;
 }
 
-void OpenGLSetViewport_impl(Uint32 x, Uint32 y, Uint32 width, Uint32 height)
+void FE_API OpenGLSetViewport_impl(Uint32 x, Uint32 y, Uint32 width, Uint32 height)
 {
 	glViewport(x, y, width, height);
 }
 
-void OpenGLClearScreenColor_impl()
+void FE_API OpenGLClearScreenColor_impl()
 {
 	glClearColor(100, 0, 100, 255);
 }
 
-void OpenGLClear_impl()
+void FE_API OpenGLClear_impl()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void OpenGLDrawIndex_impl()
+void FE_API OpenGLDrawIndex_impl()
+{
+}
+
+void FE_API OpenGLShutdown_impl()
 {
 }

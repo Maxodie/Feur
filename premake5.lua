@@ -16,23 +16,27 @@ IncludeDir["SDL2"] = "Feur/vendor/SDL2/SDL/include"
 IncludeDir["Glad"] = "Feur/vendor/Glad/include"
 IncludeDir["GLFW"] = "Feur/vendor/GLFW/include"
 IncludeDir["nuklear"] = "Feur/vendor"
-IncludeDir["Mathilda"] = "Feur/vendor/Mathilda/Mathilda/src"
+IncludeDir["Mathilda"] = "Feur/vendor/Mathilda/Mathilda/include"
+IncludeDir["Vulkan"] = "Feur/vendor/VulkanSDK/1.3.290.0/Include"
 
 IncludeLib = {}
+IncludeLib["Vulkan"] = "Feur/vendor/VulkanSDK/1.3.290.0/Lib/vulkan-1.lib"
+
 group "Dependencies"
 	group "Window"
 		include "Feur/vendor/GLFW"
 		include "Feur/vendor/SDL2/SDL/SDL2.lua"
 		include "Feur/vendor/SDL2/SDL/SDL2main.lua"
-	
-	group "Rendering"
+
+    group "Rendering"
 		include "Feur/vendor/Glad/premake5.lua"
+        include "Feur/vendor/VulkanSDK/Vulkan_premake.lua"
 
 	group "GUI"
 		include "Feur/vendor/Nuklear/nuklear.lua"
 
 	group "Math"
-		include "Feur/vendor/Mathilda/premake5.lua"
+		include "Feur/vendor/Mathilda/include_premake5.lua"
 
 group "Feur"
 
@@ -55,10 +59,12 @@ project "Feur"
 		"%{prj.name}/src/**.c"
 	}
 
-	defines 
+	defines
 	{
+		"HAVE_INLINE",
 		"_CRT_SECURE_NO_WARNINGS",
-		"HAVE_INLINE"
+        --"FE_RENDER_SELECTED_API_OPENGL",
+		"FE_RENDER_SELECTED_API_VULKAN"
 	}
 
 	libdirs
@@ -72,7 +78,8 @@ project "Feur"
 		"%{prj.name}/vendor/spdlog/include",
 		"%{IncludeDir.SDL2}",
 		"%{IncludeDir.Glad}",
-		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Vulkan}",
+        "%{IncludeDir.GLFW}",
 		"%{IncludeDir.nuklear}",
 		"%{IncludeDir.Mathilda}"
 	}
@@ -82,7 +89,9 @@ project "Feur"
 		"SDL2",
 		"SDL2main",
 		"Glad",
-		"GLFW"
+		"GLFW",
+		"Mathilda",
+        "%{IncludeLib.Vulkan}"
 	}
 
 	filter "system:windows"
@@ -108,13 +117,15 @@ project "Feur"
 		{
 			"FE_RELEASE",
 			"FE_ENABLE_ASSERTS"
-		}
+        }
 		runtime "Release"
+		optimize "on"
 		symbols "on"
 
 	filter "configurations:Dist"
 		defines "FE_DIST"
 		runtime "Release"
+		optimize "on"
 		symbols "on"
 
 project "Sandbox"
@@ -136,20 +147,26 @@ project "Sandbox"
 	includedirs
 	{
 		"Feur/vendor/spdlog/include",
-		"%{IncludeDir.Glad}",
 		"Feur/src",
-		"%{IncludeDir.Mathilda}"
+		"%{IncludeDir.Mathilda}",
+		--temp test includes
+        --"%{IncludeDir.Vulkan}",
+		"%{IncludeDir.Glad}"
 	}
 
 	links
 	{
 		"Feur",
+		"Mathilda",
+        --temp test includes
+        --"Vulkan",
 		"Glad"
 	}
 
 	defines
 	{
-		"HAVE_INLINE"
+		"HAVE_INLINE",
+	--	"_FEUR_TEST_OPENGL_SANDBOX_"
 	}
 
 	filter "system:windows"

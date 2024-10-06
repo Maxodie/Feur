@@ -11,7 +11,7 @@ typedef struct LayerStack
 // TODO : Canva layer handling
 
 
-void InitLayerStack(LayerStack* layerStack);
-void PopLayerStack(LayerStack* layerStack); 
-void InsertLayerStack(LayerStack* layerStack, Layer* value, Uint32 position);
-void PushLayerStack(LayerStack* layerStack, Layer* value);
+void FE_API InitLayerStack(LayerStack* layerStack);
+void FE_API PopLayerStack(LayerStack* layerStack);
+void FE_API InsertLayerStack(LayerStack* layerStack, Layer* value, Uint32 position);
+void FE_API PushLayerStack(LayerStack* layerStack, Layer* value);

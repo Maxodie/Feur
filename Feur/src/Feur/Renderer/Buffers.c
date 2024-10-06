@@ -3,7 +3,7 @@
 
 Renderer_VAO_Buffer renderer_VAO_Buffer;
 
-Renderer_VAO_Buffer* GetRenderer_VertexArray_Buffer()
+Renderer_VAO_Buffer* FE_API GetRenderer_VertexArray_Buffer()
 {
 	return &renderer_VAO_Buffer;
 }

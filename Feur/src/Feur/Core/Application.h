@@ -6,27 +6,28 @@ struct FE_EventData;
 typedef struct FE_App
 {
 	WindowData windowData;
+	RendererAPIData rendererAPIData;
 	LayerStack layerStack;
 } FE_App;
 
-void StartApp_impl();
-void RunApp_impl();
+void FE_API StartApp_impl();
+void FE_API RunApp_impl();
 
-void StartApp();
+void FE_API StartApp();
 
-void AddLayerApp(Layer* newLayer);
-void InsertLayerApp(Layer* newLayer, Uint32 position);
-void PopLayerApp();
-void AppUpdate();
-void LoadWindow();
-void PullWindowEvent();
-void Render();
-void AppOnEvent(FE_Event event);
-BOOL OnWindowResizing(FE_EventData* windowResizeEvent);
-BOOL OnWindowClose(FE_EventData* windowResizeEvent);
+void FE_API AddLayerApp(Layer* newLayer);
+void FE_API InsertLayerApp(Layer* newLayer, Uint32 position);
+void FE_API PopLayerApp();
+void FE_API AppUpdate();
+void FE_API LoadWindow();
+void FE_API PullWindowEvent();
+void FE_API Render();
+void FE_API AppOnEvent(FE_Event event);
+BOOL FE_API OnWindowResizing(FE_EventData* windowResizeEvent);
+BOOL FE_API OnWindowClose(FE_EventData* windowResizeEvent);
 
-void ShutdownApp();
-void QuitApp();
+void FE_API ShutdownApp();
+void FE_API QuitApp();
 
 const FE_App* GetApp();
 

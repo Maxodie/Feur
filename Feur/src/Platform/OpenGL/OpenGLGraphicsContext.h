@@ -1,4 +1,5 @@
 #pragma once
 
-void OpenGLG_GLFWraphicsContextInit(WindowData* windowData);
-void OpenGL_GLFWGraphicsContextSwapBuffers(WindowData* windowData);
+void FE_API OpenGL_GLFWwindowHintParameters();
+void FE_API OpenGL_GLFWgraphicsContextInit(WindowData* windowData);
+void FE_API OpenGL_GLFWGraphicsContextSwapBuffers(WindowData* windowData);

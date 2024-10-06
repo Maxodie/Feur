@@ -5,7 +5,7 @@
 
 static Window_API windowAPI;
 
-void InitWindowAPI()
+void FE_API InitWindowAPI()
 {
 	windowAPI.API_Type = FE_WINDOW_API_GLFW;
 	switch (windowAPI.API_Type)
@@ -27,8 +27,9 @@ void InitWindowAPI()
 	}
 }
 
-void CreateWindow(WindowData* windowData)
+void FE_API CreateWindow(WindowData* windowData)
 {
+	InitWindowCreationHintParameters();
 	BOOL success = windowAPI.CreateWindow(windowData);
 
 	FE_CORE_ASSERT(success, "Window.c: Failed to create window");
@@ -36,7 +37,7 @@ void CreateWindow(WindowData* windowData)
 	CreateGraphicsContext(windowData);
 }
 
-Window_API* GetWindowAPI()
+Window_API* FE_API GetWindowAPI()
 {
 	return &windowAPI;
 }

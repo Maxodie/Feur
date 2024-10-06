@@ -26,7 +26,7 @@ void get_time() {
     m_time = localtime(&current_time);
 }
 
-void ulogger_log(const char* prefix, LOG_LEVEL level, const char* fmt, ...) {
+void FE_API ulogger_log(const char* prefix, LOG_LEVEL level, const char* fmt, ...) {
 
     va_list args;
     va_start(args, fmt);

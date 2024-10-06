@@ -1,3 +1,3 @@
 #pragma once
 
-void InitOpenGL_VertexArrayBuffer();
+void FE_API InitOpenGL_VertexArrayBuffer();

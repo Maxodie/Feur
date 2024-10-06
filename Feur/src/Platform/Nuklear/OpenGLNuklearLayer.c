@@ -22,15 +22,15 @@
 #include <Nuklear/nuklear.h>
 #include <Nuklear/demo/glfw_opengl4/nuklear_glfw_gl4.h>
 
-void OpenGL_GLFW_NuklearGUILayerEvent_impl(FE_Event* event)
+void FE_API OpenGL_GLFW_NuklearGUILayerEvent_impl(FE_Event* event)
 {
 }
 
-void OpenGL_GLFW_NuklearGUILayerRender_impl(Layer* layer)
+void FE_API OpenGL_GLFW_NuklearGUILayerRender_impl(Layer* layer)
 {
 	struct nk_context* context = (struct nk_context*)layer->handledInfo;
 	nk_glfw3_new_frame();
-	if(nk_begin(context, "Nuklear Window", nk_rect(0, 0, 500, 500), NK_WINDOW_TITLE | NK_WINDOW_SCALABLE))
+	if (nk_begin(context, "Nuklear Window", nk_rect(0, 0, 500, 500), NK_WINDOW_TITLE | NK_WINDOW_SCALABLE))
 	{
 		/*struct nk_vec2 rect = nk_window_get_content_region_min(context);
 		struct nk_vec2 size = nk_window_get_content_region_size(context);
@@ -71,17 +71,17 @@ void OpenGL_GLFW_NuklearGUILayerRender_impl(Layer* layer)
 			nk_window_set_position(context, "Nuklear Window", newPos);
 		}
 		*/
-		//FE_CORE_LOG_DEBUG("x : %f; y : %f", rect.x, rect.y);
+		//FE_CORE_LOG_DEBUG("x : %f; y : %f", rect.x, rect.y)
 	}
 	nk_end(context);
 
 	nk_glfw3_render(NK_ANTI_ALIASING_ON);
 }
 
-void OpenGL_GLFW_NuklearGUILayerOnAttach_impl(Layer* layer)
+void FE_API OpenGL_GLFW_NuklearGUILayerOnAttach_impl(Layer* layer)
 {
 	GLFWwindow* window = (GLFWwindow*)GetApp()->windowData.nativeWindow;
-	
+
 	layer->handledInfo = nk_glfw3_init(window, NK_GLFW3_INSTALL_CALLBACKS, MAX_VERTEX_BUFFER, MAX_ELEMENT_BUFFER);
 
 	//set up font
@@ -90,7 +90,7 @@ void OpenGL_GLFW_NuklearGUILayerOnAttach_impl(Layer* layer)
 	nk_glfw3_font_stash_end();
 }
 
-void OpenGL_GLFW_NuklearGUILayerOnDetach_impl()
+void FE_API OpenGL_GLFW_NuklearGUILayerOnDetach_impl()
 {
 	nk_glfw3_shutdown();
 }

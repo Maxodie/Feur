@@ -12,6 +12,8 @@ typedef int Int32;
 typedef unsigned int Uint32;
 
 
+#define FE_API
+
 #define FALSE 0
 #define TRUE 1
 

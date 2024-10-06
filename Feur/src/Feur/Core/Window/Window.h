@@ -25,7 +25,7 @@ typedef struct Window_API
 	void (*Update)(WindowData*);
 } Window_API;
 
-void InitWindowAPI();
-void CreateWindow(WindowData* windowData);
+void FE_API InitWindowAPI();
+void FE_API CreateWindow(WindowData* windowData);
 
-Window_API* GetWindowAPI();
+Window_API* FE_API GetWindowAPI();

@@ -8,7 +8,7 @@ typedef enum {
     LOG_LEVEL_LEN
 } LOG_LEVEL;
 
-void ulogger_log(const char* prefix, LOG_LEVEL level, const char* fmt, ...);
+void FE_API ulogger_log(const char* prefix, LOG_LEVEL level, const char* fmt, ...);
 
 #define FE_CORE_LOG_DEBUG(...) ulogger_log("CORE", LOG_DEBUG, __VA_ARGS__)
 #define FE_CORE_LOG_SUCCESS(...) ulogger_log("CORE", LOG_SUCCESS, __VA_ARGS__)

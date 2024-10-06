@@ -4,12 +4,12 @@
 #include "Feur/Core/Event/Event.h"
 #include <GLFW/glfw3.h>
 
-static void GLFWErrorCallback(int error, const char* description);
-static void GLFWSetWindowSizeCallback(GLFWwindow* window, int width, int height);
-static void GLFWSetWindowCloseCallback(GLFWwindow* window);
-static void GLFWSetKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+static void FE_API GLFWErrorCallback(int error, const char* description);
+static void FE_API GLFWSetWindowSizeCallback(GLFWwindow* window, int width, int height);
+static void FE_API GLFWSetWindowCloseCallback(GLFWwindow* window);
+static void FE_API GLFWSetKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-BOOL CreateGLFWWindow_impl(WindowData* windowData)
+BOOL FE_API CreateGLFWWindow_impl(WindowData* windowData)
 {
 	int sucess = glfwInit();
 
@@ -22,10 +22,11 @@ BOOL CreateGLFWWindow_impl(WindowData* windowData)
 
 	if (!glfwWindow)
 	{
-		fprintf(stderr, "Error creating GLFW Window.\n");
+		FE_CORE_LOG_ERROR(stderr, "Error creating GLFW Window.\n");
 		return FALSE;
 	}
 
+	FE_CORE_LOG_SUCCESS("   GLFW Window Created");
 
 	glfwSetWindowUserPointer(glfwWindow, windowData);
 	
@@ -78,12 +79,12 @@ BOOL CreateGLFWWindow_impl(WindowData* windowData)
 	return TRUE;
 }
 
-static void GLFWErrorCallback(int error, const char* description)
+static void FE_API GLFWErrorCallback(int error, const char* description)
 {
 	FE_CORE_LOG_ERROR("GLFW Error ({%d}): {%s}", error, description);
 }
 
-static void GLFWSetWindowSizeCallback(GLFWwindow * window, int width, int height)
+static void FE_API GLFWSetWindowSizeCallback(GLFWwindow * window, int width, int height)
 {
 	WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 
@@ -96,7 +97,7 @@ static void GLFWSetWindowSizeCallback(GLFWwindow * window, int width, int height
 	data->EventCallback(event);
 }
 
-static void GLFWSetWindowCloseCallback(GLFWwindow* window)
+static void FE_API GLFWSetWindowCloseCallback(GLFWwindow* window)
 {
 	WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 
@@ -106,7 +107,7 @@ static void GLFWSetWindowCloseCallback(GLFWwindow* window)
 	data->EventCallback(event);
 }
 
-void GLFWSetKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+void FE_API GLFWSetKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 
@@ -130,17 +131,17 @@ void GLFWSetKeyCallback(GLFWwindow* window, int key, int scancode, int action, i
 }
 
 
-void GLFWPollEvent_impl()
+void FE_API GLFWPollEvent_impl()
 {
 }
 
-void GLFWDestroyWindow_impl(WindowData* windowData)
+void FE_API GLFWDestroyWindow_impl(WindowData* windowData)
 {
 	glfwDestroyWindow(windowData->nativeWindow);
 	glfwTerminate();
 }
 
-void GLFWUpdate_impl(WindowData* windowData)
+void FE_API GLFWUpdate_impl(WindowData* windowData)
 {
 	glfwPollEvents();
 	windowData->graphicsContext.SwapBuffers(windowData);

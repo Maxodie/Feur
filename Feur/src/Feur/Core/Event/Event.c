@@ -1,7 +1,7 @@
 #include "fepch.h"
 #include "Event.h"
 
-void DispatchEvent(FE_EventDispatcher* eventDispatcher, FE_EventType eventType, void(*f)(FE_EventData*))
+void FE_API DispatchEvent(FE_EventDispatcher* eventDispatcher, FE_EventType eventType, void(*f)(FE_EventData*))
 {
 	if (eventDispatcher->eventType == eventType)
 	{
@@ -10,7 +10,7 @@ void DispatchEvent(FE_EventDispatcher* eventDispatcher, FE_EventType eventType, 
 	}
 }
 
-BOOL IsEventInCategory(const FE_EventCategory eventCategory, FE_Event* event)
+BOOL FE_API IsEventInCategory(const FE_EventCategory eventCategory, FE_Event* event)
 {
 	if (eventCategory | event->eventCategory)
 	{

@@ -2,9 +2,9 @@
 #include "Feur/Renderer/Renderer.h"
 #include "Feur/Renderer/RenderCommand.h"
 
-BOOL InitRenderer()
+BOOL FE_API InitRenderer(RendererAPI* api)
 {
-	if (!RenderCommandInit())
+	if (!RenderCommandInit(api))
 	{
 		return FALSE;
 	}
@@ -12,17 +12,22 @@ BOOL InitRenderer()
 	return TRUE;
 }
 
-void RendererBeginScene()
-{
-	
-}
-
-void RendererEndScene()
+void FE_API RendererBeginScene()
 {
 
 }
 
-void RendererOnWindowResize(Uint32 width, Uint32 height)
+void FE_API RendererEndScene()
+{
+
+}
+
+void FE_API RendererOnWindowResize(Uint32 width, Uint32 height)
 {
 	RenderCommandSetRendererViewport(0, 0, width, height);
+}
+
+void FE_API RendererShutdown(RendererAPIData* apiData)
+{
+	RenderCommandShutDown(apiData);
 }

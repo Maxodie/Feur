@@ -5,4 +5,4 @@ typedef struct Renderer_VAO_Buffer {
 } Renderer_VAO_Buffer;
 
 
-Renderer_VAO_Buffer* GetRenderer_VertexArray_Buffer();
+Renderer_VAO_Buffer* FE_API GetRenderer_VertexArray_Buffer();

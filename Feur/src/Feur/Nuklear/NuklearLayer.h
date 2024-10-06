@@ -1,11 +1,11 @@
 #pragma once
 
-void NuklearGUILayerInit();
+void FE_API NuklearGUILayerInit();
+	 FE_API
+void FE_API NuklearGUILayerEvent(FE_Event* event);
+void FE_API NuklearGUILayerUpdate();
+void FE_API NuklearGUILayerRender(Layer* layer);
+void FE_API NuklearGUILayerOnAttach(Layer* layer);
+void FE_API NuklearGUILayerOnDetach();
 
-void NuklearGUILayerEvent(FE_Event* event);
-void NuklearGUILayerUpdate();
-void NuklearGUILayerRender(Layer* layer);
-void NuklearGUILayerOnAttach(Layer* layer);
-void NuklearGUILayerOnDetach();
-
-Layer CreateNewNuklearGUILayer(char* layerName);
+Layer FE_API CreateNewNuklearGUILayer(char* layerName);
