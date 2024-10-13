@@ -1,5 +1,5 @@
 #include "fepch.h"
-#include "Event.h"
+#include "Feur/Event/Event.h"
 
 void FE_API DispatchEvent(FE_EventDispatcher* eventDispatcher, FE_EventType eventType, void(*f)(FE_EventData*))
 {
@@ -10,7 +10,7 @@ void FE_API DispatchEvent(FE_EventDispatcher* eventDispatcher, FE_EventType even
 	}
 }
 
-BOOL FE_API IsEventInCategory(const FE_EventCategory eventCategory, FE_Event* event)
+Bool FE_API IsEventInCategory(const FE_EventCategory eventCategory, FE_Event* event)
 {
 	if (eventCategory | event->eventCategory)
 	{

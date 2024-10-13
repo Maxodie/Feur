@@ -3,7 +3,7 @@
 #include "Platform/Vulkan/VulkanRendererAPI.h"
 #include "Platform/Vulkan/VulkanValidationLayer.h"
 
-BOOL FE_API VulkanInit_impl(RendererAPIData* apiData)
+Bool FE_API VulkanInit_impl(RendererAPIData* apiData)
 {
 	VulkanInfo* vkInfo = malloc(sizeof(VulkanInfo));
 	if (vkInfo == NULL)

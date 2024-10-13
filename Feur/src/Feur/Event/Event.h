@@ -26,7 +26,7 @@ typedef struct FE_Event {
 	FE_EventType eventType;
 	FE_EventCategory eventCategory;
 	FE_EventData eventData;
-	BOOL isHandled;
+	Bool isHandled;
 } FE_Event;
 
 typedef struct FE_EventDispatcher {
@@ -35,4 +35,4 @@ typedef struct FE_EventDispatcher {
 }FE_EventDispatcher;
 
 void FE_API DispatchEvent(FE_EventDispatcher* eventDispatcher, FE_EventType eventType, void(*f)(FE_EventData*));
-BOOL FE_API IsEventInCategory(const FE_EventCategory eventCategory, FE_Event* event);
+Bool FE_API IsEventInCategory(const FE_EventCategory eventCategory, FE_Event* event);

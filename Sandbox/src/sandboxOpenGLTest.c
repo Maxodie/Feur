@@ -130,7 +130,7 @@ void UpdateLayerBaseEventSandbox(FE_Event* event)
 
 void OnAttachSandboxLayerBase(Layer* layer)
 {
-	FE_LOG_DEBUG("Sandbox base layer attached")
+	FE_LOG_DEBUG("Sandbox base layer attached");
 }
 
 
@@ -217,7 +217,7 @@ const char* LoadFile(const char* filePath)
 	FILE* fptr = fopen(filePath, "rb");
 	if (NULL == fptr)
 	{
-		FE_LOG_ERROR("ERROR::sandbox.c shader file named %s couldn't be loaded !", filePath)
+		FE_LOG_ERROR("ERROR::sandbox.c shader file named %s couldn't be loaded !", filePath);
 		return NULL;
 	}
 
@@ -233,7 +233,7 @@ const char* LoadFile(const char* filePath)
 	}
 	else
 	{
-		FE_LOG_ERROR("ERROR::sandbox.c file buffer of %s is NULL !", filePath)
+		FE_LOG_ERROR("ERROR::sandbox.c file buffer of %s is NULL !", filePath);
 	}
 
 	fclose(fptr);

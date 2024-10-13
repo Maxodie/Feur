@@ -13,19 +13,19 @@ typedef struct WindowData
 	int w, h;
 	void* nativeWindow;
 	void (*EventCallback)(FE_Event);
-	BOOL isMinimized;
+	Bool isMinimized;
 } WindowData;
 
 typedef struct Window_API
 {
 	Window_API_Type API_Type;
-	BOOL (*CreateWindow)(WindowData*);
+	Bool (*CreateAppWindow)(WindowData*);
 	void (*PollEvent)();
 	void (*DestroyWindow)(WindowData*);
 	void (*Update)(WindowData*);
 } Window_API;
 
 void FE_API InitWindowAPI();
-void FE_API CreateWindow(WindowData* windowData);
+void FE_API CreateAppWindow(WindowData* windowData);
 
 Window_API* FE_API GetWindowAPI();

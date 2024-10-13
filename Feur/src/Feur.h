@@ -1,8 +1,18 @@
 #pragma once
 
+
+#include <stdint.h>
+#include <time.h>
+
 //Core
 #include "Feur/Core/Core.h"
-#include "Feur/Core/Log.h"
+#include "Feur/Core/Log/Log.h"
+
+//Memory
+#include "Feur/Core/Memory/MemoryAllocator.h"
+
+//Benchmark
+#include "Feur/Debug/Benchmark.h" //maybe remove debug stuff from the header
 
 //Window
 #include "Feur/Core/Window/Window.h"
@@ -15,7 +25,7 @@
 #include "Feur/Core/Input/Input.h"
 
 //Event
-#include "Feur/Core/Event/Event.h"
+#include "Feur/Event/Event.h"
 
 //Layer
 #include "Feur/Core/Layer.h"
@@ -26,3 +36,4 @@
 
 //Entry point
 #include "Feur/Core/EntryPoint.h"
+

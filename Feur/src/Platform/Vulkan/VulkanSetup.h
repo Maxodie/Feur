@@ -3,12 +3,12 @@
 
 typedef struct VulkanInfo {
 	VkInstance vkInstance;
-	BOOL enableValidationLayers;
+	Bool enableValidationLayers;
 
-	const char* const* validationLayers[1];
-	size_t validationsCount;
+	const char* const* validationLayers[1];//remove table to fit wwith the createInfo struct
+	Uint32 validationsCount;
 
 } VulkanInfo;
 
-BOOL FE_API CreateVulkanInstance(VulkanInfo* vkInfo);
+Bool FE_API CreateVulkanInstance(VulkanInfo* vkInfo);
 void FE_API VulkanCleanup(VkInstance* vkInstance);

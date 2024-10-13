@@ -41,7 +41,7 @@ void FE_API InsertLayerStack(LayerStack* layerStack, Layer* value, Uint32 positi
 	FE_CORE_ASSERT(layerStack, "LayerStacks.c in InsertLayerStack is null");
 	if (position > layerStack->count) return;
 
-	size_t i;
+	SizeT i;
 	Layer** temp = layerStack->dataPtr;
 
 	layerStack->dataPtr = realloc(layerStack->dataPtr, (layerStack->count + 1) * sizeof(Layer));
@@ -60,7 +60,7 @@ void FE_API InsertLayerStack(LayerStack* layerStack, Layer* value, Uint32 positi
 		layerStack->dataPtr[i] = layerStack->dataPtr[i - 1];
 	}
 
-	size_t positionItemId = (size_t)position - 1;
+	SizeT positionItemId = (SizeT)position - 1;
 	layerStack->dataPtr[positionItemId] = value;
 
 	/*for (i = 0; i < layerStack->count; i++)
@@ -85,7 +85,7 @@ void FE_API PushLayerStack(LayerStack* layerStack, Layer* value)
 		return;
 	}
 
-	size_t lastItemId = layerStack->count;
+	SizeT lastItemId = layerStack->count;
 	layerStack->count++;
 
 	layerStack->dataPtr[lastItemId] = value;

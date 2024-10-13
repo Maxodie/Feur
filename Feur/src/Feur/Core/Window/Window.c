@@ -11,13 +11,13 @@ void FE_API InitWindowAPI()
 	switch (windowAPI.API_Type)
 	{
 	case FE_WINDOW_API_SDL:
-		windowAPI.CreateWindow = CreateSDLWindow_impl;
+		windowAPI.CreateAppWindow = CreateSDLWindow_impl;
 		windowAPI.DestroyWindow = SDLDestroyWindow_impl;
 		windowAPI.PollEvent = SDLPollEvent_impl;
 		//windowAPI.Update = SDLUpdate_impl;
 		break;
 	case FE_WINDOW_API_GLFW:
-		windowAPI.CreateWindow = CreateGLFWWindow_impl;
+		windowAPI.CreateAppWindow = CreateGLFWWindow_impl;
 		windowAPI.DestroyWindow = GLFWDestroyWindow_impl;
 		windowAPI.PollEvent = GLFWPollEvent_impl;
 		windowAPI.Update = GLFWUpdate_impl;
@@ -27,10 +27,10 @@ void FE_API InitWindowAPI()
 	}
 }
 
-void FE_API CreateWindow(WindowData* windowData)
+void FE_API CreateAppWindow(WindowData* windowData)
 {
 	InitWindowCreationHintParameters();
-	BOOL success = windowAPI.CreateWindow(windowData);
+	Bool success = windowAPI.CreateAppWindow(windowData);
 
 	FE_CORE_ASSERT(success, "Window.c: Failed to create window");
 

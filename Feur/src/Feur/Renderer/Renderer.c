@@ -2,7 +2,7 @@
 #include "Feur/Renderer/Renderer.h"
 #include "Feur/Renderer/RenderCommand.h"
 
-BOOL FE_API InitRenderer(RendererAPI* api)
+Bool FE_API InitRenderer(RendererAPIData* api)
 {
 	if (!RenderCommandInit(api))
 	{

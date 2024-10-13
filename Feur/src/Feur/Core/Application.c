@@ -1,13 +1,13 @@
 #include "fepch.h"
 #include "Feur/Core/Application.h"
-#include "Feur/Core/Event/Event.h"
+#include "Feur/Event/Event.h"
 #include "Feur/Core/Input/Input.h"
 #include "Feur/Renderer/RenderCommand.h"
 #include "Feur/Nuklear/NuklearLayer.h"
 
 static FE_App g_fe_App;
 
-static BOOL g_IsAppRunning = TRUE;
+static Bool g_IsAppRunning = TRUE;
 
 Layer nuklearGUILayer;
 
@@ -73,7 +73,7 @@ void FE_API PopLayerApp()
 void FE_API LoadWindow()
 {
 	InitWindowAPI();
-	CreateWindow(&g_fe_App.windowData);
+	CreateAppWindow(&g_fe_App.windowData);
 	g_fe_App.windowData.graphicsContext.Init(&g_fe_App.windowData);
 
 	g_fe_App.windowData.EventCallback = AppOnEvent;
@@ -98,7 +98,7 @@ void FE_API AppOnEvent(FE_Event event)
 	}
 }
 
-BOOL FE_API OnWindowResizing(FE_EventData* eventData)
+Bool FE_API OnWindowResizing(FE_EventData* eventData)
 {
 	if(eventData->windowData->w == 0 || eventData->windowData->h == 0)
 	{
@@ -111,7 +111,7 @@ BOOL FE_API OnWindowResizing(FE_EventData* eventData)
 	return TRUE;
 }
 
-BOOL FE_API OnWindowClose(FE_EventData* eventData)
+Bool FE_API OnWindowClose(FE_EventData* eventData)
 {
 	g_IsAppRunning = FALSE;
 	return FALSE;

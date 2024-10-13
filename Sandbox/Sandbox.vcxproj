@@ -78,7 +78,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>HAVE_INLINE;FE_PLATFORM_WINDOWS;FE_DEBUG;FE_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HAVE_INLINE;_FEUR_TEST_VULKAN_SANDBOX_;FE_PLATFORM_WINDOWS;FE_DEBUG;FE_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Feur\vendor\spdlog\include;..\Feur\src;..\Feur\vendor\Mathilda\Mathilda\include;..\Feur\vendor\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -95,7 +95,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>HAVE_INLINE;FE_PLATFORM_WINDOWS;FE_RELEASE;FE_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HAVE_INLINE;_FEUR_TEST_VULKAN_SANDBOX_;FE_PLATFORM_WINDOWS;FE_RELEASE;FE_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Feur\vendor\spdlog\include;..\Feur\src;..\Feur\vendor\Mathilda\Mathilda\include;..\Feur\vendor\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -116,7 +116,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>HAVE_INLINE;FE_PLATFORM_WINDOWS;FE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HAVE_INLINE;_FEUR_TEST_VULKAN_SANDBOX_;FE_PLATFORM_WINDOWS;FE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Feur\vendor\spdlog\include;..\Feur\src;..\Feur\vendor\Mathilda\Mathilda\include;..\Feur\vendor\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>

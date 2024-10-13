@@ -1,6 +1,6 @@
 #pragma once
 
-BOOL FE_API InitRenderer(RendererAPI* api);
+Bool FE_API InitRenderer(RendererAPIData* api);
 void FE_API RendererBeginScene();
 void FE_API RendererEndScene();
 

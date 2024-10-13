@@ -14,7 +14,7 @@ void FE_API VulkanInitValidationLayer(VulkanInfo* vkInfo)
 #endif
 }
 
-BOOL FE_API VulkanCheckValidationLayerSupport(VulkanInfo* vkInfo)
+Bool FE_API VulkanCheckValidationLayerSupport(VulkanInfo* vkInfo)
 {
 	Uint32 availableLayerCount;
 	vkEnumerateInstanceLayerProperties(&availableLayerCount, NULL);
@@ -28,10 +28,10 @@ BOOL FE_API VulkanCheckValidationLayerSupport(VulkanInfo* vkInfo)
 	vkEnumerateInstanceLayerProperties(&availableLayerCount, availableLayers);
 
 
-	BOOL sucess = TRUE;
+	Bool sucess = TRUE;
 
 	for (Uint32 i = 0; i < vkInfo->validationsCount; i++) {
-		BOOL layerFound = FALSE;
+		Bool layerFound = FALSE;
 
 		for (Uint32 j = 0; j < availableLayerCount; j++) {
 			if (strcmp(vkInfo->validationLayers[i], availableLayers[j].layerName))

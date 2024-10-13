@@ -1,15 +1,20 @@
 #pragma once
 
 typedef unsigned char BYTE;
-typedef BYTE BOOL;
+typedef BYTE Bool;
 typedef unsigned short WORD;
 
-typedef BYTE Uint8;
 typedef char Int8;
+typedef BYTE Uint8;
 typedef short Int16;
 typedef unsigned short Uint16;
 typedef int Int32;
 typedef unsigned int Uint32;
+typedef long long Int64;
+typedef unsigned long long Uint64;
+typedef size_t SizeT;
+typedef uintptr_t UintptrT;
+typedef double MaxAlignT; //based on the cstddef c++ using : most aligned type
 
 
 #define FE_API
@@ -19,27 +24,37 @@ typedef unsigned int Uint32;
 
 #define BIT(x) (1 << x)
 
-#define debugBreak(x) asm { int 3 }
+#if defined(_MSC_VER)
+#	define FE_CORE_DEBUG_BREAK(x) __debugbreak();
+#elif defined(__GNUC__) || defined(__GNUG__)
+#	define FE_CORE_DEBUG_BREAK(x) asm("int $3")//won't compile with -masm=intel
+#else
+#	define FE_CORE_DEBUG_BREAK(x) FE_CORE_LOG_ERROR("FE_CORE_DEBUG_BREAK don't do anything");
+#endif
+
 #ifdef FE_ENABLE_ASSERTS
 
-	#define FE_ASSERT(x, ...) \
+#	define FE_ASSERT(x, ...) \
 	if(x) \
 	{ }\
 	else\
 	{\
-		FE_LOG_ERROR("%s Assertion Failed %s", #x, __VA_ARGS__); \
-		__debugbreak(); \
+		FE_LOG_ERROR("%s Assertion Failed : %s", #x, __VA_ARGS__); \
+		FE_CORE_DEBUG_BREAK(); \
 	}
 
-	#define FE_CORE_ASSERT(x, ...) \
+#	define FE_CORE_ASSERT(x, ...) \
 	if(x) \
 	{ }\
 	else\
 	{\
-		FE_CORE_LOG_ERROR("%s Assertion Failed %s", #x, __VA_ARGS__); \
-		__debugbreak(); \
+		FE_CORE_LOG_ERROR("%s Assertion Failed : %s", #x, __VA_ARGS__); \
+		FE_CORE_DEBUG_BREAK(); \
 	}
 #else
-#define FE_ASSERT(x, ...)
-#define FE_CORE_ASSERT(x, ...)
+#	define FE_ASSERT(x, ...)
+#	define FE_CORE_ASSERT(x, ...)
 #endif
+
+#define FE_EXTERN extern
+#define FE_INLINE_FUN FE_EXTERN inline

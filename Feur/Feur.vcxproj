@@ -154,13 +154,18 @@
     <ClInclude Include="src\Feur\Core\Application.h" />
     <ClInclude Include="src\Feur\Core\Core.h" />
     <ClInclude Include="src\Feur\Core\EntryPoint.h" />
-    <ClInclude Include="src\Feur\Core\Event\Event.h" />
+    <ClInclude Include="src\Feur\Core\Memory\PoolAllocator.h" />
+    <ClInclude Include="src\Feur\Event\Event.h" />
     <ClInclude Include="src\Feur\Core\Input\Input.h" />
     <ClInclude Include="src\Feur\Core\Input\KeyCode.h" />
     <ClInclude Include="src\Feur\Core\Layer.h" />
     <ClInclude Include="src\Feur\Core\LayerStack.h" />
-    <ClInclude Include="src\Feur\Core\Log.h" />
+    <ClInclude Include="src\Feur\Core\Log\Log.h" />
+    <ClInclude Include="src\Feur\Core\Memory\MemoryAllocator.h" />
+    <ClInclude Include="src\Feur\Core\Memory\StackAllocator.h" />
+    <ClInclude Include="src\Feur\Core\Utils\List.h" />
     <ClInclude Include="src\Feur\Core\Window\Window.h" />
+    <ClInclude Include="src\Feur\Debug\Benchmark.h" />
     <ClInclude Include="src\Feur\Nuklear\NuklearLayer.h" />
     <ClInclude Include="src\Feur\Renderer\Buffers.h" />
     <ClInclude Include="src\Feur\Renderer\GraphicsContext.h" />
@@ -185,12 +190,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Feur\Core\Application.c" />
-    <ClCompile Include="src\Feur\Core\Event\Event.c" />
+    <ClCompile Include="src\Feur\Core\Memory\PoolAllocator.c" />
+    <ClCompile Include="src\Feur\Event\Event.c" />
     <ClCompile Include="src\Feur\Core\Input\Input.c" />
     <ClCompile Include="src\Feur\Core\Layer.c" />
     <ClCompile Include="src\Feur\Core\LayerStack.c" />
-    <ClCompile Include="src\Feur\Core\Log.c" />
+    <ClCompile Include="src\Feur\Core\Log\Log.c" />
+    <ClCompile Include="src\Feur\Core\Memory\MemoryAllocator.c" />
+    <ClCompile Include="src\Feur\Core\Memory\StackAllocator.c" />
+    <ClCompile Include="src\Feur\Core\Utils\List.c" />
     <ClCompile Include="src\Feur\Core\Window\Window.c" />
+    <ClCompile Include="src\Feur\Debug\Benchmark.c" />
     <ClCompile Include="src\Feur\Nuklear\NuklearLayer.c" />
     <ClCompile Include="src\Feur\Renderer\Buffers.c" />
     <ClCompile Include="src\Feur\Renderer\GraphicsContext.c" />
@@ -203,9 +213,9 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLGraphicsContext.c" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.c" />
     <ClCompile Include="src\Platform\Vulkan\VulkanBuffers.c" />
+    <ClCompile Include="src\Platform\Vulkan\VulkanGraphicsContext.c" />
     <ClCompile Include="src\Platform\Vulkan\VulkanRendererAPI.c" />
     <ClCompile Include="src\Platform\Vulkan\VulkanSetup.c" />
-    <ClCompile Include="src\Platform\Vulkan\VulkanGraphicsContext.c" />
     <ClCompile Include="src\Platform\Vulkan\VulkanValidationLayer.c" />
     <ClCompile Include="src\Platform\Windows\GLFW\GLFWWindowsInput.c" />
     <ClCompile Include="src\Platform\Windows\GLFW\GLFWWindowsWindow.c" />
@@ -231,6 +241,9 @@
     <ProjectReference Include="vendor\Mathilda\Mathilda\Mathilda.vcxproj">
       <Project>{A9207DCC-95ED-D7D7-BE06-C67FAA320D66}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -9,7 +9,7 @@ typedef struct RendererAPIData
 
 typedef struct RendererAPI
 {
-	BOOL (*Init)(RendererAPIData* api);
+	Bool (*Init)(RendererAPIData* api);
 	void (*SetViewport)(Uint32, Uint32, Uint32, Uint32);
 	void (*Clear)();
 	void (*ClearScreenColor)();

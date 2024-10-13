@@ -1,7 +1,7 @@
 #include "fepch.h"
 #include "Platform/Windows/GLFW/GLFWWindowsWindow.h"
 #include "Feur/Core/Window/Window.h"
-#include "Feur/Core/Event/Event.h"
+#include "Feur/Event/Event.h"
 #include <GLFW/glfw3.h>
 
 static void FE_API GLFWErrorCallback(int error, const char* description);
@@ -9,7 +9,7 @@ static void FE_API GLFWSetWindowSizeCallback(GLFWwindow* window, int width, int 
 static void FE_API GLFWSetWindowCloseCallback(GLFWwindow* window);
 static void FE_API GLFWSetKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-BOOL FE_API CreateGLFWWindow_impl(WindowData* windowData)
+Bool FE_API CreateGLFWWindow_impl(WindowData* windowData)
 {
 	int sucess = glfwInit();
 
@@ -22,7 +22,7 @@ BOOL FE_API CreateGLFWWindow_impl(WindowData* windowData)
 
 	if (!glfwWindow)
 	{
-		FE_CORE_LOG_ERROR(stderr, "Error creating GLFW Window.\n");
+		FE_CORE_LOG_ERROR("Error creating GLFW Window.\n");
 		return FALSE;
 	}
 

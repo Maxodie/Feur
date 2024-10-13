@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdio.h>
+#include <time.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdarg.h>
@@ -10,10 +11,15 @@
 #include <time.h>
 
 #include "Feur/Core/Core.h"
-#include "Feur/Core/Log.h"
+#include "Feur/Core/Log/Log.h"
+
+#include "Feur/Debug/Benchmark.h"
+
+#include "Feur/Core/Memory/MemoryAllocator.h"
+
 #include "Feur/Core/Input/KeyCode.h"
 #include "Feur/Core/Window/Window.h"
-#include "Feur/Core/Event/Event.h"
+#include "Feur/Event/Event.h"
 #include "Feur/Core/Layer.h"
 
 #include "Feur/Core/LayerStack.h"

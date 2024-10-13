@@ -13,6 +13,15 @@
     <Filter Include="Feur\Core\Input">
       <UniqueIdentifier>{2E95A5C5-9A20-138A-A331-967E0F3C6F8A}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Feur\Core\Log">
+      <UniqueIdentifier>{40E5CDDA-ACA5-4911-75E0-928EE15F8EED}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feur\Core\Memory">
+      <UniqueIdentifier>{77420883-633B-27D5-8C6D-0C5A78C506E1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feur\Core\Utils">
+      <UniqueIdentifier>{8FE681C6-FB71-EF8A-0483-727F708D4B8B}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Feur\Core\Window">
       <UniqueIdentifier>{F697A49A-E290-C3EC-0BC3-A871F71AA3F8}</UniqueIdentifier>
     </Filter>
@@ -55,7 +64,7 @@
     <ClInclude Include="src\Feur\Core\EntryPoint.h">
       <Filter>Feur\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Feur\Core\Event\Event.h">
+    <ClInclude Include="src\Feur\Event\Event.h">
       <Filter>Feur\Core\Event</Filter>
     </ClInclude>
     <ClInclude Include="src\Feur\Core\Input\Input.h">
@@ -70,8 +79,17 @@
     <ClInclude Include="src\Feur\Core\LayerStack.h">
       <Filter>Feur\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Feur\Core\Log.h">
-      <Filter>Feur\Core</Filter>
+    <ClInclude Include="src\Feur\Core\Log\Log.h">
+      <Filter>Feur\Core\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Feur\Core\Memory\MemoryAllocator.h">
+      <Filter>Feur\Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Feur\Core\Memory\StackAllocator.h">
+      <Filter>Feur\Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Feur\Core\Utils\List.h">
+      <Filter>Feur\Core\Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\Feur\Core\Window\Window.h">
       <Filter>Feur\Core\Window</Filter>
@@ -121,6 +139,9 @@
     <ClInclude Include="src\Platform\Vulkan\VulkanSetup.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\VulkanValidationLayer.h">
+      <Filter>Platform\Vulkan</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Windows\GLFW\GLFWWindowsInput.h">
       <Filter>Platform\Windows\GLFW</Filter>
     </ClInclude>
@@ -134,13 +155,14 @@
       <Filter>Platform\Windows\SDL</Filter>
     </ClInclude>
     <ClInclude Include="src\fepch.h" />
-    <ClInclude Include="src\Platform\Vulkan\VulkanValidationLayer.h" />
+    <ClInclude Include="src\Feur\Debug\Benchmark.h" />
+    <ClInclude Include="src\Feur\Core\Memory\PoolAllocator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Feur\Core\Application.c">
       <Filter>Feur\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Feur\Core\Event\Event.c">
+    <ClCompile Include="src\Feur\Event\Event.c">
       <Filter>Feur\Core\Event</Filter>
     </ClCompile>
     <ClCompile Include="src\Feur\Core\Input\Input.c">
@@ -152,8 +174,17 @@
     <ClCompile Include="src\Feur\Core\LayerStack.c">
       <Filter>Feur\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Feur\Core\Log.c">
-      <Filter>Feur\Core</Filter>
+    <ClCompile Include="src\Feur\Core\Log\Log.c">
+      <Filter>Feur\Core\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Feur\Core\Memory\MemoryAllocator.c">
+      <Filter>Feur\Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Feur\Core\Memory\StackAllocator.c">
+      <Filter>Feur\Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Feur\Core\Utils\List.c">
+      <Filter>Feur\Core\Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\Feur\Core\Window\Window.c">
       <Filter>Feur\Core\Window</Filter>
@@ -194,13 +225,16 @@
     <ClCompile Include="src\Platform\Vulkan\VulkanBuffers.c">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\VulkanGraphicsContext.c">
+      <Filter>Platform\Vulkan</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\VulkanRendererAPI.c">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\VulkanSetup.c">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Vulkan\VulkanGraphicsContext.c">
+    <ClCompile Include="src\Platform\Vulkan\VulkanValidationLayer.c">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\GLFW\GLFWWindowsInput.c">
@@ -216,6 +250,10 @@
       <Filter>Platform\Windows\SDL</Filter>
     </ClCompile>
     <ClCompile Include="src\fepch.c" />
-    <ClCompile Include="src\Platform\Vulkan\VulkanValidationLayer.c" />
+    <ClCompile Include="src\Feur\Debug\Benchmark.c" />
+    <ClCompile Include="src\Feur\Core\Memory\PoolAllocator.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@
 
 #include "Feur/Renderer/RendererAPI.h"
 
-BOOL FE_API RenderCommandInit(RendererAPIData* api)
+Bool FE_API RenderCommandInit(RendererAPIData* api)
 {
 	return GetRendererAPI()->Init(api);
 }
@@ -30,5 +30,5 @@ void FE_API RenderCommandDrawIndex()
 
 void FE_API RenderCommandShutDown(RendererAPIData* apiData)
 {
-	return GetRendererAPI()->Shutdown(apiData);
+	GetRendererAPI()->Shutdown(apiData);
 }

@@ -30,7 +30,7 @@ void FE_API InitInputAPI()
 	}
 }
 
-BOOL FE_API IsInputPressed(const FE_KeyCode key_code)
+Bool FE_API IsInputPressed(const FE_KeyCode key_code)
 {
 	return g_Input_API.GetKeyPressed(key_code);
 }

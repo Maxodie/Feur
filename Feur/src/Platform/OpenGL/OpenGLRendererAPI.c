@@ -3,7 +3,7 @@
 
 #include <glad/glad.h>
 
-BOOL FE_API OpenGLInit_impl(RendererAPIData* apiData)
+Bool FE_API OpenGLInit_impl(RendererAPIData* apiData)
 {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -32,6 +32,6 @@ void FE_API OpenGLDrawIndex_impl()
 {
 }
 
-void FE_API OpenGLShutdown_impl()
+void FE_API OpenGLShutdown_impl(RendererAPIData* apiData)
 {
 }

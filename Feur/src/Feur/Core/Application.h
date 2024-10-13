@@ -23,8 +23,8 @@ void FE_API LoadWindow();
 void FE_API PullWindowEvent();
 void FE_API Render();
 void FE_API AppOnEvent(FE_Event event);
-BOOL FE_API OnWindowResizing(FE_EventData* windowResizeEvent);
-BOOL FE_API OnWindowClose(FE_EventData* windowResizeEvent);
+Bool FE_API OnWindowResizing(FE_EventData* windowResizeEvent);
+Bool FE_API OnWindowClose(FE_EventData* windowResizeEvent);
 
 void FE_API ShutdownApp();
 void FE_API QuitApp();

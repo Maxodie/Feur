@@ -2,7 +2,7 @@
 
 typedef struct LayerStack
 {
-	size_t count;
+	SizeT count;
 	Layer** dataPtr;
 
 } LayerStack;

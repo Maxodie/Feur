@@ -166,7 +166,8 @@ project "Sandbox"
 	defines
 	{
 		"HAVE_INLINE",
-	--	"_FEUR_TEST_OPENGL_SANDBOX_"
+		--"_FEUR_TEST_OPENGL_SANDBOX_"
+		"_FEUR_TEST_VULKAN_SANDBOX_"
 	}
 
 	filter "system:windows"

@@ -3,7 +3,7 @@
 #include "Platform/Vulkan/VulkanGraphicsContext.h"
 #include "Platform/Vulkan/VulkanValidationLayer.h"
 
-BOOL FE_API CreateVulkanInstance(VulkanInfo* vkInfo)
+Bool FE_API CreateVulkanInstance(VulkanInfo* vkInfo)
 {
 	if (vkInfo->enableValidationLayers && !VulkanCheckValidationLayerSupport(vkInfo))
 	{

@@ -3,7 +3,7 @@
 #include "Feur/Core/Window/Window.h"
 #include <SDL.h>
 
-BOOL FE_API CreateSDLWindow_impl(WindowData* windowData)
+Bool FE_API CreateSDLWindow_impl(WindowData* windowData)
 {
 	windowData->w = 800;
 	windowData->h = 600;

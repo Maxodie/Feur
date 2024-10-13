@@ -1,3 +1,4 @@
+#ifdef _FEUR_TEST_VULKAN_SANDBOX_
 #include "Feur.h"
 
 #include "glad/glad.h"
@@ -32,6 +33,8 @@ void tempMatrixPrint(const ILDA_matrix4x4* matrix)
 void StartSandbox()
 {
 	AddLayerApp(&layer);
+
+	FE_MemoryStackAllocatorBenchmarkTest();
 }
 
 void OnAttachSandboxLayerBase(Layer* layer)
@@ -91,3 +94,5 @@ const char* LoadFile(const char* filePath)
 	fclose(fptr);
 	return buffer;
 }
+
+#endif

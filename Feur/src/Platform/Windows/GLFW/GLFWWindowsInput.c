@@ -3,7 +3,7 @@
 #include "Feur/Core/Application.h"
 #include <GLFW/glfw3.h>
 
-BOOL FE_API GLFWWindowsIsInputPressed_impl(const FE_KeyCode key_code)
+Bool FE_API GLFWWindowsIsInputPressed_impl(const FE_KeyCode key_code)
 {
 	const int state = glfwGetKey(GetApp()->windowData.nativeWindow, key_code);
 	//assert(false,"\n----------\nERROR : GLFW Get Key for windows not implemented yet.\n----------\n");
@@ -19,7 +19,7 @@ BOOL FE_API GLFWWindowsIsInputPressed_impl(const FE_KeyCode key_code)
 //	return state == GLFW_PRESS;*/
 }
 
-BOOL FE_API GLFWWindowsIsInputDown_impl(const FE_KeyCode key_code)
+Bool FE_API GLFWWindowsIsInputDown_impl(const FE_KeyCode key_code)
 {
 	//assert(false,"\n----------\nERROR : GLFW Get Key Down for windows not implemented yet.\n----------\n");
 	FE_CORE_ASSERT(FALSE, "ERROR : GLFW Get Key Down for windows not implemented yet.");
