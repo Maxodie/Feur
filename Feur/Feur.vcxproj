@@ -154,6 +154,7 @@
     <ClInclude Include="src\Feur\Core\Application.h" />
     <ClInclude Include="src\Feur\Core\Core.h" />
     <ClInclude Include="src\Feur\Core\EntryPoint.h" />
+    <ClInclude Include="src\Feur\Core\Memory\FreeListAllocator.h" />
     <ClInclude Include="src\Feur\Core\Memory\PoolAllocator.h" />
     <ClInclude Include="src\Feur\Event\Event.h" />
     <ClInclude Include="src\Feur\Core\Input\Input.h" />
@@ -190,6 +191,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Feur\Core\Application.c" />
+    <ClCompile Include="src\Feur\Core\Memory\FreeListAllocator.c" />
     <ClCompile Include="src\Feur\Core\Memory\PoolAllocator.c" />
     <ClCompile Include="src\Feur\Event\Event.c" />
     <ClCompile Include="src\Feur\Core\Input\Input.c" />

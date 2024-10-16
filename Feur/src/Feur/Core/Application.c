@@ -40,6 +40,7 @@ void FE_API AppUpdate()
 
 void FE_API StartApp()
 {
+	FE_MemoryGeneralInit(FE_MEMORY_SMALL_POOL_ALLOCATION_SIZE);
 	InitRendererAPISelection();
 	LoadWindow();
 	InitInputAPI();

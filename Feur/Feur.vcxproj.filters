@@ -157,6 +157,7 @@
     <ClInclude Include="src\fepch.h" />
     <ClInclude Include="src\Feur\Debug\Benchmark.h" />
     <ClInclude Include="src\Feur\Core\Memory\PoolAllocator.h" />
+    <ClInclude Include="src\Feur\Core\Memory\FreeListAllocator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Feur\Core\Application.c">
@@ -252,6 +253,7 @@
     <ClCompile Include="src\fepch.c" />
     <ClCompile Include="src\Feur\Debug\Benchmark.c" />
     <ClCompile Include="src\Feur\Core\Memory\PoolAllocator.c" />
+    <ClCompile Include="src\Feur\Core\Memory\FreeListAllocator.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

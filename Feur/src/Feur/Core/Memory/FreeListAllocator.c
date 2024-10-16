@@ -1,0 +1,114 @@
+#include "fepch.h"
+#include "FreeListAllocator.h"
+
+void FE_API FE_MemoryFreeListAllocatorInit(FE_MemoryFreeListAllocator* allocator, SizeT size, void* start)
+{
+	FE_CORE_ASSERT(size > sizeof(FreeBlock), "size is too small (less than sizeof(FreeBlock) or 16 bytes)");
+    allocator->freeBlocks = (FreeBlock*)start;
+	allocator->freeBlocks->size = size;
+	allocator->freeBlocks->next = NULL;
+}
+
+
+void* FE_API FE_MemoryFreeListAllocatorAlloc(FE_MemoryFreeListAllocator* allocator, SizeT size, Uint8 alignment)
+{
+    FE_CORE_ASSERT(size != 0 && alignment != 0, "Size and alignement can not be 0");
+    FreeBlock* prevFreeBlock = NULL;
+    FreeBlock* currentFreeBlock = allocator->freeBlocks;
+
+    while (currentFreeBlock != NULL)
+    {
+        //Calculate adjustment needed to keep object correctly aligned 
+        UintptrT adjustment = FE_MemoryAlignForwardAdjustmentWithHeader((UintptrT)currentFreeBlock, alignment, sizeof(FreeListAllocationHeader));
+        size_t total_size = size + adjustment;
+
+        //If allocation doesn't fit in this FreeBlock, try the next 
+        if (currentFreeBlock->size < total_size)
+        {
+            prevFreeBlock = currentFreeBlock;
+            currentFreeBlock = currentFreeBlock->next;
+            continue;
+        }
+
+        FE_STATIC_ASSERT(sizeof(FreeListAllocationHeader) >= sizeof(FreeBlock), "sizeof(AllocationHeader) < sizeof(FreeBlock)");
+
+        //If allocations in the remaining memory will be impossible 
+        if (currentFreeBlock->size - total_size <= sizeof(FreeListAllocationHeader))
+        {
+            //Increase allocation size instead of creating a new FreeBlock 
+            total_size = currentFreeBlock->size;
+
+            if (prevFreeBlock != NULL)
+                prevFreeBlock->next = currentFreeBlock->next;
+            else
+                allocator->freeBlocks = currentFreeBlock->next;
+        }
+        else
+        {
+            //Else create a new FreeBlock containing remaining memory 
+            FreeBlock* next_block = (FreeBlock*)(currentFreeBlock + total_size);
+
+            next_block->size = currentFreeBlock->size - total_size;
+            next_block->next = currentFreeBlock->next;
+
+            if (prevFreeBlock != NULL)
+                prevFreeBlock->next = next_block;
+            else
+                allocator->freeBlocks = next_block;
+        }
+
+        UintptrT aligned_address = (UintptrT)currentFreeBlock + adjustment;
+        FreeListAllocationHeader* header = (FreeListAllocationHeader*)(aligned_address - sizeof(FreeListAllocationHeader));
+        header->size = total_size;
+        header->adjustment = adjustment;
+
+        FE_CORE_ASSERT(FE_MemoryAlignForwardAdjustment((UintptrT)aligned_address, alignment) == 0, "alignment should be 0");
+
+        return (void*)aligned_address;
+    }
+    return NULL;
+}
+
+void FE_API FE_MemoryFreeListAllocatorFree(FE_MemoryFreeListAllocator* allocator, void* ptr)
+{
+    FE_CORE_ASSERT(ptr != NULL, "Given pointer is NULL");
+    FreeListAllocationHeader* header = (FreeListAllocationHeader*)((UintptrT)ptr - sizeof(FreeListAllocationHeader));
+    UintptrT block_start = (UintptrT)ptr - header->adjustment;
+    SizeT block_size = header->size;
+    UintptrT block_end = block_start + block_size;
+    FreeBlock* prevFreeBlock = NULL;
+    FreeBlock* currentFreeBlock = allocator->freeBlocks;
+
+    while (currentFreeBlock != NULL)
+    {
+        if ((UintptrT)currentFreeBlock >= block_end) break;
+        prevFreeBlock = currentFreeBlock;
+        currentFreeBlock = currentFreeBlock->next;
+    }
+
+    if (prevFreeBlock == NULL)
+    {
+        prevFreeBlock = (FreeBlock*)block_start;
+        prevFreeBlock->size = block_size;
+        prevFreeBlock->next = allocator->freeBlocks;
+        allocator->freeBlocks = prevFreeBlock;
+    }
+    else if ((UintptrT)prevFreeBlock + prevFreeBlock->size == block_start)
+    {
+        prevFreeBlock->size += block_size;
+    }
+    else
+    {
+        FreeBlock* temp = (FreeBlock*)block_start;
+        temp->size = block_size;
+        temp->next = prevFreeBlock->next;
+        prevFreeBlock->next = temp;
+        prevFreeBlock = temp;
+    }
+
+    if (currentFreeBlock != NULL && (UintptrT)currentFreeBlock == block_end)
+    {
+        prevFreeBlock->size += currentFreeBlock->size;
+        prevFreeBlock->next = currentFreeBlock->next;
+    }
+}

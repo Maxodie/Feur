@@ -33,8 +33,6 @@ void tempMatrixPrint(const ILDA_matrix4x4* matrix)
 void StartSandbox()
 {
 	AddLayerApp(&layer);
-
-	FE_MemoryStackAllocatorBenchmarkTest();
 }
 
 void OnAttachSandboxLayerBase(Layer* layer)
