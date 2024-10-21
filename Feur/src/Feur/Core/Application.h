@@ -14,11 +14,11 @@ void FE_API StartApp_impl();
 void FE_API RunApp_impl();
 
 void FE_API StartApp();
+void FE_API AppUpdate();
 
 void FE_API AddLayerApp(Layer* newLayer);
 void FE_API InsertLayerApp(Layer* newLayer, Uint32 position);
 void FE_API PopLayerApp();
-void FE_API AppUpdate();
 void FE_API LoadWindow();
 void FE_API PullWindowEvent();
 void FE_API Render();

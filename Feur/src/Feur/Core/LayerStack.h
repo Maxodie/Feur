@@ -2,7 +2,6 @@
 
 typedef struct LayerStack
 {
-	SizeT count;
 	FE_List(Layer*) stackedlayers;
 
 } LayerStack;
@@ -11,7 +10,8 @@ typedef struct LayerStack
 // TODO : Canva layer handling
 
 
-void FE_API InitLayerStack(LayerStack* layerStack);
-void FE_API PopLayerStack(LayerStack* layerStack);
-void FE_API InsertLayerStack(LayerStack* layerStack, Layer* value, Uint32 position);
-void FE_API PushLayerStack(LayerStack* layerStack, Layer* value);
+FE_FORCEINLINE_FUN Bool FE_API FE_LayerStackInit(LayerStack* layerStack);
+FE_FORCEINLINE_FUN Bool FE_API FE_LayerStackPop(LayerStack* layerStack);
+FE_FORCEINLINE_FUN Bool FE_API FE_LayerStackInsert(LayerStack* layerStack, Layer* value, Uint32 position);
+FE_FORCEINLINE_FUN Bool FE_API FE_LayerStackPush(LayerStack* layerStack, Layer* value);
+FE_FORCEINLINE_FUN Uint32 FE_API FE_LayerStackGetCount(LayerStack* layerStack);

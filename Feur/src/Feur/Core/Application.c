@@ -28,23 +28,13 @@ void FE_API RunApp_impl()
 	ShutdownApp();
 }
 
-
-void FE_API AppUpdate()
-{
-	for (int i = 0; i < g_fe_App.layerStack.count; i++)
-	{
-		g_fe_App.layerStack.stackedlayers.data[i]->OnUpdate();
-	}
-}
-
-
 void FE_API StartApp()
 {
 	FE_MemoryGeneralInit(FE_MEMORY_SMALL_POOL_ALLOCATION_SIZE);
 	InitRendererAPISelection();
 	LoadWindow();
 	InitInputAPI();
-	InitLayerStack(&g_fe_App.layerStack);
+	FE_LayerStackInit(&g_fe_App.layerStack);
 
 	if (!InitRenderer(&g_fe_App.rendererAPIData))
 	{
@@ -55,20 +45,29 @@ void FE_API StartApp()
 	AddLayerApp(&nuklearGUILayer);
 }
 
+void FE_API AppUpdate()
+{
+	for (int i = 0; i < g_fe_App.layerStack.stackedlayers.impl.count; i++)
+	{
+		g_fe_App.layerStack.stackedlayers.data[i]->OnUpdate();
+	}
+}
+
+
 void FE_API AddLayerApp(Layer* newLayer)
 {
-	PushLayerStack(&g_fe_App.layerStack, newLayer);
+	FE_LayerStackPush(&g_fe_App.layerStack, newLayer);
 	newLayer->OnAttach(newLayer);
 }
 
 void FE_API InsertLayerApp(Layer* newLayer, Uint32 position)
 {
-	InsertLayerStack(&g_fe_App.layerStack, newLayer, position);
+	FE_LayerStackInsert(&g_fe_App.layerStack, newLayer, position);
 }
 
 void FE_API PopLayerApp()
 {
-	PopLayerStack(&g_fe_App.layerStack);
+	FE_LayerStackPop(&g_fe_App.layerStack);
 }
 
 void FE_API LoadWindow()
@@ -86,7 +85,7 @@ void FE_API AppOnEvent(FE_Event event)
 	DispatchEvent(&eventDispatcher, FE_Event_WindowResize, OnWindowResizing);
 	DispatchEvent(&eventDispatcher, FE_Event_WindowClose, OnWindowClose);
 
-	for (int i = 0; i < g_fe_App.layerStack.count; i++)
+	for (int i = 0; i < FE_LayerStackGetCount(&g_fe_App.layerStack); i++)
 	{
 		if (!event.isHandled)
 		{
@@ -129,7 +128,7 @@ void FE_API Render()
 	RenderCommandClear();
 
 	Layer* layer;
-	for (int i = 0; i < g_fe_App.layerStack.count; i++)
+	for (int i = 0; i < FE_LayerStackGetCount(&g_fe_App.layerStack); i++)
 	{
 		layer = g_fe_App.layerStack.stackedlayers.data[i];
 		layer->OnRender(layer);
@@ -140,9 +139,9 @@ void FE_API Render()
 
 void FE_API ShutdownApp()
 {
-	for (int i = 0; i < g_fe_App.layerStack.count; i++)
+	for (int i = 0; i < FE_LayerStackGetCount(&g_fe_App.layerStack); i++)
 	{
-		PopLayerStack(&g_fe_App.layerStack);
+		FE_LayerStackPop(&g_fe_App.layerStack);
 	}
 
 	RendererShutdown(&g_fe_App.rendererAPIData);
