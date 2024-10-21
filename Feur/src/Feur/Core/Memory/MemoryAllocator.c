@@ -9,13 +9,20 @@ struct FE_MemoryGeneralAllocator
 FE_FORCEINLINE_FUN void* FE_API FE_MemoryCustomMalloc(SizeT size)
 {
     void* data = malloc(size);
-    FE_CORE_ASSERT(data != NULL, "MemoryArena.c:: FE_CustomMalloc : failed to malloc");
+    FE_CORE_ASSERT(data != NULL, "failed to malloc");
+    return data;
+}
+
+FE_FORCEINLINE_FUN void* FE_API FE_MemoryCustomCalloc(SizeT size)
+{
+    void* data = calloc(1, size);
+    FE_CORE_ASSERT(data != NULL, "failed to calloc");
     return data;
 }
 
 FE_FORCEINLINE_FUN void FE_API FE_MemoryGeneralInit(SizeT size)
 {
-    void* mainFreeListMem = FE_MemoryCustomMalloc(size);
+    void* mainFreeListMem = FE_MemoryCustomCalloc(size);
     FE_MemoryFreeListAllocatorInit(&FE_MemoryGeneralAllocator.freeListAllocator, size, mainFreeListMem);
 }
 
@@ -27,6 +34,11 @@ FE_FORCEINLINE_FUN void* FE_API FE_MemoryGeneralAlloc(SizeT size)
 FE_FORCEINLINE_FUN void FE_API FE_MemoryGeneralFree(void* ptr)
 {
     FE_MemoryFreeListAllocatorFree(&FE_MemoryGeneralAllocator.freeListAllocator, ptr);
+}
+
+FE_FORCEINLINE_FUN void* FE_API FE_MemoryGeneralRealloc(void* ptr, SizeT size)
+{
+    return FE_MemoryFreeListAllocatorRealloc(&FE_MemoryGeneralAllocator.freeListAllocator, ptr, size, FE_MEMORY_BASE_ALIGNEMENT);
 }
 
 FE_FORCEINLINE_FUN UintptrT FE_API FE_MemoryAlignAddress(UintptrT address, SizeT alignment)

@@ -1,11 +1,11 @@
 #pragma once
 
-typedef unsigned char BYTE;
-typedef BYTE Bool;
+typedef unsigned char Byte;
+typedef Byte Bool;
 typedef unsigned short WORD;
 
 typedef char Int8;
-typedef BYTE Uint8;
+typedef Byte Uint8;
 typedef short Int16;
 typedef unsigned short Uint16;
 typedef int Int32;

@@ -2,7 +2,7 @@
 #include "Feur/Core/Memory/PoolAllocator.h"
 
 //@TODO add parameters to make a page system, divided in same allocation size pages
-void FE_API FE_MemoryPoolAllocatorInit(FE_MemoryPoolAllocator* allocator, SizeT blockSize, SizeT chunkSize, SizeT alignment, void* memory)
+void FE_API FE_MemoryPoolAllocatorInit(FE_MemoryPoolAllocator* allocator, SizeT blockSize, SizeT chunkSize, SizeT alignment, const void* memory)
 {
     FE_CORE_ASSERT(chunkSize >= sizeof(void*), "Pool Allocator minimum size required is 8 byts or sizeof(void*)");
     FE_CORE_ASSERT(blockSize % chunkSize == 0, "ChunkSize can not be divided by blockSize");

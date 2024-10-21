@@ -3,7 +3,7 @@
 typedef struct LayerStack
 {
 	SizeT count;
-	Layer** dataPtr;
+	FE_List(Layer*) stackedlayers;
 
 } LayerStack;
 

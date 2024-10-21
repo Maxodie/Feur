@@ -1,7 +1,7 @@
 #include "fepch.h"
 #include "Feur/Core/Memory/StackAllocator.h"
 
-void FE_API FE_MemoryStackAllocatorInit(FE_MemoryStackAllocator* allocator, SizeT size, void* memory)
+void FE_API FE_MemoryStackAllocatorInit(FE_MemoryStackAllocator* allocator, SizeT size, const void* memory)
 {
 	allocator->data = memory;
 	allocator->top = (UintptrT)allocator->data;

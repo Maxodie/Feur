@@ -6,7 +6,7 @@ void FE_API InitLayerStack(LayerStack* layerStack)
 {
 	FE_CORE_ASSERT(layerStack, "LayerStacks.c in InitLayerStack is null");
 
-	layerStack->dataPtr = NULL;
+	FE_ListCreate(layerStack->stackedlayers);
 	layerStack->count = 0;
 }
 
@@ -14,7 +14,9 @@ void FE_API PopLayerStack(LayerStack* layerStack)
 {
 	FE_CORE_ASSERT(layerStack, "LayerStacks.c in PopLayerStack is null");
 
-	if (layerStack->dataPtr != NULL)
+	FE_ListPop(layerStack->stackedlayers);
+
+	/*if (layerStack->dataPtr != NULL)
 	{
 		layerStack->dataPtr[layerStack->count - 1]->OnDetach();
 
@@ -33,7 +35,7 @@ void FE_API PopLayerStack(LayerStack* layerStack)
 			layerStack->dataPtr = temp;
 			return;
 		}
-	}
+	}*/
 }
 
 void FE_API InsertLayerStack(LayerStack* layerStack, Layer* value, Uint32 position) {
@@ -41,7 +43,9 @@ void FE_API InsertLayerStack(LayerStack* layerStack, Layer* value, Uint32 positi
 	FE_CORE_ASSERT(layerStack, "LayerStacks.c in InsertLayerStack is null");
 	if (position > layerStack->count) return;
 
-	SizeT i;
+	FE_ListInsert(layerStack->stackedlayers, value, position);
+
+	/*SizeT i;
 	Layer** temp = layerStack->dataPtr;
 
 	layerStack->dataPtr = realloc(layerStack->dataPtr, (layerStack->count + 1) * sizeof(Layer));
@@ -61,7 +65,7 @@ void FE_API InsertLayerStack(LayerStack* layerStack, Layer* value, Uint32 positi
 	}
 
 	SizeT positionItemId = (SizeT)position - 1;
-	layerStack->dataPtr[positionItemId] = value;
+	layerStack->dataPtr[positionItemId] = value;*/
 
 	/*for (i = 0; i < layerStack->count; i++)
 	{
@@ -73,7 +77,9 @@ void FE_API InsertLayerStack(LayerStack* layerStack, Layer* value, Uint32 positi
 void FE_API PushLayerStack(LayerStack* layerStack, Layer* value)
 {
 	FE_CORE_ASSERT(layerStack, "LayerStacks.c in PushLayerStack is null");
-	Layer** temp = layerStack->dataPtr;
+	
+	FE_ListPush(layerStack->stackedlayers, value);
+	/*Layer** temp = layerStack->dataPtr;
 
 	layerStack->dataPtr = layerStack->dataPtr == NULL ?
 		calloc(layerStack->count + 1, sizeof(Layer)) :
@@ -88,7 +94,7 @@ void FE_API PushLayerStack(LayerStack* layerStack, Layer* value)
 	SizeT lastItemId = layerStack->count;
 	layerStack->count++;
 
-	layerStack->dataPtr[lastItemId] = value;
+	layerStack->dataPtr[lastItemId] = value;*/
 
 	FE_LOG_DEBUG("Add %s layer to the stack", value->layerName);
 }

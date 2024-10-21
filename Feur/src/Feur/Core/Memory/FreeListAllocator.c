@@ -1,7 +1,7 @@
 #include "fepch.h"
 #include "FreeListAllocator.h"
 
-void FE_API FE_MemoryFreeListAllocatorInit(FE_MemoryFreeListAllocator* allocator, SizeT size, void* start)
+void FE_API FE_MemoryFreeListAllocatorInit(FE_MemoryFreeListAllocator* allocator, SizeT size, const void* start)
 {
 	FE_CORE_ASSERT(size > sizeof(FreeBlock), "size is too small (less than sizeof(FreeBlock) or 16 bytes)");
     allocator->freeBlocks = (FreeBlock*)start;
@@ -66,6 +66,8 @@ void* FE_API FE_MemoryFreeListAllocatorAlloc(FE_MemoryFreeListAllocator* allocat
 
         return (void*)aligned_address;
     }
+
+    FE_CORE_ASSERT(FALSE, "there are no free blocks left to store the data")
     return NULL;
 }
 
@@ -111,4 +113,17 @@ void FE_API FE_MemoryFreeListAllocatorFree(FE_MemoryFreeListAllocator* allocator
         prevFreeBlock->size += currentFreeBlock->size;
         prevFreeBlock->next = currentFreeBlock->next;
     }
+}
+
+void* FE_API FE_MemoryFreeListAllocatorRealloc(FE_MemoryFreeListAllocator* allocator, void* ptr, SizeT size, Uint8 alignment)
+{
+    FE_CORE_ASSERT(ptr != NULL, "the given pointer is NULL")
+    FreeListAllocationHeader* header = (FreeListAllocationHeader*)((UintptrT)ptr - sizeof(FreeListAllocationHeader));
+    void* result = FE_MemoryFreeListAllocatorAlloc(allocator, size, alignment);
+
+    memcpy(result, ptr, header->size < size ? header->size : size);
+
+    FE_MemoryFreeListAllocatorFree(allocator, ptr);
+
+    return result;
 }

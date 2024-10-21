@@ -33,7 +33,7 @@ void FE_API AppUpdate()
 {
 	for (int i = 0; i < g_fe_App.layerStack.count; i++)
 	{
-		g_fe_App.layerStack.dataPtr[i]->OnUpdate();
+		g_fe_App.layerStack.stackedlayers.data[i]->OnUpdate();
 	}
 }
 
@@ -90,7 +90,7 @@ void FE_API AppOnEvent(FE_Event event)
 	{
 		if (!event.isHandled)
 		{
-			g_fe_App.layerStack.dataPtr[i]->OnUpdateLayerEvent(&event);
+			g_fe_App.layerStack.stackedlayers.data[i]->OnUpdateLayerEvent(&event);
 		}
 		else
 		{
@@ -131,7 +131,7 @@ void FE_API Render()
 	Layer* layer;
 	for (int i = 0; i < g_fe_App.layerStack.count; i++)
 	{
-		layer = g_fe_App.layerStack.dataPtr[i];
+		layer = g_fe_App.layerStack.stackedlayers.data[i];
 		layer->OnRender(layer);
 	}
 

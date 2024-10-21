@@ -12,7 +12,7 @@ typedef struct FE_MemoryStackAllocator
 	SizeT size;
 } FE_MemoryStackAllocator;
 
-void FE_API FE_MemoryStackAllocatorInit(FE_MemoryStackAllocator* allocator, SizeT size, void* memory);
+void FE_API FE_MemoryStackAllocatorInit(FE_MemoryStackAllocator* allocator, SizeT size, const void* memory);
 
 void* FE_API FE_MemoryStackAllocatorAlloc(FE_MemoryStackAllocator* allocator, SizeT size, SizeT alignment);
 void FE_API FE_MemoryStackAllocatorFree(FE_MemoryStackAllocator* allocator);
