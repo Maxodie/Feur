@@ -7,9 +7,6 @@
     <Filter Include="Feur\Core">
       <UniqueIdentifier>{EF6DDF3D-5BD8-93B4-A416-455A10C07109}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Feur\Core\Event">
-      <UniqueIdentifier>{806661C5-ECF1-CE89-F502-527E610D2B8A}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Feur\Core\Input">
       <UniqueIdentifier>{2E95A5C5-9A20-138A-A331-967E0F3C6F8A}</UniqueIdentifier>
     </Filter>
@@ -24,6 +21,12 @@
     </Filter>
     <Filter Include="Feur\Core\Window">
       <UniqueIdentifier>{F697A49A-E290-C3EC-0BC3-A871F71AA3F8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feur\Debug">
+      <UniqueIdentifier>{ED86D9F9-D93E-1B47-4246-F4A22E1DB637}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Feur\Event">
+      <UniqueIdentifier>{C8FDF4F9-B4B5-3647-1DBD-0FA30994D137}</UniqueIdentifier>
     </Filter>
     <Filter Include="Feur\Nuklear">
       <UniqueIdentifier>{58D10DFE-4434-9DA2-EDB9-D558D9FB6825}</UniqueIdentifier>
@@ -64,9 +67,6 @@
     <ClInclude Include="src\Feur\Core\EntryPoint.h">
       <Filter>Feur\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Feur\Event\Event.h">
-      <Filter>Feur\Core\Event</Filter>
-    </ClInclude>
     <ClInclude Include="src\Feur\Core\Input\Input.h">
       <Filter>Feur\Core\Input</Filter>
     </ClInclude>
@@ -82,7 +82,13 @@
     <ClInclude Include="src\Feur\Core\Log\Log.h">
       <Filter>Feur\Core\Log</Filter>
     </ClInclude>
+    <ClInclude Include="src\Feur\Core\Memory\FreeListAllocator.h">
+      <Filter>Feur\Core\Memory</Filter>
+    </ClInclude>
     <ClInclude Include="src\Feur\Core\Memory\MemoryAllocator.h">
+      <Filter>Feur\Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Feur\Core\Memory\PoolAllocator.h">
       <Filter>Feur\Core\Memory</Filter>
     </ClInclude>
     <ClInclude Include="src\Feur\Core\Memory\StackAllocator.h">
@@ -93,6 +99,12 @@
     </ClInclude>
     <ClInclude Include="src\Feur\Core\Window\Window.h">
       <Filter>Feur\Core\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Feur\Debug\Benchmark.h">
+      <Filter>Feur\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Feur\Event\Event.h">
+      <Filter>Feur\Event</Filter>
     </ClInclude>
     <ClInclude Include="src\Feur\Nuklear\NuklearLayer.h">
       <Filter>Feur\Nuklear</Filter>
@@ -155,16 +167,10 @@
       <Filter>Platform\Windows\SDL</Filter>
     </ClInclude>
     <ClInclude Include="src\fepch.h" />
-    <ClInclude Include="src\Feur\Debug\Benchmark.h" />
-    <ClInclude Include="src\Feur\Core\Memory\PoolAllocator.h" />
-    <ClInclude Include="src\Feur\Core\Memory\FreeListAllocator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Feur\Core\Application.c">
       <Filter>Feur\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Feur\Event\Event.c">
-      <Filter>Feur\Core\Event</Filter>
     </ClCompile>
     <ClCompile Include="src\Feur\Core\Input\Input.c">
       <Filter>Feur\Core\Input</Filter>
@@ -178,7 +184,13 @@
     <ClCompile Include="src\Feur\Core\Log\Log.c">
       <Filter>Feur\Core\Log</Filter>
     </ClCompile>
+    <ClCompile Include="src\Feur\Core\Memory\FreeListAllocator.c">
+      <Filter>Feur\Core\Memory</Filter>
+    </ClCompile>
     <ClCompile Include="src\Feur\Core\Memory\MemoryAllocator.c">
+      <Filter>Feur\Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Feur\Core\Memory\PoolAllocator.c">
       <Filter>Feur\Core\Memory</Filter>
     </ClCompile>
     <ClCompile Include="src\Feur\Core\Memory\StackAllocator.c">
@@ -189,6 +201,12 @@
     </ClCompile>
     <ClCompile Include="src\Feur\Core\Window\Window.c">
       <Filter>Feur\Core\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Feur\Debug\Benchmark.c">
+      <Filter>Feur\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Feur\Event\Event.c">
+      <Filter>Feur\Event</Filter>
     </ClCompile>
     <ClCompile Include="src\Feur\Nuklear\NuklearLayer.c">
       <Filter>Feur\Nuklear</Filter>
@@ -251,11 +269,5 @@
       <Filter>Platform\Windows\SDL</Filter>
     </ClCompile>
     <ClCompile Include="src\fepch.c" />
-    <ClCompile Include="src\Feur\Debug\Benchmark.c" />
-    <ClCompile Include="src\Feur\Core\Memory\PoolAllocator.c" />
-    <ClCompile Include="src\Feur\Core\Memory\FreeListAllocator.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

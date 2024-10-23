@@ -30,7 +30,7 @@ void FE_API OpenGL_GLFW_NuklearGUILayerRender_impl(Layer* layer)
 {
 	struct nk_context* context = (struct nk_context*)layer->handledInfo;
 	nk_glfw3_new_frame();
-	if (nk_begin(context, "Nuklear Window", nk_rect(0, 0, 500, 500), NK_WINDOW_TITLE | NK_WINDOW_SCALABLE))
+	if (nk_begin(context, "Nuklear Window", nk_rect(0, 0, 500, 500), NK_WINDOW_TITLE | NK_WINDOW_SCALABLE | NK_WINDOW_MOVABLE))
 	{
 		/*struct nk_vec2 rect = nk_window_get_content_region_min(context);
 		struct nk_vec2 size = nk_window_get_content_region_size(context);

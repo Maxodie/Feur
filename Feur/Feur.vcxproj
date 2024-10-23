@@ -76,7 +76,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>fepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>HAVE_INLINE;_CRT_SECURE_NO_WARNINGS;FE_RENDER_SELECTED_API_VULKAN;FE_PLATFORM_WINDOWS;FE_ENABLE_ASSERTS;FE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ILDA_HAVE_INLINE;_CRT_SECURE_NO_WARNINGS;FE_RENDER_SELECTED_API_VULKAN;FE_PLATFORM_WINDOWS;FE_ENABLE_ASSERTS;FE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\SDL2\SDL\include;vendor\Glad\include;vendor\VulkanSDK\1.3.290.0\Include;vendor\GLFW\include;vendor;vendor\Mathilda\Mathilda\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -98,7 +98,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>fepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>HAVE_INLINE;_CRT_SECURE_NO_WARNINGS;FE_RENDER_SELECTED_API_VULKAN;FE_PLATFORM_WINDOWS;FE_RELEASE;FE_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ILDA_HAVE_INLINE;_CRT_SECURE_NO_WARNINGS;FE_RENDER_SELECTED_API_VULKAN;FE_PLATFORM_WINDOWS;FE_RELEASE;FE_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\SDL2\SDL\include;vendor\Glad\include;vendor\VulkanSDK\1.3.290.0\Include;vendor\GLFW\include;vendor;vendor\Mathilda\Mathilda\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
@@ -126,7 +126,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>fepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>HAVE_INLINE;_CRT_SECURE_NO_WARNINGS;FE_RENDER_SELECTED_API_VULKAN;FE_PLATFORM_WINDOWS;FE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ILDA_HAVE_INLINE;_CRT_SECURE_NO_WARNINGS;FE_RENDER_SELECTED_API_VULKAN;FE_PLATFORM_WINDOWS;FE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\SDL2\SDL\include;vendor\Glad\include;vendor\VulkanSDK\1.3.290.0\Include;vendor\GLFW\include;vendor;vendor\Mathilda\Mathilda\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
@@ -154,19 +154,19 @@
     <ClInclude Include="src\Feur\Core\Application.h" />
     <ClInclude Include="src\Feur\Core\Core.h" />
     <ClInclude Include="src\Feur\Core\EntryPoint.h" />
-    <ClInclude Include="src\Feur\Core\Memory\FreeListAllocator.h" />
-    <ClInclude Include="src\Feur\Core\Memory\PoolAllocator.h" />
-    <ClInclude Include="src\Feur\Event\Event.h" />
     <ClInclude Include="src\Feur\Core\Input\Input.h" />
     <ClInclude Include="src\Feur\Core\Input\KeyCode.h" />
     <ClInclude Include="src\Feur\Core\Layer.h" />
     <ClInclude Include="src\Feur\Core\LayerStack.h" />
     <ClInclude Include="src\Feur\Core\Log\Log.h" />
+    <ClInclude Include="src\Feur\Core\Memory\FreeListAllocator.h" />
     <ClInclude Include="src\Feur\Core\Memory\MemoryAllocator.h" />
+    <ClInclude Include="src\Feur\Core\Memory\PoolAllocator.h" />
     <ClInclude Include="src\Feur\Core\Memory\StackAllocator.h" />
     <ClInclude Include="src\Feur\Core\Utils\List.h" />
     <ClInclude Include="src\Feur\Core\Window\Window.h" />
     <ClInclude Include="src\Feur\Debug\Benchmark.h" />
+    <ClInclude Include="src\Feur\Event\Event.h" />
     <ClInclude Include="src\Feur\Nuklear\NuklearLayer.h" />
     <ClInclude Include="src\Feur\Renderer\Buffers.h" />
     <ClInclude Include="src\Feur\Renderer\GraphicsContext.h" />
@@ -191,18 +191,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Feur\Core\Application.c" />
-    <ClCompile Include="src\Feur\Core\Memory\FreeListAllocator.c" />
-    <ClCompile Include="src\Feur\Core\Memory\PoolAllocator.c" />
-    <ClCompile Include="src\Feur\Event\Event.c" />
     <ClCompile Include="src\Feur\Core\Input\Input.c" />
     <ClCompile Include="src\Feur\Core\Layer.c" />
     <ClCompile Include="src\Feur\Core\LayerStack.c" />
     <ClCompile Include="src\Feur\Core\Log\Log.c" />
+    <ClCompile Include="src\Feur\Core\Memory\FreeListAllocator.c" />
     <ClCompile Include="src\Feur\Core\Memory\MemoryAllocator.c" />
+    <ClCompile Include="src\Feur\Core\Memory\PoolAllocator.c" />
     <ClCompile Include="src\Feur\Core\Memory\StackAllocator.c" />
     <ClCompile Include="src\Feur\Core\Utils\List.c" />
     <ClCompile Include="src\Feur\Core\Window\Window.c" />
     <ClCompile Include="src\Feur\Debug\Benchmark.c" />
+    <ClCompile Include="src\Feur\Event\Event.c" />
     <ClCompile Include="src\Feur\Nuklear\NuklearLayer.c" />
     <ClCompile Include="src\Feur\Renderer\Buffers.c" />
     <ClCompile Include="src\Feur\Renderer\GraphicsContext.c" />
@@ -243,9 +243,6 @@
     <ProjectReference Include="vendor\Mathilda\Mathilda\Mathilda.vcxproj">
       <Project>{A9207DCC-95ED-D7D7-BE06-C67FAA320D66}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="cpp.hint" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -61,7 +61,7 @@ project "Feur"
 
 	defines
 	{
-		"HAVE_INLINE",
+		"ILDA_HAVE_INLINE",
 		"_CRT_SECURE_NO_WARNINGS",
         --"FE_RENDER_SELECTED_API_OPENGL",
 		"FE_RENDER_SELECTED_API_VULKAN"
@@ -150,7 +150,7 @@ project "Sandbox"
 		"Feur/src",
 		"%{IncludeDir.Mathilda}",
 		--temp test includes
-        --"%{IncludeDir.Vulkan}",
+        "%{IncludeDir.Vulkan}",
 		"%{IncludeDir.Glad}"
 	}
 
@@ -159,13 +159,13 @@ project "Sandbox"
 		"Feur",
 		"Mathilda",
         --temp test includes
-        --"Vulkan",
+        "Vulkan",
 		"Glad"
 	}
 
 	defines
 	{
-		"HAVE_INLINE",
+		"ILDA_HAVE_INLINE",
 		--"_FEUR_TEST_OPENGL_SANDBOX_"
 		"_FEUR_TEST_VULKAN_SANDBOX_"
 	}

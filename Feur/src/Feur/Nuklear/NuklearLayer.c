@@ -26,7 +26,7 @@ void FE_API NuklearGUILayerInit()
 
 void FE_API NuklearGUILayerEvent(FE_Event* event)
 {
-#ifdef _FEUR_TEST_OPENGL_SANDBOX_
+#ifdef FE_RENDER_SELECTED_API_OPENGL
 	nuklearGUILayerInterface.OnEvent(event);
 #endif
 }
@@ -38,7 +38,7 @@ void FE_API NuklearGUILayerUpdate()
 
 void FE_API NuklearGUILayerRender(Layer* layer)
 {
-#ifdef _FEUR_TEST_OPENGL_SANDBOX_
+#ifdef FE_RENDER_SELECTED_API_OPENGL
 	nuklearGUILayerInterface.OnRender(layer);
 #endif
 }
@@ -46,14 +46,14 @@ void FE_API NuklearGUILayerRender(Layer* layer)
 
 void FE_API NuklearGUILayerOnAttach(Layer* layer)
 {
-#ifdef _FEUR_TEST_OPENGL_SANDBOX_
+#ifdef FE_RENDER_SELECTED_API_OPENGL
 	nuklearGUILayerInterface.OnAttach(layer);
 #endif
 }
 
 void FE_API NuklearGUILayerOnDetach()
 {
-#ifdef _FEUR_TEST_OPENGL_SANDBOX_
+#ifdef FE_RENDER_SELECTED_API_OPENGL
 	nuklearGUILayerInterface.OnDetach();
 #endif
 }

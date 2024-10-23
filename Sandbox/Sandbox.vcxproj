@@ -78,8 +78,8 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>HAVE_INLINE;_FEUR_TEST_VULKAN_SANDBOX_;FE_PLATFORM_WINDOWS;FE_DEBUG;FE_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Feur\vendor\spdlog\include;..\Feur\src;..\Feur\vendor\Mathilda\Mathilda\include;..\Feur\vendor\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>ILDA_HAVE_INLINE;_FEUR_TEST_VULKAN_SANDBOX_;FE_PLATFORM_WINDOWS;FE_DEBUG;FE_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Feur\vendor\spdlog\include;..\Feur\src;..\Feur\vendor\Mathilda\Mathilda\include;..\Feur\vendor\VulkanSDK\1.3.290.0\Include;..\Feur\vendor\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -95,8 +95,8 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>HAVE_INLINE;_FEUR_TEST_VULKAN_SANDBOX_;FE_PLATFORM_WINDOWS;FE_RELEASE;FE_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Feur\vendor\spdlog\include;..\Feur\src;..\Feur\vendor\Mathilda\Mathilda\include;..\Feur\vendor\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>ILDA_HAVE_INLINE;_FEUR_TEST_VULKAN_SANDBOX_;FE_PLATFORM_WINDOWS;FE_RELEASE;FE_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Feur\vendor\spdlog\include;..\Feur\src;..\Feur\vendor\Mathilda\Mathilda\include;..\Feur\vendor\VulkanSDK\1.3.290.0\Include;..\Feur\vendor\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -116,8 +116,8 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>HAVE_INLINE;_FEUR_TEST_VULKAN_SANDBOX_;FE_PLATFORM_WINDOWS;FE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Feur\vendor\spdlog\include;..\Feur\src;..\Feur\vendor\Mathilda\Mathilda\include;..\Feur\vendor\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>ILDA_HAVE_INLINE;_FEUR_TEST_VULKAN_SANDBOX_;FE_PLATFORM_WINDOWS;FE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Feur\vendor\spdlog\include;..\Feur\src;..\Feur\vendor\Mathilda\Mathilda\include;..\Feur\vendor\VulkanSDK\1.3.290.0\Include;..\Feur\vendor\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -143,6 +143,9 @@
     </ProjectReference>
     <ProjectReference Include="..\Feur\vendor\Mathilda\Mathilda\Mathilda.vcxproj">
       <Project>{A9207DCC-95ED-D7D7-BE06-C67FAA320D66}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Feur\vendor\VulkanSDK\Vulkan.vcxproj">
+      <Project>{4ABD8B07-B672-04FD-3F67-FED3AB1BFB00}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Feur\vendor\Glad\Glad.vcxproj">
       <Project>{BDD6857C-A90D-870D-52FA-6C103E10030F}</Project>
