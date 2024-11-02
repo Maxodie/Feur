@@ -1,7 +1,7 @@
 #include "fepch.h"
 #include "Platform/Nuklear/OpenGLNuklearLayer.h"
 #include "Feur/Core/Application.h"
-#include "Platform/Windows/GLFW/GLFWWindowsWindow.h"
+#include "Platform/Window/GLFW/GLFWWindowsWindow.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>

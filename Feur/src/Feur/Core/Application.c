@@ -85,7 +85,7 @@ void FE_API AppOnEvent(FE_Event event)
 	DispatchEvent(&eventDispatcher, FE_Event_WindowResize, OnWindowResizing);
 	DispatchEvent(&eventDispatcher, FE_Event_WindowClose, OnWindowClose);
 
-	for (int i = 0; i < FE_LayerStackGetCount(&g_fe_App.layerStack); i++)
+	for (SizeT i = 0; i < FE_LayerStackGetCount(&g_fe_App.layerStack); i++)
 	{
 		if (!event.isHandled)
 		{
@@ -128,7 +128,7 @@ void FE_API Render()
 	RenderCommandClear();
 
 	Layer* layer;
-	for (int i = 0; i < FE_LayerStackGetCount(&g_fe_App.layerStack); i++)
+	for (SizeT i = 0; i < FE_LayerStackGetCount(&g_fe_App.layerStack); i++)
 	{
 		layer = g_fe_App.layerStack.stackedlayers.data[i];
 		layer->OnRender(layer);
@@ -139,13 +139,14 @@ void FE_API Render()
 
 void FE_API ShutdownApp()
 {
-	for (int i = 0; i < FE_LayerStackGetCount(&g_fe_App.layerStack); i++)
+	for (SizeT i = 0; i < FE_LayerStackGetCount(&g_fe_App.layerStack); i++)
 	{
 		FE_LayerStackPop(&g_fe_App.layerStack);
 	}
 
 	RendererShutdown(&g_fe_App.rendererAPIData);
 	GetWindowAPI()->DestroyWindow(&g_fe_App.windowData);
+	FE_MemoryGeneralShutdown();
 }
 
 void FE_API QuitApp()
@@ -153,7 +154,7 @@ void FE_API QuitApp()
 	g_IsAppRunning = FALSE;
 }
 
-const FE_API FE_App* GetApp()
+const FE_App* FE_API GetApp()
 {
 	return &g_fe_App;
 }

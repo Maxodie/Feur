@@ -1,7 +1,7 @@
 ﻿#include "fepch.h"
 #include "Feur/Core/Window/Window.h"
-#include "Platform/Windows/SDL/SDLWindowsWindow.h"
-#include "Platform/Windows/GLFW/GLFWWindowsWindow.h"
+#include "Platform/Window/SDL/SDLWindowsWindow.h"
+#include "Platform/Window/GLFW/GLFWWindowsWindow.h"
 
 static Window_API windowAPI;
 

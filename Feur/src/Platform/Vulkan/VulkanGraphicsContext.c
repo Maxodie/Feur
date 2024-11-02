@@ -1,6 +1,7 @@
 #include "fepch.h"
 
 #include "Platform/Vulkan/VulkanGraphicsContext.h"
+#include "Platform/Vulkan/VulkanSetup.h"
 
 #include <vulkan/vulkan.h>
 #include <GLFW/glfw3.h>
@@ -32,13 +33,31 @@ void FE_API Vulkan_GLFWgraphicsContextSwapBuffers(WindowData* windowData)
 	//glfwSwapBuffers((GLFWwindow*)windowData->nativeWindow);
 }
 
-void FE_API Vulkan_GLFWsetExtentionCount(VkInstanceCreateInfo* createInfo)
+void FE_API Vulkan_GLFWsetExtention(VkInstanceCreateInfo* createInfo, VulkanInfo* vkInfo)
 {
-	uint32_t glfwExtensionCount = 0;
-	const char** glfwExtensions;
-
+	Uint32 glfwExtensionCount = 0;
+	const char* const* glfwExtensions;
 	glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
-	createInfo->enabledExtensionCount = glfwExtensionCount;
-	createInfo->ppEnabledExtensionNames = glfwExtensions;
+	FE_List(const char* const) extensions = { 0 };
+	FE_ListInit(extensions);
+
+	FE_ListPushArray(extensions, glfwExtensions, glfwExtensionCount);
+	
+	if (vkInfo->enableValidationLayers) {
+		const char* debugLayer = VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
+		FE_ListPush(extensions, debugLayer);
+	}
+
+#ifndef FE_DIST
+
+	FE_CORE_LOG_SUCCESS("   == Vulkan GLFW required extensions ==");
+	for (SizeT i = 0; i < extensions.impl.count; i++)
+	{
+		const char* str = extensions.data[i];
+		FE_CORE_LOG_SUCCESS("   - NAME   %s", extensions.data[i]);
+	}
+#endif
+	createInfo->enabledExtensionCount = (Uint32)extensions.impl.count;
+	createInfo->ppEnabledExtensionNames = extensions.data;
 }

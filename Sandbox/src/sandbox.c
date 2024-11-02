@@ -65,7 +65,7 @@ GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path)
 
 const char* LoadFile(const char* filePath)
 {
-	char* buffer = 0;
+	/*char* buffer = 0;
 	long length;
 	FILE* fptr = fopen(filePath, "rb");
 	if (NULL == fptr)
@@ -90,7 +90,7 @@ const char* LoadFile(const char* filePath)
 	}
 	
 	fclose(fptr);
-	return buffer;
+	return buffer;*/
 }
 
 #endif

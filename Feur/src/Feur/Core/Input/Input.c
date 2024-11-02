@@ -2,8 +2,8 @@
 #include "Feur/Core/Input/Input.h"
 #include "Feur/Core/Input/KeyCode.h"
 
-#include "Platform/Windows/SDL/SDLWindowsInput.h"
-#include "Platform/Windows/GLFW/GLFWWindowsInput.h"
+#include "Platform/Window/SDL/SDLWindowsInput.h"
+#include "Platform/Window/GLFW/GLFWWindowsInput.h"
 #include "Feur/Core/Window/Window.h"
 
 typedef enum { Pressed, Repeat, Released }keySate;

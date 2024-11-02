@@ -17,7 +17,7 @@ typedef uintptr_t UintptrT;
 typedef double MaxAlignT; //based on the cstddef c++ using : most aligned type
 
 
-#define FE_API
+#define FE_API _cdecl
 
 #define FALSE 0
 #define TRUE 1
@@ -64,9 +64,10 @@ typedef double MaxAlignT; //based on the cstddef c++ using : most aligned type
 #	define COMPILE_TIME_ASSERT(X, LINE) COMPILE_TIME_ASSERT2(X, LINE)
 #	define FE_STATIC_ASSERT(x, msg) COMPILE_TIME_ASSERT(x, __LINE__)
 #else
-#	define FE_ASSERT(x, ...)
-#	define FE_CORE_ASSERT(x, ...)
-#	define FE_CORE_STATIC_ASSERT(x, ...)
+#	define FE_ASSERT(...)
+#	define FE_CORE_ASSERT(...)
+#	define FE_CORE_STATIC_ASSERT(...)
+#	define FE_STATIC_ASSERT(...)
 #endif
 
 #define FE_EXTERN extern

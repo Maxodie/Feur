@@ -1,16 +1,19 @@
 #include "fepch.h"
 #include "Platform/Vulkan/VulkanSetup.h"
 #include "Platform/Vulkan/VulkanGraphicsContext.h"
-#include "Platform/Vulkan/VulkanValidationLayer.h"
+#include "Platform/Vulkan/Debug/VulkanValidationLayer.h"
 
 Bool FE_API CreateVulkanInstance(VulkanInfo* vkInfo)
 {
+	//Init validation layers
 	if (vkInfo->enableValidationLayers && !VulkanCheckValidationLayerSupport(vkInfo))
 	{
-		FE_CORE_LOG_ERROR("VulkanSetup.c : CreateVulkanInstance : Vulkan validation layers are enabled but not available");
+		FE_CORE_ASSERT(FALSE, "Vulkan validation layers are enabled but not available");
 	}
 
-	VkApplicationInfo appInfo = {
+	//Create instance data
+	VkApplicationInfo appInfo = 
+	{
 		.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
 		.pApplicationName = "Vulkan Feur App",
 		.applicationVersion = VK_MAKE_VERSION(1, 0, 0),
@@ -19,62 +22,72 @@ Bool FE_API CreateVulkanInstance(VulkanInfo* vkInfo)
 		.apiVersion = VK_API_VERSION_1_0
 	};
 
-	VkInstanceCreateInfo createInfo = {
+	VkInstanceCreateInfo createInfo = 
+	{
 		.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
 		.pApplicationInfo = &appInfo,
 	};
 
+	//setup validation layers/window extensions into the instance data
+	VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = { 0 };
 	if (vkInfo->enableValidationLayers)
 	{
-		createInfo.enabledExtensionCount = vkInfo->validationsCount;
-		createInfo.ppEnabledExtensionNames = vkInfo->validationLayers;
+		createInfo.enabledLayerCount = (Uint32)vkInfo->validationLayers.impl.count;
+		createInfo.ppEnabledLayerNames = vkInfo->validationLayers.data;
+		VulkanPopulateDebugMessenger(&debugCreateInfo, vkInfo);
+		createInfo.pNext = &debugCreateInfo;
 	}
 	else
 	{
-		createInfo.enabledExtensionCount = 0;
+		createInfo.enabledLayerCount = 0;
+		createInfo.pNext = NULL;
 	}
 
 	switch (GetWindowAPI()->API_Type)
 	{
 	case FE_WINDOW_API_GLFW:
-		Vulkan_GLFWsetExtentionCount(&createInfo);
+		Vulkan_GLFWsetExtention(&createInfo, vkInfo);
 		break;
 	default:
-		FE_CORE_LOG_ERROR("VulkanSetup.c : CreateVulkanInstance : failed to set extention count");
+		FE_CORE_ASSERT(FALSE, "failed to set extention count");
 		return FALSE;
 		break;
 	}
 
 	createInfo.enabledLayerCount = 0;
 
+	//Get vulkan extensions
 	Uint32 extensionCount;
 	vkEnumerateInstanceExtensionProperties(NULL, &extensionCount, NULL);
-	VkExtensionProperties* extensions = malloc(extensionCount * sizeof(VkExtensionProperties));
-	if (extensions == NULL)
-	{
-		FE_CORE_LOG_ERROR("VulkanSetup.c : CreateVulkanInstance : failed to allocate memory for extensions properties");
-		return FALSE;
-	}
+	VkExtensionProperties* extensions = FE_MemoryGeneralAlloc(extensionCount * sizeof(VkExtensionProperties));
+	//if (extensions == NULL)
+	//{
+	//	FE_CORE_ASSERT(FALSE, "failed to allocate memory for extensions properties");
+	//	return FALSE;
+	//}
 
 	vkEnumerateInstanceExtensionProperties(NULL, &extensionCount, extensions);
 
 	FE_CORE_LOG_SUCCESS("   == Vulkan Extensions Supported ==");
 
-	for (Uint32 i = 0; i < extensionCount; i++) {
+	for (Uint32 i = 0; i < extensionCount; i++) 
+	{
 		FE_CORE_LOG_SUCCESS("   - NAME   %s || VERSION   %d", (const char*)extensions[i].extensionName, extensions[i].specVersion);
 	}
 
-	free(extensions);
+	FE_MemoryGeneralFree(extensions);
 
-	if (vkCreateInstance(&createInfo, NULL, &vkInfo->vkInstance) != VK_SUCCESS) {
-		FE_CORE_LOG_ERROR("VulkanSetup.c : CreateVulkanInstance : failed to create vulkan instance");
+	//create instance
+	if (vkCreateInstance(&createInfo, NULL, &vkInfo->vkInstance) != VK_SUCCESS) 
+	{
+		FE_CORE_ASSERT(FALSE, "failed to create vulkan instance");
 		return FALSE;
 	}
 
 	return TRUE;
 }
 
-void FE_API VulkanCleanup(VkInstance* vkInstance)
+void FE_API VulkanCleanup(VkInstance vkInstance)
 {
-	vkDestroyInstance(*vkInstance, NULL);
+	vkDestroyInstance(vkInstance, NULL);
 }

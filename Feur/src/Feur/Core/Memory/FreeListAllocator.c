@@ -9,6 +9,11 @@ void FE_API FE_MemoryFreeListAllocatorInit(FE_MemoryFreeListAllocator* allocator
 	allocator->freeBlocks->next = NULL;
 }
 
+void FE_API FE_MemoryFreeListAllocatorShutdown(FE_MemoryFreeListAllocator* allocator)
+{
+    allocator->freeBlocks = NULL;
+}
+
 
 void* FE_API FE_MemoryFreeListAllocatorAlloc(FE_MemoryFreeListAllocator* allocator, SizeT size, Uint8 alignment)
 {
@@ -91,7 +96,7 @@ void FE_API FE_MemoryFreeListAllocatorFree(FE_MemoryFreeListAllocator* allocator
     if (prevFreeBlock == NULL)
     {
         prevFreeBlock = (FreeBlock*)block_start;
-        prevFreeBlock->size = block_size;
+        prevFreeBlock->size = block_size; // throw an error here means that some things shouldn't have been freed
         prevFreeBlock->next = allocator->freeBlocks;
         allocator->freeBlocks = prevFreeBlock;
     }

@@ -1,24 +1,30 @@
 #include "fepch.h"
 #include "Platform/Vulkan/VulkanSetup.h"
 #include "Platform/Vulkan/VulkanRendererAPI.h"
-#include "Platform/Vulkan/VulkanValidationLayer.h"
+#include "Platform/Vulkan/Debug/VulkanValidationLayer.h"
+#include "Platform/Vulkan/Debug/VulkanDebug.h"
 
 Bool FE_API VulkanInit_impl(RendererAPIData* apiData)
 {
-	VulkanInfo* vkInfo = malloc(sizeof(VulkanInfo));
+	VulkanInfo* vkInfo = FE_MemoryGeneralAlloc(sizeof(VulkanInfo));
+
 	if (vkInfo == NULL)
 	{
-		FE_CORE_LOG_ERROR("VulkanRendererAPI.c : VulkanInit_impl : Failed allocate memory for VulkanInfo");
+		FE_CORE_LOG_ERROR("Failed allocate memory for VulkanInfo");
 		return FALSE;
 	}
 
 	VulkanInitValidationLayer(vkInfo);
 
+	vkInfo->vkfeDebugger.enableFullVulkanDebugMsg = TRUE;
+
 	if (!CreateVulkanInstance(vkInfo))
 	{
-		FE_CORE_LOG_ERROR("VulkanRendererAPI.c : VulkanInit_impl : Failed to create vulkanInstance");
+		FE_CORE_LOG_ERROR("Failed to create vulkanInstance");
 		return FALSE;
 	}
+
+	VulkanSetupDebugMessenger(vkInfo);
 
 	apiData->nativeInfoAPI = vkInfo;
 	return TRUE;
@@ -45,5 +51,9 @@ void FE_API VulkanDrawIndex_impl()
 
 void FE_API VulkanShutdown_impl(RendererAPIData* apiData)
 {
-	VulkanCleanup(&((VulkanInfo*)apiData->nativeInfoAPI)->vkInstance);
+	VulkanInfo* vkInfo = (VulkanInfo*)apiData->nativeInfoAPI;
+	
+	VulkanDestroyDebugMessenger(vkInfo);
+	VulkanCleanup(vkInfo->vkInstance);
+	FE_MemoryGeneralFree(vkInfo);
 }

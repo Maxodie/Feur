@@ -4,7 +4,7 @@
 
 FE_FORCEINLINE_FUN Bool FE_API FE_LayerStackInit(LayerStack* layerStack)
 {
-	if (FE_ListCreate(layerStack->stackedlayers))
+	if (FE_ListInit(layerStack->stackedlayers))
 	{
 		return FE_ListReserve(layerStack->stackedlayers, 3);
 	}
@@ -27,7 +27,7 @@ FE_FORCEINLINE_FUN Bool FE_API FE_LayerStackPush(LayerStack* layerStack, Layer* 
 	return FE_ListPush(layerStack->stackedlayers, value);
 }
 
-FE_FORCEINLINE_FUN Uint32 FE_API FE_LayerStackGetCount(LayerStack* layerStack)
+FE_FORCEINLINE_FUN SizeT FE_API FE_LayerStackGetCount(LayerStack* layerStack)
 {
 	return layerStack->stackedlayers.impl.count;
 }

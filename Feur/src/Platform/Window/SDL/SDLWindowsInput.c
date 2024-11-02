@@ -1,5 +1,5 @@
 #include "fepch.h"
-#include "Platform/Windows/SDL/SDLWindowsInput.h"
+#include "Platform/Window/SDL/SDLWindowsInput.h"
 #include <SDL.h>
 
 Bool FE_API SDLWindowsIsInputPressed_impl(const FE_KeyCode key_code)

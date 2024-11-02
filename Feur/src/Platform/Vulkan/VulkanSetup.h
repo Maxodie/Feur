@@ -1,14 +1,16 @@
 #pragma once
 #include <vulkan/vulkan.h>
+#include "Platform/Vulkan/Debug/VulkanDebug.h"
 
-typedef struct VulkanInfo {
+typedef struct VulkanInfo 
+{
 	VkInstance vkInstance;
 	Bool enableValidationLayers;
+	VulkanFeurDebugger vkfeDebugger;
 
-	const char* const* validationLayers[1];//remove table to fit wwith the createInfo struct
-	Uint32 validationsCount;
+	FE_List(const char* const) validationLayers;
 
 } VulkanInfo;
 
 Bool FE_API CreateVulkanInstance(VulkanInfo* vkInfo);
-void FE_API VulkanCleanup(VkInstance* vkInstance);
+void FE_API VulkanCleanup(VkInstance vkInstance);

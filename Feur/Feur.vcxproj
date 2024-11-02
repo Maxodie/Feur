@@ -178,15 +178,16 @@
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffers.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLGraphicsContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
+    <ClInclude Include="src\Platform\Vulkan\Debug\VulkanDebug.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanBuffers.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanGraphicsContext.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanRendererAPI.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanSetup.h" />
-    <ClInclude Include="src\Platform\Vulkan\VulkanValidationLayer.h" />
-    <ClInclude Include="src\Platform\Windows\GLFW\GLFWWindowsInput.h" />
-    <ClInclude Include="src\Platform\Windows\GLFW\GLFWWindowsWindow.h" />
-    <ClInclude Include="src\Platform\Windows\SDL\SDLWindowsInput.h" />
-    <ClInclude Include="src\Platform\Windows\SDL\SDLWindowsWindow.h" />
+    <ClInclude Include="src\Platform\Vulkan\Debug\VulkanValidationLayer.h" />
+    <ClInclude Include="src\Platform\Window\GLFW\GLFWWindowsInput.h" />
+    <ClInclude Include="src\Platform\Window\GLFW\GLFWWindowsWindow.h" />
+    <ClInclude Include="src\Platform\Window\SDL\SDLWindowsInput.h" />
+    <ClInclude Include="src\Platform\Window\SDL\SDLWindowsWindow.h" />
     <ClInclude Include="src\fepch.h" />
   </ItemGroup>
   <ItemGroup>
@@ -214,15 +215,16 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffers.c" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLGraphicsContext.c" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.c" />
+    <ClCompile Include="src\Platform\Vulkan\Debug\VulkanDebug.c" />
     <ClCompile Include="src\Platform\Vulkan\VulkanBuffers.c" />
     <ClCompile Include="src\Platform\Vulkan\VulkanGraphicsContext.c" />
     <ClCompile Include="src\Platform\Vulkan\VulkanRendererAPI.c" />
     <ClCompile Include="src\Platform\Vulkan\VulkanSetup.c" />
-    <ClCompile Include="src\Platform\Vulkan\VulkanValidationLayer.c" />
-    <ClCompile Include="src\Platform\Windows\GLFW\GLFWWindowsInput.c" />
-    <ClCompile Include="src\Platform\Windows\GLFW\GLFWWindowsWindow.c" />
-    <ClCompile Include="src\Platform\Windows\SDL\SDLWindowsInput.c" />
-    <ClCompile Include="src\Platform\Windows\SDL\SDLWindowsWindow.c" />
+    <ClCompile Include="src\Platform\Vulkan\Debug\VulkanValidationLayer.c" />
+    <ClCompile Include="src\Platform\Window\GLFW\GLFWWindowsInput.c" />
+    <ClCompile Include="src\Platform\Window\GLFW\GLFWWindowsWindow.c" />
+    <ClCompile Include="src\Platform\Window\SDL\SDLWindowsInput.c" />
+    <ClCompile Include="src\Platform\Window\SDL\SDLWindowsWindow.c" />
     <ClCompile Include="src\fepch.c">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>

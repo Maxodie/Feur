@@ -2,6 +2,12 @@
 .vs/
 bin/
 bin-int/
+Binaries/
+Feur/vendor/SDL2/SDL/Intermediate/
 
 # Files
 *.user
+*.obj
+*.idb
+*.pdb
+*.tlog

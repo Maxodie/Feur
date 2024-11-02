@@ -151,22 +151,23 @@
     <ClInclude Include="src\Platform\Vulkan\VulkanSetup.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Vulkan\VulkanValidationLayer.h">
+    <ClInclude Include="src\Platform\Vulkan\Debug\VulkanValidationLayer.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Windows\GLFW\GLFWWindowsInput.h">
+    <ClInclude Include="src\Platform\Window\GLFW\GLFWWindowsInput.h">
       <Filter>Platform\Windows\GLFW</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Windows\GLFW\GLFWWindowsWindow.h">
+    <ClInclude Include="src\Platform\Window\GLFW\GLFWWindowsWindow.h">
       <Filter>Platform\Windows\GLFW</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Windows\SDL\SDLWindowsInput.h">
+    <ClInclude Include="src\Platform\Window\SDL\SDLWindowsInput.h">
       <Filter>Platform\Windows\SDL</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Windows\SDL\SDLWindowsWindow.h">
+    <ClInclude Include="src\Platform\Window\SDL\SDLWindowsWindow.h">
       <Filter>Platform\Windows\SDL</Filter>
     </ClInclude>
     <ClInclude Include="src\fepch.h" />
+    <ClInclude Include="src\Platform\Vulkan\Debug\VulkanDebug.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Feur\Core\Application.c">
@@ -253,21 +254,22 @@
     <ClCompile Include="src\Platform\Vulkan\VulkanSetup.c">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Vulkan\VulkanValidationLayer.c">
+    <ClCompile Include="src\Platform\Vulkan\Debug\VulkanValidationLayer.c">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Windows\GLFW\GLFWWindowsInput.c">
+    <ClCompile Include="src\Platform\Window\GLFW\GLFWWindowsInput.c">
       <Filter>Platform\Windows\GLFW</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Windows\GLFW\GLFWWindowsWindow.c">
+    <ClCompile Include="src\Platform\Window\GLFW\GLFWWindowsWindow.c">
       <Filter>Platform\Windows\GLFW</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Windows\SDL\SDLWindowsInput.c">
+    <ClCompile Include="src\Platform\Window\SDL\SDLWindowsInput.c">
       <Filter>Platform\Windows\SDL</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Windows\SDL\SDLWindowsWindow.c">
+    <ClCompile Include="src\Platform\Window\SDL\SDLWindowsWindow.c">
       <Filter>Platform\Windows\SDL</Filter>
     </ClCompile>
     <ClCompile Include="src\fepch.c" />
+    <ClCompile Include="src\Platform\Vulkan\Debug\VulkanDebug.c" />
   </ItemGroup>
 </Project>

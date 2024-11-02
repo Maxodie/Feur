@@ -4,6 +4,7 @@
 struct FE_MemoryGeneralAllocator
 {
     FE_MemoryFreeListAllocator freeListAllocator;
+    void* mainFreeListMem;
 } FE_MemoryGeneralAllocator;
 
 FE_FORCEINLINE_FUN void* FE_API FE_MemoryCustomMalloc(SizeT size)
@@ -22,8 +23,15 @@ FE_FORCEINLINE_FUN void* FE_API FE_MemoryCustomCalloc(SizeT size)
 
 FE_FORCEINLINE_FUN void FE_API FE_MemoryGeneralInit(SizeT size)
 {
-    void* mainFreeListMem = FE_MemoryCustomCalloc(size);
+    void* mainFreeListMem = FE_MemoryCustomMalloc(size);
+    FE_MemoryGeneralAllocator.mainFreeListMem = mainFreeListMem;
     FE_MemoryFreeListAllocatorInit(&FE_MemoryGeneralAllocator.freeListAllocator, size, mainFreeListMem);
+}
+
+FE_FORCEINLINE_FUN void FE_API FE_MemoryGeneralShutdown()
+{
+    FE_MemoryFreeListAllocatorShutdown(&FE_MemoryGeneralAllocator.freeListAllocator);
+    free(FE_MemoryGeneralAllocator.mainFreeListMem);
 }
 
 FE_FORCEINLINE_FUN void* FE_API FE_MemoryGeneralAlloc(SizeT size)
@@ -98,6 +106,7 @@ void FE_API FE_MemoryStackAllocatorBenchmarkTest()
         void* ptr = malloc(allocSize);
         FE_BenchmarkStopClock(&AllocBenchmark);
         results[i] = FE_BenchmarkClockNsDuration(&AllocBenchmark);
+        free(ptr);
     }
 
     //results malloc allocator
@@ -151,6 +160,7 @@ void FE_API FE_MemoryPoolAllocatorBenchmarkTest()
         void* ptr = malloc(allocSize);
         FE_BenchmarkStopClock(&AllocBenchmark);
         results[i] = FE_BenchmarkClockNsDuration(&AllocBenchmark);
+        free(ptr);
     }
 
     //results malloc allocator
@@ -189,7 +199,7 @@ void FE_API FE_MemoryPoolAllocatorBenchmarkTest()
     FE_BenchmarkShowDuration(result, "Pool allocations benchmark average duration");
 
     free(results);
-    //free(memory);
+    free(memory);
 }
 
 void FE_MemoryFreeListAllocatorBenchmarkTest()
@@ -206,6 +216,7 @@ void FE_MemoryFreeListAllocatorBenchmarkTest()
         void* ptr = malloc(allocSize);
         FE_BenchmarkStopClock(&AllocBenchmark);
         results[i] = FE_BenchmarkClockNsDuration(&AllocBenchmark);
+        free(ptr);
     }
 
     //results malloc allocator

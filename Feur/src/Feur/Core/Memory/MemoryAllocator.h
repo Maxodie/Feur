@@ -33,6 +33,7 @@ FE_FORCEINLINE_FUN UintptrT FE_API FE_MemoryAlignForwardAdjustmentWithHeader(Uin
 #include "Feur/Core/Memory/FreeListAllocator.h"
 
 FE_FORCEINLINE_FUN void FE_API FE_MemoryGeneralInit(SizeT size);
+FE_FORCEINLINE_FUN void FE_API FE_MemoryGeneralShutdown();
 //@TODO maybe made a gameloop allocation using stack alloc (or linear) and free it every frame
 FE_FORCEINLINE_FUN void* FE_API FE_MemoryGeneralAlloc(SizeT size);
 FE_FORCEINLINE_FUN void FE_API FE_MemoryGeneralFree(void* ptr);

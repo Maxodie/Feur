@@ -1,5 +1,5 @@
 #include "fepch.h"
-#include "Platform/Windows/GLFW/GLFWWindowsWindow.h"
+#include "Platform/Window/GLFW/GLFWWindowsWindow.h"
 #include "Feur/Core/Window/Window.h"
 #include "Feur/Event/Event.h"
 #include <GLFW/glfw3.h>
