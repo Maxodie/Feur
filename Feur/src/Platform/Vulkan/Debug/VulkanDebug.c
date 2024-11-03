@@ -49,7 +49,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(
 	const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
 	void* pUserData) 
 {
-	VulkanFeurDebugger* vkfeDebugger = pUserData;
+	VulkanfeDebugger* vkfeDebugger = pUserData;
 	if (vkfeDebugger->enableFullVulkanDebugMsg || messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
 	{
 		VulkanShowDebug(messageSeverity, pCallbackData);
@@ -58,12 +58,12 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(
 	return VK_FALSE;
 }
 
-void FE_API VulkanInitDefaultDebug(VulkanFeurDebugger* vkfeDebugger)
+void FE_API VulkanInitDefaultDebug(VulkanfeDebugger* vkfeDebugger)
 {
 	vkfeDebugger->enableFullVulkanDebugMsg = FALSE;
 }
 
-void FE_API VulkanPopulateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT* createInfo, VulkanfeInfo* vkInfo)
+void FE_API VulkanPopulateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT* createInfo, const VulkanfeInfo* vkInfo)
 {
 	createInfo->sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
 	createInfo->messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
@@ -79,10 +79,8 @@ void FE_API VulkanSetupDebugMessenger(VulkanfeInfo* vkInfo)
 	VkDebugUtilsMessengerCreateInfoEXT createInfo;
 	VulkanPopulateDebugMessenger(&createInfo, vkInfo);
 	
-	if (CreateDebugUtilsMessengerEXT(vkInfo->vkInstance, &createInfo, NULL, &vkInfo->vkfeDebugger.callback) != VK_SUCCESS) 
-	{
-		FE_CORE_ASSERT(FALSE, "Vulkan Debug message could not be created");
-	}
+	VkResult success = CreateDebugUtilsMessengerEXT(vkInfo->vkInstance, &createInfo, NULL, &vkInfo->vkfeDebugger.callback);
+	FE_CORE_ASSERT(success == VK_SUCCESS, "Vulkan Debug message could not be created");
 }
 
 void FE_API VulkanDestroyDebugMessenger(VulkanfeInfo* vkInfo)

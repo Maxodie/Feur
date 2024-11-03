@@ -4,7 +4,7 @@
 
 Bool FE_API VulkanIsQueueFamilyIndicesCompleted(VulkanfeQueueFamilyIndices* vkQueueFamilyIndices)
 {
-	return vkQueueFamilyIndices->graphicsFamily.hasValue;
+	return vkQueueFamilyIndices->graphicsFamily.hasValue && vkQueueFamilyIndices->presentFamily.hasValue;
 }
 
 void FE_API VulkanPickPhysicalDevice(VulkanfeInfo* vkInfo)
@@ -15,17 +15,14 @@ void FE_API VulkanPickPhysicalDevice(VulkanfeInfo* vkInfo)
 	Uint32 deviceCount = 0;
 	vkEnumeratePhysicalDevices(vkInfo->vkInstance, &deviceCount, NULL);
 
-	if (deviceCount == 0) 
-	{
-		FE_CORE_ASSERT(FALSE, "Failed to find GPUs with Vulkan support!");
-	}
+	FE_CORE_ASSERT(deviceCount > 0, "Failed to find GPUs with Vulkan support!");
 
 	VkPhysicalDevice* devices = FE_MemoryGeneralAlloc(deviceCount * sizeof(VkPhysicalDevice));
 	vkEnumeratePhysicalDevices(vkInfo->vkInstance, &deviceCount, devices);
 
 	for (Uint32 i = 0; i < deviceCount; i++)
 	{
-		if (VulkanPhysicalDeviceSuitable(devices[i])) {
+		if (VulkanPhysicalDeviceSuitable(vkInfo, devices[i])) {
 			vkInfo->physicalDevice = devices[i];
 			break;
 		}
@@ -43,9 +40,7 @@ void FE_API VulkanPickPhysicalDevice(VulkanfeInfo* vkInfo)
 
 	FE_MemoryGeneralFree(devices);
 
-	if (vkInfo->physicalDevice == VK_NULL_HANDLE) {
-		FE_CORE_ASSERT(FALSE, "Failed to find a suitable GPU!");
-	}
+	FE_CORE_ASSERT(vkInfo->physicalDevice != VK_NULL_HANDLE, "Failed to find a suitable GPU!");
 
 #ifndef FE_DIST
 	FE_CORE_LOG_SUCCESS("   == Vulkan Chosen GPU ==");
@@ -54,13 +49,13 @@ void FE_API VulkanPickPhysicalDevice(VulkanfeInfo* vkInfo)
 #endif // !FE_DIST
 }
 
-Bool FE_API VulkanPhysicalDeviceSuitable(VkPhysicalDevice device)
+Bool FE_API VulkanPhysicalDeviceSuitable(const VulkanfeInfo* vkInfo, VkPhysicalDevice device)
 {
-	VulkanfeQueueFamilyIndices indices = VulkanFindQueueFamilies(device);
+	VulkanfeQueueFamilyIndices indices = VulkanFindQueueFamilies(vkInfo, device);
 	return VulkanIsQueueFamilyIndicesCompleted(&indices);
 }
 
-VulkanfeQueueFamilyIndices FE_API VulkanFindQueueFamilies(VkPhysicalDevice device)
+VulkanfeQueueFamilyIndices FE_API VulkanFindQueueFamilies(const VulkanfeInfo* vkInfo, VkPhysicalDevice device)
 {
 	VulkanfeQueueFamilyIndices indices = { 0 };
 
@@ -70,12 +65,18 @@ VulkanfeQueueFamilyIndices FE_API VulkanFindQueueFamilies(VkPhysicalDevice devic
 	VkQueueFamilyProperties* queueFamilies = FE_MemoryGeneralAlloc(queueFamilyCount * sizeof(VkQueueFamilyProperties));
 	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies);
 
-	for (Uint32 y = 0; y < queueFamilyCount; y++) 
+	VkBool32 presentSupport = VK_FALSE;
+	for (Uint32 i = 0; i < queueFamilyCount; i++) 
 	{
-		if (queueFamilies[y].queueFlags & VK_QUEUE_GRAPHICS_BIT) 
+		if (queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) 
 		{
-			FE_OptionalSetValue(indices.graphicsFamily, y);
-			Bool value = indices.graphicsFamily.hasValue;
+			FE_OptionalSetValue(indices.graphicsFamily, i);
+		}
+		
+		vkGetPhysicalDeviceSurfaceSupportKHR(device, i, vkInfo->surface, &presentSupport);
+
+		if (presentSupport) {
+			FE_OptionalSetValue(indices.presentFamily, i);
 		}
 
 		if (VulkanIsQueueFamilyIndicesCompleted(&indices))
@@ -91,23 +92,43 @@ VulkanfeQueueFamilyIndices FE_API VulkanFindQueueFamilies(VkPhysicalDevice devic
 
 void FE_API VulkanCreateLogicalDevice(VulkanfeInfo* vkInfo)
 {
-	VulkanfeQueueFamilyIndices indices = VulkanFindQueueFamilies(vkInfo->physicalDevice);
+	VulkanfeQueueFamilyIndices indices = VulkanFindQueueFamilies(vkInfo, vkInfo->physicalDevice);
 	
+	FE_List(VkDeviceQueueCreateInfo) queueCreateInfos = { 0 };
+	FE_ListInit(queueCreateInfos);
+
+	////////////// TODO : function to remove duplicates from array
+	FE_List(Uint32) uniqueQueueFamilies = { 0 };
+	FE_ListInit(uniqueQueueFamilies);
+	FE_ListPush(uniqueQueueFamilies, indices.graphicsFamily.value);
+	if (indices.graphicsFamily.value != indices.presentFamily.value)
+	{
+		FE_ListPush(uniqueQueueFamilies, indices.presentFamily.value);
+	}
+
+	qsort(uniqueQueueFamilies.data, uniqueQueueFamilies.impl.count, sizeof(Uint32), Fe_SortInt32Ascending);
+	////////////// TODO
+
 	//Queues
 	Float32 queuePriority = 1.0f;
 
-	VkDeviceQueueCreateInfo queueCreateInfo = { 
-		.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
-		.queueFamilyIndex = indices.graphicsFamily.value,
-		.queueCount = 1,
-		.pQueuePriorities = &queuePriority
-	};
+	for (Uint32 i = 0; i < uniqueQueueFamilies.impl.count; i++)
+	{
+		VkDeviceQueueCreateInfo queueCreateInfo = { 
+			.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
+			.queueFamilyIndex = uniqueQueueFamilies.data[i],
+			.queueCount = 1,
+			.pQueuePriorities = &queuePriority
+		};
+		FE_ListPush(queueCreateInfos, queueCreateInfo);
+	}
+
 	//features
 	VkPhysicalDeviceFeatures deviceFeatures = { 0 };
 	VkDeviceCreateInfo createInfo = {
 	.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
-	.pQueueCreateInfos = &queueCreateInfo,
-	.queueCreateInfoCount = 1,
+	.queueCreateInfoCount = (Uint32)queueCreateInfos.impl.count,
+	.pQueueCreateInfos = queueCreateInfos.data,
 	.pEnabledFeatures = &deviceFeatures,
 	.enabledExtensionCount = 0
 	};
@@ -123,11 +144,10 @@ void FE_API VulkanCreateLogicalDevice(VulkanfeInfo* vkInfo)
 	}
 
 	//create device based on pyshical device and createInfo
-	if (vkCreateDevice(vkInfo->physicalDevice, &createInfo, NULL, &vkInfo->device) != VK_SUCCESS)
-	{
-		FE_CORE_LOG_ERROR("failed to create logical device!");
-	}
+	VkResult success = vkCreateDevice(vkInfo->physicalDevice, &createInfo, NULL, &vkInfo->device);
+	FE_CORE_ASSERT(success == VK_SUCCESS, "failed to create logical device!");
 
-	//store graphic queue into vkInfo->graphicsQueue
+	//store queues into vkInfo->*Queue
 	vkGetDeviceQueue(vkInfo->device, indices.graphicsFamily.value, 0, &vkInfo->graphicsQueue);
+	vkGetDeviceQueue(vkInfo->device, indices.presentFamily.value, 0, &vkInfo->presentQueue);
 }

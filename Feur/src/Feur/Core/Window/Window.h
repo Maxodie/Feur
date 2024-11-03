@@ -10,7 +10,7 @@ typedef struct WindowData
 		void (*SwapBuffers)(struct WindowData*);
 	}graphicsContext;
 
-	int w, h;
+	Uint32 w, h;
 	void* nativeWindow;
 	void (*EventCallback)(FE_Event);
 	Bool isMinimized;
@@ -19,6 +19,7 @@ typedef struct WindowData
 typedef struct Window_API
 {
 	Window_API_Type API_Type;
+	Bool (*Init)();
 	Bool (*CreateAppWindow)(WindowData*);
 	void (*PollEvent)();
 	void (*DestroyWindow)(WindowData*);
@@ -28,4 +29,4 @@ typedef struct Window_API
 void FE_API InitWindowAPI();
 void FE_API CreateAppWindow(WindowData* windowData);
 
-Window_API* FE_API GetWindowAPI();
+const Window_API* FE_API GetWindowAPI();

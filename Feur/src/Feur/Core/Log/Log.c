@@ -54,7 +54,15 @@ void FE_API FE_LoggerLog(const char* prefix, LOG_LEVEL level, const char* fmt, .
 
     FE_PrefixLog(prefix, level);
     
-    vfprintf(stdout, fmt, args);
+    switch (level)
+    {
+    case LOG_ERROR:
+        vfprintf(stderr, fmt, args);
+        break;
+    default:
+        vfprintf(stdout, fmt, args);
+        break;
+    }
     
     FE_SuffixLog();
 
@@ -72,7 +80,17 @@ void FE_API FE_ContextLoggerLog(const char* prefix, LOG_LEVEL level, const char*
     FE_PrefixLog(prefix, level);
 
     printf("%s() from %s, line %d : ", functionCtx, fileCtx, lineCtx);
-    vfprintf(stdout, fmt, args);
+
+    switch (level)
+    {
+    case LOG_ERROR :
+        vfprintf(stderr, fmt, args);
+        break;
+    default:
+        vfprintf(stdout, fmt, args);
+        break;
+    }
+    
 
     FE_SuffixLog();
 

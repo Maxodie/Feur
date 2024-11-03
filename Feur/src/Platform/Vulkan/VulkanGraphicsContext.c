@@ -33,7 +33,7 @@ void FE_API Vulkan_GLFWgraphicsContextSwapBuffers(WindowData* windowData)
 	//glfwSwapBuffers((GLFWwindow*)windowData->nativeWindow);
 }
 
-void FE_API Vulkan_GLFWsetExtention(VkInstanceCreateInfo* createInfo, VulkanfeInfo* vkInfo)
+void FE_API Vulkan_GLFWsetExtention(VkInstanceCreateInfo* createInfo, const VulkanfeInfo* vkInfo)
 {
 	Uint32 glfwExtensionCount = 0;
 	const char* const* glfwExtensions;
@@ -60,4 +60,10 @@ void FE_API Vulkan_GLFWsetExtention(VkInstanceCreateInfo* createInfo, VulkanfeIn
 #endif
 	createInfo->enabledExtensionCount = (Uint32)extensions.impl.count;
 	createInfo->ppEnabledExtensionNames = extensions.data;
+}
+
+void Vulkan_GLFWcreateSurface(VulkanfeInfo* vkInfo)
+{
+	VkResult success = glfwCreateWindowSurface(vkInfo->vkInstance, GetApp()->windowData.nativeWindow, NULL, &vkInfo->surface);
+	FE_CORE_ASSERT(success == VK_SUCCESS, "failed to create window surface!");
 }

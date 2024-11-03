@@ -8,23 +8,15 @@
 Bool FE_API VulkanInit_impl(RendererAPIData* apiData)
 {
 	VulkanfeInfo* vkInfo = FE_MemoryGeneralAlloc(sizeof(VulkanfeInfo));
-
-	if (vkInfo == NULL)
-	{
-		FE_CORE_LOG_ERROR("Failed allocate memory for VulkanInfo");
-		return FALSE;
-	}
+	FE_CORE_ASSERT(vkInfo != NULL, "Failed allocate memory for VulkanInfo");
 
 	VulkanInitValidationLayer(vkInfo);
 	VulkanInitDefaultDebug(&vkInfo->vkfeDebugger);
 
-	if (!CreateVulkanInstance(vkInfo))
-	{
-		FE_CORE_LOG_ERROR("Failed to create vulkanInstance");
-		return FALSE;
-	}
+	CreateVulkanInstance(vkInfo);
 
 	VulkanSetupDebugMessenger(vkInfo);
+	CreateVulkanSurface(vkInfo);
 	VulkanPickPhysicalDevice(vkInfo);
 	VulkanCreateLogicalDevice(vkInfo);
 

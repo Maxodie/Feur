@@ -4,15 +4,18 @@
 #include "Feur/Event/Event.h"
 #include <GLFW/glfw3.h>
 
-static void FE_API GLFWErrorCallback(int error, const char* description);
-static void FE_API GLFWSetWindowSizeCallback(GLFWwindow* window, int width, int height);
+static void FE_API GLFWErrorCallback(Int32 error, const char* description);
+static void FE_API GLFWSetWindowSizeCallback(GLFWwindow* window, Int32 width, Int32 height);
 static void FE_API GLFWSetWindowCloseCallback(GLFWwindow* window);
-static void FE_API GLFWSetKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+static void FE_API GLFWSetKeyCallback(GLFWwindow* window, Int32 key, Int32 scancode, Int32 action, Int32 mods);
+
+Bool CreateGLFWInit_impl(WindowData* windowData)
+{
+	return glfwInit();
+}
 
 Bool FE_API CreateGLFWWindow_impl(WindowData* windowData)
 {
-	int sucess = glfwInit();
-
 	windowData->w = 800;
 	windowData->h = 600;
 	GLFWwindow* glfwWindow = glfwCreateWindow(
@@ -79,12 +82,12 @@ Bool FE_API CreateGLFWWindow_impl(WindowData* windowData)
 	return TRUE;
 }
 
-static void FE_API GLFWErrorCallback(int error, const char* description)
+static void FE_API GLFWErrorCallback(Int32 error, const char* description)
 {
 	FE_CORE_LOG_ERROR("GLFW Error ({%d}): {%s}", error, description);
 }
 
-static void FE_API GLFWSetWindowSizeCallback(GLFWwindow * window, int width, int height)
+static void FE_API GLFWSetWindowSizeCallback(GLFWwindow * window, Int32 width, Int32 height)
 {
 	WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 
@@ -107,7 +110,7 @@ static void FE_API GLFWSetWindowCloseCallback(GLFWwindow* window)
 	data->EventCallback(event);
 }
 
-void FE_API GLFWSetKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+void FE_API GLFWSetKeyCallback(GLFWwindow* window, Int32 key, Int32 scancode, Int32 action, Int32 mods)
 {
 	WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 

@@ -3,7 +3,7 @@
 #include "Platform/Vulkan/VulkanGraphicsContext.h"
 #include "Platform/Vulkan/Debug/VulkanValidationLayer.h"
 
-Bool FE_API CreateVulkanInstance(VulkanfeInfo* vkInfo)
+void FE_API CreateVulkanInstance(VulkanfeInfo* vkInfo)
 {
 	//Init validation layers
 	if (vkInfo->enableValidationLayers && !VulkanCheckValidationLayerSupport(vkInfo))
@@ -49,8 +49,8 @@ Bool FE_API CreateVulkanInstance(VulkanfeInfo* vkInfo)
 		Vulkan_GLFWsetExtention(&createInfo, vkInfo);
 		break;
 	default:
-		FE_CORE_ASSERT(FALSE, "failed to set extention count");
-		return FALSE;
+		FE_CORE_ASSERT(FALSE, "failed to set extention count, Window API not supported yet");
+		return;
 		break;
 	}
 
@@ -80,18 +80,29 @@ Bool FE_API CreateVulkanInstance(VulkanfeInfo* vkInfo)
 	FE_MemoryGeneralFree(extensions);
 
 	//create instance
-	if (vkCreateInstance(&createInfo, NULL, &vkInfo->vkInstance) != VK_SUCCESS) 
-	{
-		FE_CORE_ASSERT(FALSE, "failed to create vulkan instance");
-		return FALSE;
-	}
+	VkResult success = vkCreateInstance(&createInfo, NULL, &vkInfo->vkInstance);
+	FE_CORE_ASSERT(success == VK_SUCCESS, "failed to create vulkan instance");
+	
+}
 
-	return TRUE;
+void FE_API CreateVulkanSurface(VulkanfeInfo* vkInfo)
+{
+	switch (GetWindowAPI()->API_Type)
+	{
+	case FE_WINDOW_API_GLFW:
+		Vulkan_GLFWcreateSurface(vkInfo);
+		break;
+	default:
+		FE_CORE_ASSERT(FALSE, "failed to create surface, Window API not supported yet");
+		return;
+		break;
+	}
 }
 
 void FE_API VulkanCleanup(VulkanfeInfo* vkInfo)
 {
 	vkDestroyDevice(vkInfo->device, NULL);
 	VulkanDestroyDebugMessenger(vkInfo);
+	vkDestroySurfaceKHR(vkInfo->vkInstance, vkInfo->surface, NULL);
 	vkDestroyInstance(vkInfo->vkInstance, NULL);
 }

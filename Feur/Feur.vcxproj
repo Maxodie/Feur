@@ -151,6 +151,7 @@
     <ClInclude Include="src\Feur\Core\Memory\MemoryAllocator.h" />
     <ClInclude Include="src\Feur\Core\Memory\PoolAllocator.h" />
     <ClInclude Include="src\Feur\Core\Memory\StackAllocator.h" />
+    <ClInclude Include="src\Feur\Core\Utils\FeurSort.h" />
     <ClInclude Include="src\Feur\Core\Utils\List.h" />
     <ClInclude Include="src\Feur\Core\Utils\Optional.h" />
     <ClInclude Include="src\Feur\Core\Window\Window.h" />
@@ -190,6 +191,7 @@
     <ClCompile Include="src\Feur\Core\Memory\MemoryAllocator.c" />
     <ClCompile Include="src\Feur\Core\Memory\PoolAllocator.c" />
     <ClCompile Include="src\Feur\Core\Memory\StackAllocator.c" />
+    <ClCompile Include="src\Feur\Core\Utils\FeurSort.c" />
     <ClCompile Include="src\Feur\Core\Utils\List.c" />
     <ClCompile Include="src\Feur\Core\Utils\Optional.c" />
     <ClCompile Include="src\Feur\Core\Window\Window.c" />

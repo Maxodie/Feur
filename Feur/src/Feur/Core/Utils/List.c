@@ -1,7 +1,7 @@
 #include "fepch.h"
 #include "Feur/Core/Utils/List.h"
 
-FE_FORCEINLINE_FUN Bool FE_API FE_ListInit_impl(FE_List_impl* list, Byte** data)
+Bool FE_API FE_ListInit_impl(FE_List_impl* list, Byte** data)
 {
 	list->count = 0;
 	list->capacity = 0;
@@ -13,7 +13,7 @@ FE_FORCEINLINE_FUN Bool FE_API FE_ListInit_impl(FE_List_impl* list, Byte** data)
 
 Bool FE_API FE_ListPop_impl(FE_List_impl* list, Byte** data)
 {
-	FE_CORE_ASSERT(list != NULL && data != NULL && *data != NULL && list->isInitialized == TRUE, "FE_ListPop_impl list or data is null or list hasn't been initialized");
+	FE_CORE_ASSERT(list != NULL && data != NULL && *data != NULL && list->isInitialized == TRUE, "list or data is null or list hasn't been initialized");
 
 	if (list == NULL || NULL == data) return FALSE;
 	
@@ -38,7 +38,7 @@ Bool FE_API FE_ListPop_impl(FE_List_impl* list, Byte** data)
 
 Bool FE_API FE_ListInsert_impl(FE_List_impl* list, Byte** data, const void* value, Uint32 position, SizeT dataSize)
 {
-	FE_CORE_ASSERT(list != NULL && data != NULL && list->isInitialized == TRUE, "FE_ListPop_impl list or data is null or list hasn't been initialized");
+	FE_CORE_ASSERT(list != NULL && data != NULL && list->isInitialized == TRUE, "list or data is null or list hasn't been initialized");
 	if (list == NULL || NULL == *data || position > list->count) return FALSE;
 
 	SizeT i;
@@ -73,7 +73,7 @@ Bool FE_API FE_ListInsert_impl(FE_List_impl* list, Byte** data, const void* valu
 
 Bool FE_API FE_ListPush_impl(FE_List_impl* list, Byte** data, const void* value, SizeT dataSize)
 {
-	FE_CORE_ASSERT(list != NULL && data != NULL && list->isInitialized == TRUE, "FE_ListPop_impl list or data is null or list hasn't been initialized");
+	FE_CORE_ASSERT(list != NULL && data != NULL && list->isInitialized == TRUE, "list or data is null or list hasn't been initialized");
 	if (list == NULL) return FALSE;
 
 	Byte* temp = *data;
@@ -106,9 +106,9 @@ Bool FE_API FE_ListPush_impl(FE_List_impl* list, Byte** data, const void* value,
 	return TRUE;
 }
 
-Bool FE_ListPushArray_impl(FE_List_impl* list, Byte** data, const void* arrayData, SizeT sizeToPush, SizeT dataSize)
+Bool FE_API FE_ListPushArray_impl(FE_List_impl* list, Byte** data, const void* arrayData, SizeT sizeToPush, SizeT dataSize)
 {
-	FE_CORE_ASSERT(list != NULL && data != NULL && arrayData != NULL && sizeToPush > 0 && list->isInitialized == TRUE, "FE_ListPop_impl list or data is null or list hasn't been initialized");
+	FE_CORE_ASSERT(list != NULL && data != NULL && arrayData != NULL && sizeToPush > 0 && list->isInitialized == TRUE, "list or data is null or list hasn't been initialized");
 	if (list == NULL) return FALSE;
 
 	Byte* temp = *data;
@@ -143,7 +143,7 @@ Bool FE_ListPushArray_impl(FE_List_impl* list, Byte** data, const void* arrayDat
 
 Bool FE_API FE_ListReserve_impl(FE_List_impl* list, Byte** data, SizeT amount, SizeT dataSize)
 {
-	FE_CORE_ASSERT(list != NULL && data != NULL, "FE_ListPop_impl list or data is null");
+	FE_CORE_ASSERT(list != NULL && data != NULL, "list or data is null");
 	if (list == NULL) return FALSE;
 
 	list->capacity += amount;
@@ -163,7 +163,7 @@ Bool FE_API FE_ListReserve_impl(FE_List_impl* list, Byte** data, SizeT amount, S
 	return TRUE;
 }
 
-Bool FE_ListClear_impl(FE_List_impl* list, Byte** data)
+Bool FE_API FE_ListClear_impl(FE_List_impl* list, Byte** data)
 {
 	if (list == NULL || data == NULL || (*data) == NULL) return FALSE;
 

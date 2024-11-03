@@ -15,7 +15,7 @@ void FE_API VulkanInitValidationLayer(VulkanfeInfo* vkInfo)
 #endif
 }
 
-Bool FE_API VulkanCheckValidationLayerSupport(VulkanfeInfo* vkInfo)
+Bool FE_API VulkanCheckValidationLayerSupport(const VulkanfeInfo* vkInfo)
 {
 	Uint32 availableLayerCount;
 	vkEnumerateInstanceLayerProperties(&availableLayerCount, NULL);

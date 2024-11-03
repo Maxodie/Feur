@@ -5,16 +5,19 @@
 typedef struct VulkanfeInfo 
 {
 	VkInstance vkInstance;
-	VulkanFeurDebugger vkfeDebugger;
+	VulkanfeDebugger vkfeDebugger;
 	FE_List(const char*) validationLayers;
 
 	VkPhysicalDevice physicalDevice;
 	VkDevice device;
 	VkQueue graphicsQueue;
+	VkQueue presentQueue;
+	VkSurfaceKHR surface;
 
 	Bool enableValidationLayers;
 
 } VulkanfeInfo;
 
-Bool FE_API CreateVulkanInstance(VulkanfeInfo* vkInfo);
+void FE_API CreateVulkanInstance(VulkanfeInfo* vkInfo);
+void FE_API CreateVulkanSurface(VulkanfeInfo* vkInfo);
 void FE_API VulkanCleanup(VulkanfeInfo* vkInfo);

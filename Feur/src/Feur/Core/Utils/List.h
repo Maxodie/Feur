@@ -24,7 +24,7 @@ typedef struct FE_List_impl {
 //with 'fe_list' an FE_List(type);
 #define FE_ListClear(fe_list) FE_ListClear_impl(&fe_list.impl, (Byte**)&fe_list.data)
 
-FE_FORCEINLINE_FUN Bool FE_API FE_ListInit_impl(FE_List_impl* list, Byte** data);
+Bool FE_API FE_ListInit_impl(FE_List_impl* list, Byte** data);
 Bool FE_API FE_ListPop_impl(FE_List_impl* list, Byte** data);
 
 Bool FE_API FE_ListInsert_impl(FE_List_impl* list, Byte** data, const void* value, Uint32 position, SizeT dataSize);
@@ -33,4 +33,4 @@ Bool FE_API FE_ListPush_impl(FE_List_impl* list, Byte** data, const void* value,
 Bool FE_API FE_ListPushArray_impl(FE_List_impl* list, Byte** data, const void* arrayData, SizeT sizeToPush, SizeT dataSize);
 
 Bool FE_API FE_ListReserve_impl(FE_List_impl* list, Byte** data, SizeT amount, SizeT dataSize);
-Bool FE_API FE_ListClear_impl(FE_List_impl* list, Byte** data);
+Bool FE_API FE_ListClear_impl(FE_List_impl* list, Byte** data); 

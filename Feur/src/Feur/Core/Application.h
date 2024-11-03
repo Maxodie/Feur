@@ -29,6 +29,6 @@ Bool FE_API OnWindowClose(FE_EventData* windowResizeEvent);
 void FE_API ShutdownApp();
 void FE_API QuitApp();
 
-const FE_App* GetApp();
+const FE_App* FE_API GetApp();
 
 // TODO : some functions does not need to be imported on sandbox, put those function in other headers (_internal) and create utils to put list and weird nerd stuff

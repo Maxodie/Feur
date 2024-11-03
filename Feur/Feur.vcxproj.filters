@@ -182,6 +182,7 @@
       <Filter>Platform\Window\SDL</Filter>
     </ClInclude>
     <ClInclude Include="src\fepch.h" />
+    <ClInclude Include="src\Feur\Core\Utils\FeurSort.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Feur\Core\Application.c">
@@ -293,5 +294,6 @@
       <Filter>Platform\Window\SDL</Filter>
     </ClCompile>
     <ClCompile Include="src\fepch.c" />
+    <ClCompile Include="src\Feur\Core\Utils\FeurSort.c" />
   </ItemGroup>
 </Project>

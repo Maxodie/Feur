@@ -17,6 +17,7 @@ void FE_API InitWindowAPI()
 		//windowAPI.Update = SDLUpdate_impl;
 		break;
 	case FE_WINDOW_API_GLFW:
+		windowAPI.Init = CreateGLFWInit_impl;
 		windowAPI.CreateAppWindow = CreateGLFWWindow_impl;
 		windowAPI.DestroyWindow = GLFWDestroyWindow_impl;
 		windowAPI.PollEvent = GLFWPollEvent_impl;
@@ -29,15 +30,18 @@ void FE_API InitWindowAPI()
 
 void FE_API CreateAppWindow(WindowData* windowData)
 {
-	InitWindowCreationHintParameters();
-	Bool success = windowAPI.CreateAppWindow(windowData);
+	Bool success = windowAPI.Init();
+	FE_CORE_ASSERT(success, "Failed to init window");
 
+	InitWindowCreationHintParameters();
+
+	success = windowAPI.CreateAppWindow(windowData);
 	FE_CORE_ASSERT(success, "Window.c: Failed to create window");
 
 	CreateGraphicsContext(windowData);
 }
 
-Window_API* FE_API GetWindowAPI()
+const Window_API* FE_API GetWindowAPI()
 {
 	return &windowAPI;
 }

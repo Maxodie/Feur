@@ -27,12 +27,14 @@ typedef Double MaxAlignT; //based on the cstddef c++ using : most aligned type
 #define BIT(x) (1 << x)
 
 #if defined(_MSC_VER)
-#	define FE_CORE_DEBUG_BREAK(x) __debugbreak();
+#	define FE_CORE_DEBUG_BREAK __debugbreak()
 #elif defined(__GNUC__) || defined(__GNUG__)
-#	define FE_CORE_DEBUG_BREAK(x) asm("int $3")//won't compile with -masm=intel
+#	define FE_CORE_DEBUG_BREAK asm("int $3")//won't compile with -masm=intel
 #else
-#	define FE_CORE_DEBUG_BREAK(x) FE_CORE_LOG_ERROR("FE_CORE_DEBUG_BREAK don't do anything");
+#	define FE_CORE_DEBUG_BREAK FE_CORE_LOG_ERROR("FE_CORE_DEBUG_BREAK don't do anything")
 #endif
+
+#define FE_CORE_ABORT abort()
 
 #ifdef FE_ENABLE_ASSERTS
 
@@ -42,7 +44,8 @@ typedef Double MaxAlignT; //based on the cstddef c++ using : most aligned type
 	else\
 	{\
 		FE_LOG_ERROR("%s Assertion Failed : %s", #x, __VA_ARGS__); \
-		FE_CORE_DEBUG_BREAK(); \
+		FE_CORE_DEBUG_BREAK; \
+		FE_CORE_ABORT; \
 	}
 
 #	define FE_CORE_ASSERT(x, ...) \
@@ -51,7 +54,8 @@ typedef Double MaxAlignT; //based on the cstddef c++ using : most aligned type
 	else\
 	{\
 		FE_CORE_LOG_ERROR("%s Assertion Failed : %s", #x, __VA_ARGS__); \
-		FE_CORE_DEBUG_BREAK(); \
+		FE_CORE_DEBUG_BREAK; \
+		FE_CORE_ABORT; \
 	}
 
 #	define CORE_COMPILE_TIME_ASSERTx(COND, msg) typedef char core_static_assertion_##msg[(!!(COND))*2-1]
