@@ -2,19 +2,21 @@
 
 typedef unsigned char Byte;
 typedef Byte Bool;
-typedef unsigned short WORD;
+typedef unsigned short Word;
 
 typedef char Int8;
 typedef Byte Uint8;
 typedef short Int16;
-typedef unsigned short Uint16;
+typedef Word Uint16;
 typedef int Int32;
 typedef unsigned int Uint32;
 typedef long long Int64;
 typedef unsigned long long Uint64;
+typedef float Float32;
+typedef double Double;
 typedef size_t SizeT;
 typedef uintptr_t UintptrT;
-typedef double MaxAlignT; //based on the cstddef c++ using : most aligned type
+typedef Double MaxAlignT; //based on the cstddef c++ using : most aligned type
 
 
 #define FE_API _cdecl

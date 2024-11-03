@@ -77,7 +77,7 @@
       <PrecompiledHeaderFile>fepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>ILDA_HAVE_INLINE;_CRT_SECURE_NO_WARNINGS;FE_RENDER_SELECTED_API_VULKAN;FE_PLATFORM_WINDOWS;FE_ENABLE_ASSERTS;FE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\SDL2\SDL\include;vendor\Glad\include;vendor\VulkanSDK\1.3.290.0\Include;vendor\GLFW\include;vendor;vendor\Mathilda\Mathilda\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\Glad\include;vendor\VulkanSDK\1.3.290.0\Include;vendor\GLFW\include;vendor;vendor\Mathilda\Mathilda\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -88,10 +88,6 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <Lib>
-      <AdditionalDependencies>Feur\vendor\VulkanSDK\1.3.290.0\Lib\vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -99,7 +95,7 @@
       <PrecompiledHeaderFile>fepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>ILDA_HAVE_INLINE;_CRT_SECURE_NO_WARNINGS;FE_RENDER_SELECTED_API_VULKAN;FE_PLATFORM_WINDOWS;FE_RELEASE;FE_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\SDL2\SDL\include;vendor\Glad\include;vendor\VulkanSDK\1.3.290.0\Include;vendor\GLFW\include;vendor;vendor\Mathilda\Mathilda\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\Glad\include;vendor\VulkanSDK\1.3.290.0\Include;vendor\GLFW\include;vendor;vendor\Mathilda\Mathilda\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -116,10 +112,6 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
-    <Lib>
-      <AdditionalDependencies>Feur\vendor\VulkanSDK\1.3.290.0\Lib\vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <ClCompile>
@@ -127,7 +119,7 @@
       <PrecompiledHeaderFile>fepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>ILDA_HAVE_INLINE;_CRT_SECURE_NO_WARNINGS;FE_RENDER_SELECTED_API_VULKAN;FE_PLATFORM_WINDOWS;FE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\SDL2\SDL\include;vendor\Glad\include;vendor\VulkanSDK\1.3.290.0\Include;vendor\GLFW\include;vendor;vendor\Mathilda\Mathilda\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\Glad\include;vendor\VulkanSDK\1.3.290.0\Include;vendor\GLFW\include;vendor;vendor\Mathilda\Mathilda\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -144,10 +136,6 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
-    <Lib>
-      <AdditionalDependencies>Feur\vendor\VulkanSDK\1.3.290.0\Lib\vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Feur.h" />
@@ -164,6 +152,7 @@
     <ClInclude Include="src\Feur\Core\Memory\PoolAllocator.h" />
     <ClInclude Include="src\Feur\Core\Memory\StackAllocator.h" />
     <ClInclude Include="src\Feur\Core\Utils\List.h" />
+    <ClInclude Include="src\Feur\Core\Utils\Optional.h" />
     <ClInclude Include="src\Feur\Core\Window\Window.h" />
     <ClInclude Include="src\Feur\Debug\Benchmark.h" />
     <ClInclude Include="src\Feur\Event\Event.h" />
@@ -179,11 +168,12 @@
     <ClInclude Include="src\Platform\OpenGL\OpenGLGraphicsContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
     <ClInclude Include="src\Platform\Vulkan\Debug\VulkanDebug.h" />
+    <ClInclude Include="src\Platform\Vulkan\Debug\VulkanValidationLayer.h" />
+    <ClInclude Include="src\Platform\Vulkan\Setup\VulkanDevice.h" />
+    <ClInclude Include="src\Platform\Vulkan\Setup\VulkanSetup.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanBuffers.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanGraphicsContext.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanRendererAPI.h" />
-    <ClInclude Include="src\Platform\Vulkan\VulkanSetup.h" />
-    <ClInclude Include="src\Platform\Vulkan\Debug\VulkanValidationLayer.h" />
     <ClInclude Include="src\Platform\Window\GLFW\GLFWWindowsInput.h" />
     <ClInclude Include="src\Platform\Window\GLFW\GLFWWindowsWindow.h" />
     <ClInclude Include="src\Platform\Window\SDL\SDLWindowsInput.h" />
@@ -201,6 +191,7 @@
     <ClCompile Include="src\Feur\Core\Memory\PoolAllocator.c" />
     <ClCompile Include="src\Feur\Core\Memory\StackAllocator.c" />
     <ClCompile Include="src\Feur\Core\Utils\List.c" />
+    <ClCompile Include="src\Feur\Core\Utils\Optional.c" />
     <ClCompile Include="src\Feur\Core\Window\Window.c" />
     <ClCompile Include="src\Feur\Debug\Benchmark.c" />
     <ClCompile Include="src\Feur\Event\Event.c" />
@@ -216,11 +207,12 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLGraphicsContext.c" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.c" />
     <ClCompile Include="src\Platform\Vulkan\Debug\VulkanDebug.c" />
+    <ClCompile Include="src\Platform\Vulkan\Debug\VulkanValidationLayer.c" />
+    <ClCompile Include="src\Platform\Vulkan\Setup\VulkanDevice.c" />
+    <ClCompile Include="src\Platform\Vulkan\Setup\VulkanSetup.c" />
     <ClCompile Include="src\Platform\Vulkan\VulkanBuffers.c" />
     <ClCompile Include="src\Platform\Vulkan\VulkanGraphicsContext.c" />
     <ClCompile Include="src\Platform\Vulkan\VulkanRendererAPI.c" />
-    <ClCompile Include="src\Platform\Vulkan\VulkanSetup.c" />
-    <ClCompile Include="src\Platform\Vulkan\Debug\VulkanValidationLayer.c" />
     <ClCompile Include="src\Platform\Window\GLFW\GLFWWindowsInput.c" />
     <ClCompile Include="src\Platform\Window\GLFW\GLFWWindowsWindow.c" />
     <ClCompile Include="src\Platform\Window\SDL\SDLWindowsInput.c" />
@@ -230,12 +222,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="vendor\SDL2\SDL\Intermediate\ProjectFiles\vs2022\SDL2.vcxproj">
-      <Project>{3ABE8B7C-26F5-8C0D-CFE1-7210BBF7080F}</Project>
-    </ProjectReference>
-    <ProjectReference Include="vendor\SDL2\SDL\Intermediate\ProjectFiles\vs2022\SDL2main.vcxproj">
-      <Project>{1FBB913C-0B88-EC47-34A1-DAEF20CD21D6}</Project>
-    </ProjectReference>
     <ProjectReference Include="vendor\Glad\Glad.vcxproj">
       <Project>{BDD6857C-A90D-870D-52FA-6C103E10030F}</Project>
     </ProjectReference>
@@ -244,6 +230,9 @@
     </ProjectReference>
     <ProjectReference Include="vendor\Mathilda\Mathilda\Mathilda.vcxproj">
       <Project>{A9207DCC-95ED-D7D7-BE06-C67FAA320D66}</Project>
+    </ProjectReference>
+    <ProjectReference Include="vendor\VulkanSDK\Vulkan.vcxproj">
+      <Project>{4ABD8B07-B672-04FD-3F67-FED3AB1BFB00}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

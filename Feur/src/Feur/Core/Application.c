@@ -139,14 +139,15 @@ void FE_API Render()
 
 void FE_API ShutdownApp()
 {
-	for (SizeT i = 0; i < FE_LayerStackGetCount(&g_fe_App.layerStack); i++)
-	{
-		FE_LayerStackPop(&g_fe_App.layerStack);
-	}
+	FE_LayerStackClear(&g_fe_App.layerStack);
 
 	RendererShutdown(&g_fe_App.rendererAPIData);
+	FE_CORE_LOG_SUCCESS("Renderer shuted down");
 	GetWindowAPI()->DestroyWindow(&g_fe_App.windowData);
+	FE_CORE_LOG_SUCCESS("Window destroyed");
 	FE_MemoryGeneralShutdown();
+	FE_CORE_LOG_SUCCESS("Memory freed");
+	FE_CORE_LOG_SUCCESS("Application closed");
 }
 
 void FE_API QuitApp()

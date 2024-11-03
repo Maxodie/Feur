@@ -22,8 +22,8 @@ enum FE_MEMORY_ALLOCATION_INFO
 
 //@TODO general allocation that allocate pool page, maybe with a system of a different sized 
 
-FE_FORCEINLINE_FUN void* FE_API FE_MemoryCustomMalloc(SizeT size);
-FE_FORCEINLINE_FUN void* FE_API FE_MemoryCustomCalloc(SizeT size);
+//FE_FORCEINLINE_FUN void* FE_API FE_MemoryCustomMalloc(SizeT size);
+//FE_FORCEINLINE_FUN void* FE_API FE_MemoryCustomCalloc(SizeT size);
 FE_FORCEINLINE_FUN UintptrT FE_API FE_MemoryAlignAddress(UintptrT address, SizeT alignment);
 FE_FORCEINLINE_FUN UintptrT FE_API FE_MemoryAlignForwardAdjustment(UintptrT address, SizeT alignment);
 FE_FORCEINLINE_FUN UintptrT FE_API FE_MemoryAlignForwardAdjustmentWithHeader(UintptrT address, SizeT alignment, SizeT headerSize);

@@ -1,15 +1,15 @@
 #include "fepch.h"
 
 #include "Platform/Vulkan/VulkanGraphicsContext.h"
-#include "Platform/Vulkan/VulkanSetup.h"
+#include "Platform/Vulkan/Setup/VulkanSetup.h"
 
 #include <vulkan/vulkan.h>
 #include <GLFW/glfw3.h>
 
 void FE_API Vulkan_GLFWwindowHintParameters()
 {
-	/*glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-	glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+	/*glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);*/
 }
@@ -33,7 +33,7 @@ void FE_API Vulkan_GLFWgraphicsContextSwapBuffers(WindowData* windowData)
 	//glfwSwapBuffers((GLFWwindow*)windowData->nativeWindow);
 }
 
-void FE_API Vulkan_GLFWsetExtention(VkInstanceCreateInfo* createInfo, VulkanInfo* vkInfo)
+void FE_API Vulkan_GLFWsetExtention(VkInstanceCreateInfo* createInfo, VulkanfeInfo* vkInfo)
 {
 	Uint32 glfwExtensionCount = 0;
 	const char* const* glfwExtensions;

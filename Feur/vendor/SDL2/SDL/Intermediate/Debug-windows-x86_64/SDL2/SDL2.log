@@ -160,5 +160,7 @@
   SDL_windowswindow.c
   yuv_rgb.c
   Generating Code...
-     Creating library ..\..\..\Binaries\Debug-windows-x86_64\SDL2.lib and object ..\..\..\Binaries\Debug-windows-x86_64\SDL2.exp
-  SDL2.vcxproj -> E:\C\CProjects\FEUR\Feur\Feur\vendor\SDL2\SDL\Binaries\Debug-windows-x86_64\SDL2.dll
+winmm.lib(WINMM.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in setupapi.lib(SETUPAPI.dll); second definition ignored
+imm32.lib(IMM32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in setupapi.lib(SETUPAPI.dll); second definition ignored
+version.lib(VERSION.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in setupapi.lib(SETUPAPI.dll); second definition ignored
+  SDL2.vcxproj -> E:\C\CProjects\FEUR\Feur\Feur\vendor\SDL2\SDL\Binaries\Debug-windows-x86_64\SDL2.lib

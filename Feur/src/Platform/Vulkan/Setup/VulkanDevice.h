@@ -1,0 +1,18 @@
+#pragma once
+#include <vulkan/vulkan.h>
+
+typedef struct VulkanfeQueueFamilyIndices
+{
+	FE_Optional(Uint32) graphicsFamily;
+} VulkanfeQueueFamilyIndices;
+
+//Physical device and family queue
+Bool FE_API VulkanIsQueueFamilyIndicesCompleted(VulkanfeQueueFamilyIndices* vkQueueFamilyIndices);
+
+void FE_API VulkanPickPhysicalDevice(struct VulkanfeInfo* vkInfo);
+Bool FE_API VulkanPhysicalDeviceSuitable(VkPhysicalDevice device); 
+
+VulkanfeQueueFamilyIndices FE_API VulkanFindQueueFamilies(VkPhysicalDevice device);
+
+//Logical device
+void FE_API VulkanCreateLogicalDevice(struct VulkanfeInfo* vkInfo);

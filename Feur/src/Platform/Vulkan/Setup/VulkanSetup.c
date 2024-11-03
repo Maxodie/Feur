@@ -1,9 +1,9 @@
 #include "fepch.h"
-#include "Platform/Vulkan/VulkanSetup.h"
+#include "Platform/Vulkan/Setup/VulkanSetup.h"
 #include "Platform/Vulkan/VulkanGraphicsContext.h"
 #include "Platform/Vulkan/Debug/VulkanValidationLayer.h"
 
-Bool FE_API CreateVulkanInstance(VulkanInfo* vkInfo)
+Bool FE_API CreateVulkanInstance(VulkanfeInfo* vkInfo)
 {
 	//Init validation layers
 	if (vkInfo->enableValidationLayers && !VulkanCheckValidationLayerSupport(vkInfo))
@@ -68,12 +68,14 @@ Bool FE_API CreateVulkanInstance(VulkanInfo* vkInfo)
 
 	vkEnumerateInstanceExtensionProperties(NULL, &extensionCount, extensions);
 
+#ifndef FE_DIST
 	FE_CORE_LOG_SUCCESS("   == Vulkan Extensions Supported ==");
 
 	for (Uint32 i = 0; i < extensionCount; i++) 
 	{
 		FE_CORE_LOG_SUCCESS("   - NAME   %s || VERSION   %d", (const char*)extensions[i].extensionName, extensions[i].specVersion);
 	}
+#endif // !FE_DIST
 
 	FE_MemoryGeneralFree(extensions);
 
@@ -87,7 +89,9 @@ Bool FE_API CreateVulkanInstance(VulkanInfo* vkInfo)
 	return TRUE;
 }
 
-void FE_API VulkanCleanup(VkInstance vkInstance)
+void FE_API VulkanCleanup(VulkanfeInfo* vkInfo)
 {
-	vkDestroyInstance(vkInstance, NULL);
+	vkDestroyDevice(vkInfo->device, NULL);
+	VulkanDestroyDebugMessenger(vkInfo);
+	vkDestroyInstance(vkInfo->vkInstance, NULL);
 }

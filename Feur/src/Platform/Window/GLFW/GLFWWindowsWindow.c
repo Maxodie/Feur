@@ -133,6 +133,7 @@ void FE_API GLFWSetKeyCallback(GLFWwindow* window, int key, int scancode, int ac
 
 void FE_API GLFWPollEvent_impl()
 {
+	glfwPollEvents();
 }
 
 void FE_API GLFWDestroyWindow_impl(WindowData* windowData)
@@ -143,6 +144,5 @@ void FE_API GLFWDestroyWindow_impl(WindowData* windowData)
 
 void FE_API GLFWUpdate_impl(WindowData* windowData)
 {
-	glfwPollEvents();
 	windowData->graphicsContext.SwapBuffers(windowData);
 }

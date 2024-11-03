@@ -3,10 +3,11 @@
 
 typedef struct VulkanFeurDebugger 
 {
-	Bool enableFullVulkanDebugMsg;
 	VkDebugUtilsMessengerEXT callback;
+	Bool enableFullVulkanDebugMsg;
 } VulkanFeurDebugger;
 
-void FE_API VulkanPopulateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT* createInfo, struct VulkanInfo* vkInfo);
-void FE_API VulkanSetupDebugMessenger(struct VulkanInfo* vkInfo);
-void FE_API VulkanDestroyDebugMessenger(struct VulkanInfo* vkInfo);
+void FE_API VulkanInitDefaultDebug(VulkanFeurDebugger* vkfeDebugger);
+void FE_API VulkanPopulateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT* createInfo, struct VulkanfeInfo* vkInfo);
+void FE_API VulkanSetupDebugMessenger(struct VulkanfeInfo* vkInfo);
+void FE_API VulkanDestroyDebugMessenger(struct VulkanfeInfo* vkInfo);

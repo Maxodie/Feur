@@ -46,14 +46,20 @@
     <Filter Include="Platform\Vulkan">
       <UniqueIdentifier>{6AE1DE2D-D66C-4CF2-DF7D-CFE64B88A8F2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform\Windows">
-      <UniqueIdentifier>{64FBD71A-50F4-F66C-7926-DCF1657ED678}</UniqueIdentifier>
+    <Filter Include="Platform\Vulkan\Debug">
+      <UniqueIdentifier>{60D30ADE-CC3F-C6D8-9533-5E36015FE840}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform\Windows\GLFW">
-      <UniqueIdentifier>{2375CBE4-8FE1-86DF-58D5-1E3DC400A947}</UniqueIdentifier>
+    <Filter Include="Platform\Vulkan\Setup">
+      <UniqueIdentifier>{8A8F1ADF-F6FB-D5D9-BFEF-6D372B1BF841}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform\Windows\SDL">
-      <UniqueIdentifier>{563D8A73-42CC-133D-EBEA-2738D75824E3}</UniqueIdentifier>
+    <Filter Include="Platform\Window">
+      <UniqueIdentifier>{D1E05B2F-3D6C-C9F3-467D-4CE8B28725F4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Window\GLFW">
+      <UniqueIdentifier>{B0C6C86E-9C55-5238-4574-663331E262DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Window\SDL">
+      <UniqueIdentifier>{43112D49-AF72-0A57-38E0-5009A4404116}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -95,6 +101,9 @@
       <Filter>Feur\Core\Memory</Filter>
     </ClInclude>
     <ClInclude Include="src\Feur\Core\Utils\List.h">
+      <Filter>Feur\Core\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Feur\Core\Utils\Optional.h">
       <Filter>Feur\Core\Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\Feur\Core\Window\Window.h">
@@ -139,6 +148,18 @@
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h">
       <Filter>Platform\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\Debug\VulkanDebug.h">
+      <Filter>Platform\Vulkan\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\Debug\VulkanValidationLayer.h">
+      <Filter>Platform\Vulkan\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\Setup\VulkanDevice.h">
+      <Filter>Platform\Vulkan\Setup</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\Setup\VulkanSetup.h">
+      <Filter>Platform\Vulkan\Setup</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\VulkanBuffers.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
@@ -148,26 +169,19 @@
     <ClInclude Include="src\Platform\Vulkan\VulkanRendererAPI.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Vulkan\VulkanSetup.h">
-      <Filter>Platform\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Vulkan\Debug\VulkanValidationLayer.h">
-      <Filter>Platform\Vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="src\Platform\Window\GLFW\GLFWWindowsInput.h">
-      <Filter>Platform\Windows\GLFW</Filter>
+      <Filter>Platform\Window\GLFW</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Window\GLFW\GLFWWindowsWindow.h">
-      <Filter>Platform\Windows\GLFW</Filter>
+      <Filter>Platform\Window\GLFW</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Window\SDL\SDLWindowsInput.h">
-      <Filter>Platform\Windows\SDL</Filter>
+      <Filter>Platform\Window\SDL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Window\SDL\SDLWindowsWindow.h">
-      <Filter>Platform\Windows\SDL</Filter>
+      <Filter>Platform\Window\SDL</Filter>
     </ClInclude>
     <ClInclude Include="src\fepch.h" />
-    <ClInclude Include="src\Platform\Vulkan\Debug\VulkanDebug.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Feur\Core\Application.c">
@@ -198,6 +212,9 @@
       <Filter>Feur\Core\Memory</Filter>
     </ClCompile>
     <ClCompile Include="src\Feur\Core\Utils\List.c">
+      <Filter>Feur\Core\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Feur\Core\Utils\Optional.c">
       <Filter>Feur\Core\Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\Feur\Core\Window\Window.c">
@@ -242,6 +259,18 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.c">
       <Filter>Platform\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\Debug\VulkanDebug.c">
+      <Filter>Platform\Vulkan\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\Debug\VulkanValidationLayer.c">
+      <Filter>Platform\Vulkan\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\Setup\VulkanDevice.c">
+      <Filter>Platform\Vulkan\Setup</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\Setup\VulkanSetup.c">
+      <Filter>Platform\Vulkan\Setup</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\VulkanBuffers.c">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
@@ -251,25 +280,18 @@
     <ClCompile Include="src\Platform\Vulkan\VulkanRendererAPI.c">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Vulkan\VulkanSetup.c">
-      <Filter>Platform\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Vulkan\Debug\VulkanValidationLayer.c">
-      <Filter>Platform\Vulkan</Filter>
-    </ClCompile>
     <ClCompile Include="src\Platform\Window\GLFW\GLFWWindowsInput.c">
-      <Filter>Platform\Windows\GLFW</Filter>
+      <Filter>Platform\Window\GLFW</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Window\GLFW\GLFWWindowsWindow.c">
-      <Filter>Platform\Windows\GLFW</Filter>
+      <Filter>Platform\Window\GLFW</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Window\SDL\SDLWindowsInput.c">
-      <Filter>Platform\Windows\SDL</Filter>
+      <Filter>Platform\Window\SDL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Window\SDL\SDLWindowsWindow.c">
-      <Filter>Platform\Windows\SDL</Filter>
+      <Filter>Platform\Window\SDL</Filter>
     </ClCompile>
     <ClCompile Include="src\fepch.c" />
-    <ClCompile Include="src\Platform\Vulkan\Debug\VulkanDebug.c" />
   </ItemGroup>
 </Project>

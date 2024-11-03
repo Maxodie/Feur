@@ -1,8 +1,8 @@
 #include "fepch.h"
 #include "Platform/Vulkan/Debug/VulkanValidationLayer.h"
-#include "Platform/Vulkan/VulkanSetup.h"
+#include "Platform/Vulkan/Setup/VulkanSetup.h"
 
-void FE_API VulkanInitValidationLayer(VulkanInfo* vkInfo)
+void FE_API VulkanInitValidationLayer(VulkanfeInfo* vkInfo)
 {
 	FE_ListInit(vkInfo->validationLayers);
 	const char* layer = "VK_LAYER_KHRONOS_validation";
@@ -15,7 +15,7 @@ void FE_API VulkanInitValidationLayer(VulkanInfo* vkInfo)
 #endif
 }
 
-Bool FE_API VulkanCheckValidationLayerSupport(VulkanInfo* vkInfo)
+Bool FE_API VulkanCheckValidationLayerSupport(VulkanfeInfo* vkInfo)
 {
 	Uint32 availableLayerCount;
 	vkEnumerateInstanceLayerProperties(&availableLayerCount, NULL);

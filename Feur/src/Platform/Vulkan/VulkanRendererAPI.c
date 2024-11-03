@@ -1,12 +1,13 @@
 #include "fepch.h"
-#include "Platform/Vulkan/VulkanSetup.h"
+#include "Platform/Vulkan/Setup/VulkanSetup.h"
 #include "Platform/Vulkan/VulkanRendererAPI.h"
 #include "Platform/Vulkan/Debug/VulkanValidationLayer.h"
 #include "Platform/Vulkan/Debug/VulkanDebug.h"
+#include "Platform/Vulkan/Setup/VulkanDevice.h"
 
 Bool FE_API VulkanInit_impl(RendererAPIData* apiData)
 {
-	VulkanInfo* vkInfo = FE_MemoryGeneralAlloc(sizeof(VulkanInfo));
+	VulkanfeInfo* vkInfo = FE_MemoryGeneralAlloc(sizeof(VulkanfeInfo));
 
 	if (vkInfo == NULL)
 	{
@@ -15,8 +16,7 @@ Bool FE_API VulkanInit_impl(RendererAPIData* apiData)
 	}
 
 	VulkanInitValidationLayer(vkInfo);
-
-	vkInfo->vkfeDebugger.enableFullVulkanDebugMsg = TRUE;
+	VulkanInitDefaultDebug(&vkInfo->vkfeDebugger);
 
 	if (!CreateVulkanInstance(vkInfo))
 	{
@@ -25,6 +25,8 @@ Bool FE_API VulkanInit_impl(RendererAPIData* apiData)
 	}
 
 	VulkanSetupDebugMessenger(vkInfo);
+	VulkanPickPhysicalDevice(vkInfo);
+	VulkanCreateLogicalDevice(vkInfo);
 
 	apiData->nativeInfoAPI = vkInfo;
 	return TRUE;
@@ -51,9 +53,9 @@ void FE_API VulkanDrawIndex_impl()
 
 void FE_API VulkanShutdown_impl(RendererAPIData* apiData)
 {
-	VulkanInfo* vkInfo = (VulkanInfo*)apiData->nativeInfoAPI;
+	VulkanfeInfo* vkInfo = (VulkanfeInfo*)apiData->nativeInfoAPI;
 	
-	VulkanDestroyDebugMessenger(vkInfo);
-	VulkanCleanup(vkInfo->vkInstance);
+	VulkanCleanup(vkInfo);
+	FE_ListClear(vkInfo->validationLayers);
 	FE_MemoryGeneralFree(vkInfo);
 }

@@ -31,3 +31,8 @@ FE_FORCEINLINE_FUN SizeT FE_API FE_LayerStackGetCount(LayerStack* layerStack)
 {
 	return layerStack->stackedlayers.impl.count;
 }
+
+FE_FORCEINLINE_FUN SizeT FE_API FE_LayerStackClear(LayerStack* layerStack)
+{
+	return FE_ListClear(layerStack->stackedlayers);
+}

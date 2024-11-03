@@ -18,6 +18,7 @@
 #include "Feur/Core/Memory/MemoryAllocator.h"
 
 #include "Feur/Core/Utils/List.h"
+#include "Feur/Core/Utils/Optional.h"
 
 #include "Feur/Core/Input/KeyCode.h"
 #include "Feur/Core/Window/Window.h"

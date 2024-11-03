@@ -1,6 +1,6 @@
 #include "fepch.h"
 #include "Platform/Vulkan/Debug/VulkanDebug.h"
-#include "Platform/Vulkan/VulkanSetup.h"
+#include "Platform/Vulkan/Setup/VulkanSetup.h"
 #include <vulkan/vulkan.h>
 
 VkResult FE_API CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pCallback)
@@ -58,7 +58,12 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(
 	return VK_FALSE;
 }
 
-void VulkanPopulateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT* createInfo, VulkanInfo* vkInfo)
+void FE_API VulkanInitDefaultDebug(VulkanFeurDebugger* vkfeDebugger)
+{
+	vkfeDebugger->enableFullVulkanDebugMsg = FALSE;
+}
+
+void FE_API VulkanPopulateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT* createInfo, VulkanfeInfo* vkInfo)
 {
 	createInfo->sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
 	createInfo->messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
@@ -67,7 +72,7 @@ void VulkanPopulateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT* createInfo
 	createInfo->pUserData = &vkInfo->vkfeDebugger;
 }
 
-void FE_API VulkanSetupDebugMessenger(VulkanInfo* vkInfo)
+void FE_API VulkanSetupDebugMessenger(VulkanfeInfo* vkInfo)
 {
 	if (!vkInfo->enableValidationLayers) return;
 
@@ -80,7 +85,7 @@ void FE_API VulkanSetupDebugMessenger(VulkanInfo* vkInfo)
 	}
 }
 
-void FE_API VulkanDestroyDebugMessenger(VulkanInfo* vkInfo)
+void FE_API VulkanDestroyDebugMessenger(VulkanfeInfo* vkInfo)
 {
 	if (vkInfo->enableValidationLayers)
 	{

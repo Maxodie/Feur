@@ -12,21 +12,18 @@ workspace "Feur"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
-IncludeDir["SDL2"] = "Feur/vendor/SDL2/SDL/include"
+--IncludeDir["SDL2"] = "Feur/vendor/SDL2/SDL/include"
 IncludeDir["Glad"] = "Feur/vendor/Glad/include"
 IncludeDir["GLFW"] = "Feur/vendor/GLFW/include"
 IncludeDir["nuklear"] = "Feur/vendor"
 IncludeDir["Mathilda"] = "Feur/vendor/Mathilda/Mathilda/include"
 IncludeDir["Vulkan"] = "Feur/vendor/VulkanSDK/1.3.290.0/Include"
 
-IncludeLib = {}
-IncludeLib["Vulkan"] = "Feur/vendor/VulkanSDK/1.3.290.0/Lib/vulkan-1.lib"
-
 group "Dependencies"
 	group "Window"
 		include "Feur/vendor/GLFW"
-		include "Feur/vendor/SDL2/SDL/SDL2.lua"
-		include "Feur/vendor/SDL2/SDL/SDL2main.lua"
+		--include "Feur/vendor/SDL2/SDL/SDL2.lua"
+		--include "Feur/vendor/SDL2/SDL/SDL2main.lua"
 
     group "Rendering"
 		include "Feur/vendor/Glad/premake5.lua"
@@ -67,16 +64,11 @@ project "Feur"
 		"FE_RENDER_SELECTED_API_VULKAN"
 	}
 
-	libdirs
-	{
-		"%{IncludeLib.SDL2}"
-	}
-
 	includedirs
 	{
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
-		"%{IncludeDir.SDL2}",
+		--"%{IncludeDir.SDL2}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.Vulkan}",
         "%{IncludeDir.GLFW}",
@@ -86,12 +78,12 @@ project "Feur"
 
 	links
 	{
-		"SDL2",
-		"SDL2main",
+		--"SDL2",
+		--"SDL2main",
 		"Glad",
 		"GLFW",
 		"Mathilda",
-        "%{IncludeLib.Vulkan}"
+        "Vulkan"
 	}
 
 	filter "system:windows"

@@ -1,7 +1,7 @@
 project "SDL2"
-	filter "system:windows"               -- SDL needs to be a DLL on windows for
-		kind          "SharedLib"         -- some reason :)
-		staticruntime "off"
+	filter "system:windows"
+		kind          "StaticLib"
+		staticruntime "on"
 
 	filter "system:macosx"
 		kind          "StaticLib"
@@ -14,7 +14,7 @@ project "SDL2"
 
 	language          "C++"              -- Some files are C++ files, although they
 	cppdialect        "C++17"            -- are not needed on normal Windows.
-                            
+
 	systemversion     "latest"
 
 	flags {
@@ -43,8 +43,8 @@ project "SDL2"
 	files {
 		-- All platforms.
 		-- Header files.                                    -- C files.
-		"include/*.h",									    
-														    
+		"include/*.h",
+
 		"src/audio/disk/*.h",                               "src/atomic/*.c",
 		"src/audio/dummy/*.h",						        "src/audio/disk/*.c",
 		"src/audio/*.h",								    "src/audio/dummy/*.c",
@@ -87,8 +87,8 @@ project "SDL2"
 		files {
 			-- Windows specific files.
 			-- Header files.                                -- C files.
-			"include/SDL_config_windows.h",				    
-														    
+			"include/SDL_config_windows.h",
+
 			"src/audio/directsound/*.h",                    "src/audio/directsound/*.c",
 			"src/audio/wasapi/*.h",						    "src/audio/winmm/*.c",
 			"src/audio/winmm/*.h",						    "src/audio/wasapi/*.c",
@@ -116,7 +116,7 @@ project "SDL2"
 			"src/video/windows/wmmsg.h",
 		}
 
-		
+
 	inlining          "Explicit"             -- General optimisation options.
 	intrinsics        "Off"
 
@@ -142,7 +142,7 @@ project "SDL2"
 
 
 	filter "configurations:Development"     -- These are the configurations I tend to
-		defines {                           -- use in my projects, but I have added 
+		defines {                           -- use in my projects, but I have added
 			          "NDEBUG"              -- the default ones anyway.
 		}
 		runtime       "Release"
