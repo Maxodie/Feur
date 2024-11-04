@@ -97,17 +97,18 @@ void FE_API VulkanCreateLogicalDevice(VulkanfeInfo* vkInfo)
 	FE_List(VkDeviceQueueCreateInfo) queueCreateInfos = { 0 };
 	FE_ListInit(queueCreateInfos);
 
-	////////////// TODO : function to remove duplicates from array
 	FE_List(Uint32) uniqueQueueFamilies = { 0 };
 	FE_ListInit(uniqueQueueFamilies);
 	FE_ListPush(uniqueQueueFamilies, indices.graphicsFamily.value);
-	if (indices.graphicsFamily.value != indices.presentFamily.value)
+	FE_ListPush(uniqueQueueFamilies, indices.presentFamily.value);
+
+	FE_ListRemoveDuplicate(uniqueQueueFamilies);
+
+	if (uniqueQueueFamilies.impl.count > 1)
 	{
-		FE_ListPush(uniqueQueueFamilies, indices.presentFamily.value);
+		qsort(uniqueQueueFamilies.data, uniqueQueueFamilies.impl.count, sizeof(Uint32), Fe_SortInt32Ascending);
 	}
 
-	qsort(uniqueQueueFamilies.data, uniqueQueueFamilies.impl.count, sizeof(Uint32), Fe_SortInt32Ascending);
-	////////////// TODO
 
 	//Queues
 	Float32 queuePriority = 1.0f;

@@ -33,6 +33,50 @@ void tempMatrixPrint(const ILDA_matrix4x4* matrix)
 void StartSandbox()
 {
 	AddLayerApp(&layer);
+
+//	==========================    FE_list test 
+	/*FE_List(Uint32) test = { 0 };
+	FE_ListInit(test);
+	Uint32 value = 50, value2 = 60, value3 = 4, value4 = 89, value5 = 805;
+	FE_ListPush(test, value2);
+	FE_ListPush(test, value2);
+	FE_ListPush(test, value2);
+
+	FE_LOG_DEBUG("test default");
+	for (Uint32 i = 0; i < test.impl.count; i++)
+	{
+		FE_LOG_DEBUG("test : %d  :  %d", i, test.data[i]);
+	}
+
+	FE_ListInsert(test, value3, 1);
+
+	FE_LOG_DEBUG("test insert id : 1");
+	for (Uint32 i = 0; i < test.impl.count; i++)
+	{
+		FE_LOG_DEBUG("test : %d  :  %d", i, test.data[i]);
+	}
+
+	FE_ListPush(test, value4);
+	FE_LOG_DEBUG("test push");
+	for (Uint32 i = 0; i < test.impl.count; i++)
+	{
+		FE_LOG_DEBUG("test : %d  :  %d", i, test.data[i]);
+	}
+
+	FE_ListRemove(test, 2);
+
+	FE_LOG_DEBUG("test remove id : 2");
+	for (Uint32 i = 0; i < test.impl.count; i++)
+	{
+		FE_LOG_DEBUG("test : %d  :  %d", i, test.data[i]);
+	}
+
+	FE_ListRemoveDuplicate(test);
+	FE_LOG_DEBUG("test remove duplication");
+	for (Uint32 i = 0; i < test.impl.count; i++)
+	{
+		FE_LOG_DEBUG("test : %d  :  %d", i, test.data[i]);
+	}*/
 }
 
 void OnAttachSandboxLayerBase(Layer* layer)
