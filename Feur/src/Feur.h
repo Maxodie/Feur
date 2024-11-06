@@ -4,6 +4,9 @@
 #include <stdint.h>
 #include <time.h>
 
+//Math
+#include "ILDA_utils/ILDA_utils.h"
+
 //Core
 #include "Feur/Core/Core.h"
 #include "Feur/Core/Log/Log.h"

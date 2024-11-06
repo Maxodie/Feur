@@ -1,15 +1,23 @@
 #include "fepch.h"
 #include "Platform/Vulkan/Setup/VulkanDevice.h"
 #include "Platform/Vulkan/Setup/VulkanSetup.h"
+#include "Platform/Vulkan/Setup/VulkanSwapChain.h"
 
 Bool FE_API VulkanIsQueueFamilyIndicesCompleted(VulkanfeQueueFamilyIndices* vkQueueFamilyIndices)
 {
 	return vkQueueFamilyIndices->graphicsFamily.hasValue && vkQueueFamilyIndices->presentFamily.hasValue;
 }
 
-void FE_API VulkanPickPhysicalDevice(VulkanfeInfo* vkInfo)
+void FE_API VulkanInitDefaultDeviceSelection(VulkanfeInfo* vkInfo)
 {
 	vkInfo->physicalDevice = VK_NULL_HANDLE;
+	FE_ListInit(vkInfo->deviceExtensions);
+	FE_ListEmplace(vkInfo->deviceExtensions, const char*, VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+}
+
+void FE_API VulkanPickPhysicalDevice(VulkanfeInfo* vkInfo)
+{
+	VulkanInitDefaultDeviceSelection(vkInfo);
 
 	//List aall physical devices
 	Uint32 deviceCount = 0;
@@ -22,7 +30,7 @@ void FE_API VulkanPickPhysicalDevice(VulkanfeInfo* vkInfo)
 
 	for (Uint32 i = 0; i < deviceCount; i++)
 	{
-		if (VulkanPhysicalDeviceSuitable(vkInfo, devices[i])) {
+		if (VulkanIsPhysicalDeviceSuitable(vkInfo, devices[i])) {
 			vkInfo->physicalDevice = devices[i];
 			break;
 		}
@@ -49,10 +57,49 @@ void FE_API VulkanPickPhysicalDevice(VulkanfeInfo* vkInfo)
 #endif // !FE_DIST
 }
 
-Bool FE_API VulkanPhysicalDeviceSuitable(const VulkanfeInfo* vkInfo, VkPhysicalDevice device)
+Bool FE_API VulkanIsPhysicalDeviceSuitable(const VulkanfeInfo* vkInfo, VkPhysicalDevice device)
 {
 	VulkanfeQueueFamilyIndices indices = VulkanFindQueueFamilies(vkInfo, device);
-	return VulkanIsQueueFamilyIndicesCompleted(&indices);
+	Bool extensionsSupported = VulkanCheckDeviceExtensionSupport(vkInfo, device);
+
+	Bool swapChainAdequate = FALSE;
+	if (extensionsSupported) {
+		VulkanfeSwapChainSupportDetails swapChainSupport = VulkanQuerySwapChainSupport(vkInfo, device);
+		swapChainAdequate = !(swapChainSupport.formats.impl.count == 0) && !(swapChainSupport.presentModes.impl.count == 0);
+	}
+
+	return VulkanIsQueueFamilyIndicesCompleted(&indices) && extensionsSupported && swapChainAdequate;
+}
+
+Bool FE_API VulkanCheckDeviceExtensionSupport(const VulkanfeInfo* vkInfo, VkPhysicalDevice device)
+{
+	uint32_t extensionCount;
+	vkEnumerateDeviceExtensionProperties(device, NULL, &extensionCount, NULL);
+
+	VkExtensionProperties* availableExtensions = FE_MemoryGeneralAlloc(extensionCount * sizeof(VkExtensionProperties));
+	vkEnumerateDeviceExtensionProperties(device, NULL, &extensionCount, availableExtensions);
+
+	Bool result = FALSE;
+	for (Uint32 i = 0, y; i < vkInfo->deviceExtensions.impl.count; i++)
+	{
+		for (y = 0; y < extensionCount; y++)
+		{
+			if (strcmp(availableExtensions[y].extensionName, vkInfo->deviceExtensions.data[i]) == 0)
+			{
+				result = TRUE;
+				break;
+			}
+		}
+
+		if (!result)
+		{
+			break;
+		}
+	}
+
+	FE_MemoryGeneralFree(availableExtensions);
+
+	return result;
 }
 
 VulkanfeQueueFamilyIndices FE_API VulkanFindQueueFamilies(const VulkanfeInfo* vkInfo, VkPhysicalDevice device)
@@ -131,13 +178,14 @@ void FE_API VulkanCreateLogicalDevice(VulkanfeInfo* vkInfo)
 	.queueCreateInfoCount = (Uint32)queueCreateInfos.impl.count,
 	.pQueueCreateInfos = queueCreateInfos.data,
 	.pEnabledFeatures = &deviceFeatures,
-	.enabledExtensionCount = 0
+	.enabledExtensionCount = (Uint32)vkInfo->deviceExtensions.impl.count,
+	.ppEnabledExtensionNames = vkInfo->deviceExtensions.data
 	};
 
-	if (vkInfo->enableValidationLayers) 
+	if (vkInfo->enableValidationLayers)
 	{
 		createInfo.enabledLayerCount = (Uint32)vkInfo->validationLayers.impl.count;
-		//createInfo.ppEnabledLayerNames = vkInfo->validationLayers.data;
+		//createInfo.ppEnabledLayerNames = vkInfo->validationLayers.data; deprecated
 	}
 	else 
 	{

@@ -171,7 +171,9 @@
     <ClInclude Include="src\Platform\Vulkan\Debug\VulkanDebug.h" />
     <ClInclude Include="src\Platform\Vulkan\Debug\VulkanValidationLayer.h" />
     <ClInclude Include="src\Platform\Vulkan\Setup\VulkanDevice.h" />
+    <ClInclude Include="src\Platform\Vulkan\Setup\VulkanImageView.h" />
     <ClInclude Include="src\Platform\Vulkan\Setup\VulkanSetup.h" />
+    <ClInclude Include="src\Platform\Vulkan\Setup\VulkanSwapChain.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanBuffers.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanGraphicsContext.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanRendererAPI.h" />
@@ -211,7 +213,9 @@
     <ClCompile Include="src\Platform\Vulkan\Debug\VulkanDebug.c" />
     <ClCompile Include="src\Platform\Vulkan\Debug\VulkanValidationLayer.c" />
     <ClCompile Include="src\Platform\Vulkan\Setup\VulkanDevice.c" />
+    <ClCompile Include="src\Platform\Vulkan\Setup\VulkanImageView.c" />
     <ClCompile Include="src\Platform\Vulkan\Setup\VulkanSetup.c" />
+    <ClCompile Include="src\Platform\Vulkan\Setup\VulkanSwapChain.c" />
     <ClCompile Include="src\Platform\Vulkan\VulkanBuffers.c" />
     <ClCompile Include="src\Platform\Vulkan\VulkanGraphicsContext.c" />
     <ClCompile Include="src\Platform\Vulkan\VulkanRendererAPI.c" />
@@ -230,7 +234,7 @@
     <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">
       <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
     </ProjectReference>
-    <ProjectReference Include="vendor\Mathilda\Mathilda\Mathilda.vcxproj">
+    <ProjectReference Include="vendor\Mathilda\Mathilda\build\Mathilda.vcxproj">
       <Project>{A9207DCC-95ED-D7D7-BE06-C67FAA320D66}</Project>
     </ProjectReference>
     <ProjectReference Include="vendor\VulkanSDK\Vulkan.vcxproj">

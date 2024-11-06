@@ -36,7 +36,33 @@ Bool FE_API FE_ListPop_impl(FE_List_impl* list, Byte** data)
 	return TRUE;
 }
 
-Bool FE_ListRemove_impl(FE_List_impl* list, Byte** data, Uint32 id, SizeT dataSize)
+Bool FE_ListRemove_impl(FE_List_impl* list, Byte** data, const void* value, SizeT dataSize)
+{
+	FE_CORE_ASSERT(list != NULL && data != NULL && *data != NULL && list->isInitialized == TRUE, "list or data is null or list hasn't been initialized");
+
+
+	if (list == NULL || NULL == data) return FALSE;
+
+	Uint32 id = 0;
+	Bool isFound = FALSE;
+	for (SizeT i = 0; i < list->count; i++)
+	{
+		isFound = memcmp((*data) + i * dataSize, value, dataSize) == 0;
+		if (isFound) break;
+	}
+
+	if (!isFound) return FALSE;
+
+	Uint32 nextId = id + 1;
+
+	memcpy((*data) + dataSize * id, (*data) + dataSize * nextId, ((list->count - 1) - id) * dataSize);
+
+	list->count--;
+
+	return TRUE;
+}
+
+Bool FE_ListRemoveAt_impl(FE_List_impl* list, Byte** data, Uint32 id, SizeT dataSize)
 {
 	FE_CORE_ASSERT(list != NULL && data != NULL && *data != NULL && list->isInitialized == TRUE, "list or data is null or list hasn't been initialized");
 
@@ -156,9 +182,8 @@ Bool FE_API FE_ListPushArray_impl(FE_List_impl* list, Byte** data, const void* a
 		return FALSE;
 	}
 
-	SizeT lastItemId = list->count;
+	memcpy((*data) + dataSize * list->count, arrayData, dataSize * sizeToPush);
 	list->count += sizeToPush;
-	memcpy((*data) + dataSize * lastItemId, arrayData, dataSize * sizeToPush);
 
 	return TRUE;
 }
@@ -166,7 +191,7 @@ Bool FE_API FE_ListPushArray_impl(FE_List_impl* list, Byte** data, const void* a
 
 Bool FE_API FE_ListReserve_impl(FE_List_impl* list, Byte** data, SizeT amount, SizeT dataSize)
 {
-	FE_CORE_ASSERT(list != NULL && data != NULL, "list or data is null");
+	FE_CORE_ASSERT(list != NULL && data != NULL && list->isInitialized == TRUE, "list or data is null or list hasn't been initialized");
 	if (list == NULL || data == NULL) return FALSE;
 
 	list->capacity += amount;
@@ -186,6 +211,17 @@ Bool FE_API FE_ListReserve_impl(FE_List_impl* list, Byte** data, SizeT amount, S
 	return TRUE;
 }
 
+Bool FE_ListResize_impl(FE_List_impl* list, Byte** data, SizeT amount, SizeT dataSize)
+{
+	Bool result = FE_ListReserve_impl(list, data, amount, dataSize);
+	if (!result) return result;
+
+	memset((*data) + list->count * dataSize, 0, dataSize * amount);
+	list->count += amount;
+
+	return result;
+}
+
 Bool FE_API FE_ListClear_impl(FE_List_impl* list, Byte** data)
 {
 	if (list == NULL || data == NULL || (*data) == NULL) return FALSE;
@@ -198,7 +234,7 @@ Bool FE_API FE_ListClear_impl(FE_List_impl* list, Byte** data)
 
 Bool FE_ListRemoveDuplicate_impl(FE_List_impl* list, Byte** data, SizeT dataSize)
 {
-	FE_CORE_ASSERT(list != NULL && data != NULL, "list or data is null");
+	FE_CORE_ASSERT(list != NULL && data != NULL && list->isInitialized == TRUE, "list or data is null or list hasn't been initialized");
 	if (list == NULL || list->count < 2 || data == NULL || (*data) == NULL) return FALSE;
 
 	Bool isSame;
@@ -220,9 +256,25 @@ Bool FE_ListRemoveDuplicate_impl(FE_List_impl* list, Byte** data, SizeT dataSize
 
 			if (isSame)
 			{
-				FE_ListRemove_impl(list, data, y, dataSize);
+				FE_ListRemoveAt_impl(list, data, y, dataSize);
 			}
 		}
+	}
+
+	return TRUE;
+}
+
+Bool FE_ListEqual_impl(FE_List_impl* listA, FE_List_impl* listB, Byte** dataA, Byte** dataB, SizeT dataSize)
+{
+	FE_CORE_ASSERT(listA != NULL && listB != NULL && listA->isInitialized == TRUE && listB->isInitialized == TRUE, "list or data is null or list hasn't been initialized");
+	if (listA == NULL || listB == NULL) return FALSE;
+
+	if (listA->count != listB->count) return FALSE;
+	if (dataA == dataB) return TRUE;
+
+	for (SizeT i = 0; i < listA->count; i++)
+	{
+		if ((*dataA)[i] != (*dataB)[i]) return FALSE;
 	}
 
 	return TRUE;

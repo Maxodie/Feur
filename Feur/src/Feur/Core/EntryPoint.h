@@ -1,6 +1,5 @@
 #pragma once
 #include "Feur/Core/Application.h"
-
 extern void FE_API StartSandbox();
 
 int FE_API main(void)

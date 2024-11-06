@@ -5,8 +5,7 @@
 void FE_API VulkanInitValidationLayer(VulkanfeInfo* vkInfo)
 {
 	FE_ListInit(vkInfo->validationLayers);
-	const char* layer = "VK_LAYER_KHRONOS_validation";
-	FE_ListPush(vkInfo->validationLayers, layer);
+	FE_ListEmplace(vkInfo->validationLayers, const char*, "VK_LAYER_KHRONOS_validation");
 
 #ifdef FE_DEBUG
 	vkInfo->enableValidationLayers = TRUE;
@@ -38,9 +37,10 @@ Bool FE_API VulkanCheckValidationLayerSupport(const VulkanfeInfo* vkInfo)
 		layerFound = FALSE;
 
 		for (j = 0; j < availableLayerCount; j++) {
-			if (strcmp(vkInfo->validationLayers.data[i], availableLayers[j].layerName))
+			if (strcmp(vkInfo->validationLayers.data[i], availableLayers[j].layerName) == 0)
 			{
 				layerFound = TRUE;
+				break;
 			}
 		}
 

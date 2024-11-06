@@ -100,6 +100,9 @@
     <ClInclude Include="src\Feur\Core\Memory\StackAllocator.h">
       <Filter>Feur\Core\Memory</Filter>
     </ClInclude>
+    <ClInclude Include="src\Feur\Core\Utils\FeurSort.h">
+      <Filter>Feur\Core\Utils</Filter>
+    </ClInclude>
     <ClInclude Include="src\Feur\Core\Utils\List.h">
       <Filter>Feur\Core\Utils</Filter>
     </ClInclude>
@@ -160,6 +163,9 @@
     <ClInclude Include="src\Platform\Vulkan\Setup\VulkanSetup.h">
       <Filter>Platform\Vulkan\Setup</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\Setup\VulkanSwapChain.h">
+      <Filter>Platform\Vulkan\Setup</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\VulkanBuffers.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
@@ -182,7 +188,7 @@
       <Filter>Platform\Window\SDL</Filter>
     </ClInclude>
     <ClInclude Include="src\fepch.h" />
-    <ClInclude Include="src\Feur\Core\Utils\FeurSort.h" />
+    <ClInclude Include="src\Platform\Vulkan\Setup\VulkanImageView.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Feur\Core\Application.c">
@@ -211,6 +217,9 @@
     </ClCompile>
     <ClCompile Include="src\Feur\Core\Memory\StackAllocator.c">
       <Filter>Feur\Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Feur\Core\Utils\FeurSort.c">
+      <Filter>Feur\Core\Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\Feur\Core\Utils\List.c">
       <Filter>Feur\Core\Utils</Filter>
@@ -272,6 +281,9 @@
     <ClCompile Include="src\Platform\Vulkan\Setup\VulkanSetup.c">
       <Filter>Platform\Vulkan\Setup</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\Setup\VulkanSwapChain.c">
+      <Filter>Platform\Vulkan\Setup</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\VulkanBuffers.c">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
@@ -294,6 +306,6 @@
       <Filter>Platform\Window\SDL</Filter>
     </ClCompile>
     <ClCompile Include="src\fepch.c" />
-    <ClCompile Include="src\Feur\Core\Utils\FeurSort.c" />
+    <ClCompile Include="src\Platform\Vulkan\Setup\VulkanImageView.c" />
   </ItemGroup>
 </Project>

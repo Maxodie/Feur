@@ -8,6 +8,6 @@ typedef struct VulkanFeurDebugger
 } VulkanfeDebugger;
 
 void FE_API VulkanInitDefaultDebug(VulkanfeDebugger* vkfeDebugger);
-void FE_API VulkanPopulateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT* createInfo, const struct VulkanfeInfo* vkInfo);
+void FE_API VulkanPopulateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT* createInfo, struct VulkanfeInfo* vkInfo);
 void FE_API VulkanSetupDebugMessenger(struct VulkanfeInfo* vkInfo);
 void FE_API VulkanDestroyDebugMessenger(struct VulkanfeInfo* vkInfo);

@@ -60,10 +60,10 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(
 
 void FE_API VulkanInitDefaultDebug(VulkanfeDebugger* vkfeDebugger)
 {
-	vkfeDebugger->enableFullVulkanDebugMsg = FALSE;
+	vkfeDebugger->enableFullVulkanDebugMsg = TRUE;
 }
 
-void FE_API VulkanPopulateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT* createInfo, const VulkanfeInfo* vkInfo)
+void FE_API VulkanPopulateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT* createInfo, VulkanfeInfo* vkInfo)
 {
 	createInfo->sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
 	createInfo->messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;

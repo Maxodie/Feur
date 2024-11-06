@@ -30,7 +30,7 @@ void FE_API RunApp_impl()
 
 void FE_API StartApp()
 {
-	FE_MemoryGeneralInit(FE_MEMORY_SMALL_POOL_ALLOCATION_SIZE);
+	FE_MemoryGeneralInit(FE_MEMORY_DEFAULT_STACK_ALLOCATION_SIZE);
 	InitRendererAPISelection();
 	LoadWindow();
 	InitInputAPI();
@@ -148,6 +148,27 @@ void FE_API ShutdownApp()
 	FE_MemoryGeneralShutdown();
 	FE_CORE_LOG_SUCCESS("Memory freed");
 	FE_CORE_LOG_SUCCESS("Application closed");
+
+//#include "windows.h"
+//#define _CRTDBG_MAP_ALLOC
+//#define _CRTDBG_DELAY_FREE_MEM_DF 
+//#include <crtdbg.h>
+// 	   #include <crtdbg.h>
+//	_CrtMemState sOld;
+//	_CrtMemState sNew;
+//	_CrtMemState sDiff;
+// 	   _CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
+//	_CrtMemCheckpoint(&sOld); //take a snapshot
+//	_CrtMemCheckpoint(&sNew);
+//	if (_CrtMemDifference(&sDiff, &sOld, &sNew))
+//	{
+//		OutputDebugString(L"-----------_CrtMemDumpStatistics ---------");
+//		_CrtMemDumpStatistics(&sDiff);
+//		OutputDebugString(L"-----------_CrtMemDumpAllObjectsSince ---------");
+//		_CrtMemDumpAllObjectsSince(&sOld);
+//		OutputDebugString(L"-----------_CrtDumpMemoryLeaks ---------");
+//		_CrtDumpMemoryLeaks();
+//	}
 }
 
 void FE_API QuitApp()

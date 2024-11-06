@@ -4,6 +4,8 @@
 #include "Platform/Vulkan/Debug/VulkanValidationLayer.h"
 #include "Platform/Vulkan/Debug/VulkanDebug.h"
 #include "Platform/Vulkan/Setup/VulkanDevice.h"
+#include "Platform/Vulkan/Setup/VulkanSwapChain.h"
+#include "Platform/Vulkan/Setup/VulkanImageView.h"
 
 Bool FE_API VulkanInit_impl(RendererAPIData* apiData)
 {
@@ -19,6 +21,9 @@ Bool FE_API VulkanInit_impl(RendererAPIData* apiData)
 	CreateVulkanSurface(vkInfo);
 	VulkanPickPhysicalDevice(vkInfo);
 	VulkanCreateLogicalDevice(vkInfo);
+	VulkanCreateSwapChain(vkInfo);
+
+	VulkanCreateImageView(vkInfo);
 
 	apiData->nativeInfoAPI = vkInfo;
 	return TRUE;
@@ -49,5 +54,6 @@ void FE_API VulkanShutdown_impl(RendererAPIData* apiData)
 	
 	VulkanCleanup(vkInfo);
 	FE_ListClear(vkInfo->validationLayers);
+	FE_ListClear(vkInfo->deviceExtensions);
 	FE_MemoryGeneralFree(vkInfo);
 }

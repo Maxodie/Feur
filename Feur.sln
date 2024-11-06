@@ -13,7 +13,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Nuklear", "Feur\vendor\Nukl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Math", "Math", "{96E0C85D-8298-0AAB-EB9F-E306D776A59B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Mathilda", "Feur\vendor\Mathilda\Mathilda\Mathilda.vcxproj", "{A9207DCC-95ED-D7D7-BE06-C67FAA320D66}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Mathilda", "Feur\vendor\Mathilda\Mathilda\build\Mathilda.vcxproj", "{A9207DCC-95ED-D7D7-BE06-C67FAA320D66}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Rendering", "Rendering", "{2A23E243-96AE-4F08-9FBF-D2FC0BCAAB08}"
 EndProject

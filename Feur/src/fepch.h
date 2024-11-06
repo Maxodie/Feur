@@ -10,6 +10,8 @@
 #include <limits.h>
 #include <time.h>
 
+#include "ILDA_utils/ILDA_utils.h"
+
 #include "Feur/Core/Core.h"
 #include "Feur/Core/Log/Log.h"
 

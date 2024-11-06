@@ -101,6 +101,12 @@ void FE_API CreateVulkanSurface(VulkanfeInfo* vkInfo)
 
 void FE_API VulkanCleanup(VulkanfeInfo* vkInfo)
 {
+	for (SizeT i = 0; i < vkInfo->swapChainImageViews.impl.count; i++)
+	{
+		vkDestroyImageView(vkInfo->device, vkInfo->swapChainImageViews.data[i], NULL);
+	}
+
+	vkDestroySwapchainKHR(vkInfo->device, vkInfo->swapChain, NULL);
 	vkDestroyDevice(vkInfo->device, NULL);
 	VulkanDestroyDebugMessenger(vkInfo);
 	vkDestroySurfaceKHR(vkInfo->vkInstance, vkInfo->surface, NULL);
