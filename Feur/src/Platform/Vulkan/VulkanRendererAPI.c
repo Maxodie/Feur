@@ -1,29 +1,38 @@
 #include "fepch.h"
-#include "Platform/Vulkan/Setup/VulkanSetup.h"
 #include "Platform/Vulkan/VulkanRendererAPI.h"
-#include "Platform/Vulkan/Debug/VulkanValidationLayer.h"
-#include "Platform/Vulkan/Debug/VulkanDebug.h"
+
+#include "Platform/Vulkan/Setup/VulkanSetup.h"
 #include "Platform/Vulkan/Setup/VulkanDevice.h"
 #include "Platform/Vulkan/Setup/VulkanSwapChain.h"
 #include "Platform/Vulkan/Setup/VulkanImageView.h"
 
+#include "Platform/Vulkan/Debug/VulkanValidationLayer.h"
+#include "Platform/Vulkan/Debug/VulkanDebug.h"
+
+#include "Platform/Vulkan/RenderPipeline/VulkanRenderPipeline.h"
+
 Bool FE_API VulkanInit_impl(RendererAPIData* apiData)
 {
-	VulkanfeInfo* vkInfo = FE_MemoryGeneralAlloc(sizeof(VulkanfeInfo));
+	FE_VulkanInfo* vkInfo = FE_MemoryGeneralAlloc(sizeof(FE_VulkanInfo));
 	FE_CORE_ASSERT(vkInfo != NULL, "Failed allocate memory for VulkanInfo");
 
-	VulkanInitValidationLayer(vkInfo);
-	VulkanInitDefaultDebug(&vkInfo->vkfeDebugger);
+	VulkanInitValidationLayer(&vkInfo->validationLayer);
 
 	CreateVulkanInstance(vkInfo);
 
-	VulkanSetupDebugMessenger(vkInfo);
+	if (vkInfo->validationLayer.enableValidationLayers)
+	{
+		VulkanCreateDebugMessenger(vkInfo);
+	}
+
 	CreateVulkanSurface(vkInfo);
+	VulkanInitDefaultDeviceSelection(vkInfo);
 	VulkanPickPhysicalDevice(vkInfo);
 	VulkanCreateLogicalDevice(vkInfo);
 	VulkanCreateSwapChain(vkInfo);
 
-	VulkanCreateImageView(vkInfo);
+	//VulkanCreateImageView(vkInfo);
+	//VulkanCreateGraphicsPipeline(vkInfo);
 
 	apiData->nativeInfoAPI = vkInfo;
 	return TRUE;
@@ -50,10 +59,25 @@ void FE_API VulkanDrawIndex_impl()
 
 void FE_API VulkanShutdown_impl(RendererAPIData* apiData)
 {
-	VulkanfeInfo* vkInfo = (VulkanfeInfo*)apiData->nativeInfoAPI;
+	FE_VulkanInfo* vkInfo = (FE_VulkanInfo*)apiData->nativeInfoAPI;
 	
+	//VulkanCleanupGraphicsPipeline(vkInfo);
+	//VulkanDestroyImageView(vkInfo);
+	VulkanDestroySwapChain(vkInfo);
+	VulkanDestroyLogicalDevice(vkInfo);
+	CleanupVulkanSurface(vkInfo);
+
+	if (vkInfo->validationLayer.enableValidationLayers)
+	{
+		VulkanCleanupDebugMessenger(vkInfo);
+	}
+
 	VulkanCleanup(vkInfo);
-	FE_ListClear(vkInfo->validationLayers);
-	FE_ListClear(vkInfo->deviceExtensions);
+
+	if (vkInfo->validationLayer.enableValidationLayers)
+	{
+		FE_ListClear(vkInfo->validationLayer.validationLayers);
+	}
+
 	FE_MemoryGeneralFree(vkInfo);
 }

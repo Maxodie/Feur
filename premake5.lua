@@ -94,6 +94,15 @@ project "Feur"
 			"FE_PLATFORM_WINDOWS",
 		}
 
+
+	filter "system:macosx"
+		systemversion "13.0"
+
+		defines
+		{
+			"FE_PLATFORM_MACOS",
+		}
+
 	filter "configurations:Debug"
 		defines
 		{
@@ -142,7 +151,7 @@ project "Sandbox"
 		"Feur/src",
 		"%{IncludeDir.Mathilda}",
 		--temp test includes
-        "%{IncludeDir.Vulkan}",
+  --      "%{IncludeDir.Vulkan}",
 		"%{IncludeDir.Glad}"
 	}
 
@@ -151,7 +160,7 @@ project "Sandbox"
 		"Feur",
 		"Mathilda",
         --temp test includes
-        "Vulkan",
+--        "Vulkan",
 		"Glad"
 	}
 

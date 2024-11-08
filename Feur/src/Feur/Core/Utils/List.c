@@ -1,6 +1,16 @@
 #include "fepch.h"
 #include "Feur/Core/Utils/List.h"
 
+#ifdef FE_DEBUG
+Uint64 allocatedListCount = 0;
+Uint64 freedListCount = 0;
+#endif
+
+Bool FE_API FE_ListCheck(FE_List_impl* list, Byte** data)
+{
+	return list != NULL && NULL != data && list->isInitialized == TRUE;
+}
+
 Bool FE_API FE_ListInit_impl(FE_List_impl* list, Byte** data)
 {
 	list->count = 0;
@@ -13,9 +23,11 @@ Bool FE_API FE_ListInit_impl(FE_List_impl* list, Byte** data)
 
 Bool FE_API FE_ListPop_impl(FE_List_impl* list, Byte** data)
 {
-	FE_CORE_ASSERT(list != NULL && data != NULL && *data != NULL && list->isInitialized == TRUE, "list or data is null or list hasn't been initialized");
-
-	if (list == NULL || NULL == data) return FALSE;
+	if (!FE_ListCheck(list, data))
+	{
+		FE_CORE_LOG_ERROR("failed to pop");
+		return FALSE;
+	}
 	
 	list->count--;
 
@@ -38,10 +50,11 @@ Bool FE_API FE_ListPop_impl(FE_List_impl* list, Byte** data)
 
 Bool FE_ListRemove_impl(FE_List_impl* list, Byte** data, const void* value, SizeT dataSize)
 {
-	FE_CORE_ASSERT(list != NULL && data != NULL && *data != NULL && list->isInitialized == TRUE, "list or data is null or list hasn't been initialized");
-
-
-	if (list == NULL || NULL == data) return FALSE;
+	if (!FE_ListCheck(list, data) || *data == NULL)
+	{
+		FE_CORE_LOG_ERROR("failed to remove ptr %p", value);
+		return FALSE;
+	}
 
 	Uint32 id = 0;
 	Bool isFound = FALSE;
@@ -64,10 +77,11 @@ Bool FE_ListRemove_impl(FE_List_impl* list, Byte** data, const void* value, Size
 
 Bool FE_ListRemoveAt_impl(FE_List_impl* list, Byte** data, Uint32 id, SizeT dataSize)
 {
-	FE_CORE_ASSERT(list != NULL && data != NULL && *data != NULL && list->isInitialized == TRUE, "list or data is null or list hasn't been initialized");
-
-	
-	if (list == NULL || NULL == data) return FALSE;
+	if (!FE_ListCheck(list, data) || *data == NULL)
+	{
+		FE_CORE_LOG_ERROR("failed to remove at %d", id);
+		return FALSE;
+	}
 
 	Uint32 nextId = id + 1;
 
@@ -80,8 +94,11 @@ Bool FE_ListRemoveAt_impl(FE_List_impl* list, Byte** data, Uint32 id, SizeT data
 
 Bool FE_API FE_ListInsert_impl(FE_List_impl* list, Byte** data, const void* value, Uint32 position, SizeT dataSize)
 {
-	FE_CORE_ASSERT(list != NULL && data != NULL && list->isInitialized == TRUE, "list or data is null or list hasn't been initialized");
-	if (list == NULL || data == NULL || *data == NULL || position > list->count - 1) return FALSE;
+	if (!FE_ListCheck(list, data) || *data == NULL || position > list->count - 1)
+	{
+		FE_CORE_LOG_ERROR("failed to insert ptr %p at %d", value, position);
+		return FALSE;
+	}
 
 	Byte* temp = *data;
 
@@ -157,8 +174,11 @@ Bool FE_API FE_ListInsert_impl(FE_List_impl* list, Byte** data, const void* valu
 
 Bool FE_API FE_ListPushArray_impl(FE_List_impl* list, Byte** data, const void* arrayData, SizeT sizeToPush, SizeT dataSize)
 {
-	FE_CORE_ASSERT(list != NULL && data != NULL && arrayData != NULL && sizeToPush > 0 && list->isInitialized == TRUE, "list or data is null or list hasn't been initialized");
-	if (list == NULL || data == NULL) return FALSE;
+	if (!FE_ListCheck(list, data) || arrayData == NULL || sizeToPush <= 0)
+	{
+		FE_CORE_LOG_ERROR("failed to push array fe_list");
+		return FALSE;
+	}
 
 	Byte* temp = *data;
 
@@ -168,6 +188,9 @@ Bool FE_API FE_ListPushArray_impl(FE_List_impl* list, Byte** data, const void* a
 		{
 			list->capacity += sizeToPush;
 			(*data) = FE_MemoryGeneralAlloc(dataSize * list->capacity);
+#ifdef FE_DEBUG
+			allocatedListCount++;
+#endif
 		}
 		else
 		{
@@ -191,12 +214,19 @@ Bool FE_API FE_ListPushArray_impl(FE_List_impl* list, Byte** data, const void* a
 
 Bool FE_API FE_ListReserve_impl(FE_List_impl* list, Byte** data, SizeT amount, SizeT dataSize)
 {
-	FE_CORE_ASSERT(list != NULL && data != NULL && list->isInitialized == TRUE, "list or data is null or list hasn't been initialized");
-	if (list == NULL || data == NULL) return FALSE;
+	if (!FE_ListCheck(list, data))
+	{
+		FE_CORE_LOG_ERROR("failed to reserve fe_list");
+		return FALSE;
+	}
 
 	list->capacity += amount;
 
 	Byte* temp = *data;
+
+#ifdef FE_DEBUG
+	if(*data == NULL) allocatedListCount++;
+#endif
 
 	(*data) = (*data) == NULL ?
 		FE_MemoryGeneralAlloc(dataSize * list->capacity) :
@@ -213,6 +243,12 @@ Bool FE_API FE_ListReserve_impl(FE_List_impl* list, Byte** data, SizeT amount, S
 
 Bool FE_ListResize_impl(FE_List_impl* list, Byte** data, SizeT amount, SizeT dataSize)
 {
+	if (!FE_ListCheck(list, data))
+	{
+		FE_CORE_LOG_ERROR("failed to resize fe_list");
+		return FALSE;
+	}
+
 	Bool result = FE_ListReserve_impl(list, data, amount, dataSize);
 	if (!result) return result;
 
@@ -224,18 +260,32 @@ Bool FE_ListResize_impl(FE_List_impl* list, Byte** data, SizeT amount, SizeT dat
 
 Bool FE_API FE_ListClear_impl(FE_List_impl* list, Byte** data)
 {
-	if (list == NULL || data == NULL || (*data) == NULL) return FALSE;
+	if (!FE_ListCheck(list, data))
+	{
+		FE_CORE_LOG_ERROR("failed to clear fe_list");
+		return FALSE;
+	}
+
+#ifdef FE_DEBUG
+	freedListCount++;
+#endif
 
 	list->capacity = 0;
 	list->count = 0;
-	FE_MemoryGeneralFree(*data);
+	if (*data != NULL)
+	{
+		FE_MemoryGeneralFree(*data);
+	}
 	return TRUE;
 }
 
 Bool FE_ListRemoveDuplicate_impl(FE_List_impl* list, Byte** data, SizeT dataSize)
 {
-	FE_CORE_ASSERT(list != NULL && data != NULL && list->isInitialized == TRUE, "list or data is null or list hasn't been initialized");
-	if (list == NULL || list->count < 2 || data == NULL || (*data) == NULL) return FALSE;
+	if (!FE_ListCheck(list, data) || *data == NULL || list->count < 2)
+	{
+		FE_CORE_LOG_ERROR("failed to remove duplicate");
+		return FALSE;
+	}
 
 	Bool isSame;
 	for (Uint32 i = 0; i < list->count; i++)
@@ -266,7 +316,12 @@ Bool FE_ListRemoveDuplicate_impl(FE_List_impl* list, Byte** data, SizeT dataSize
 
 Bool FE_ListEqual_impl(FE_List_impl* listA, FE_List_impl* listB, Byte** dataA, Byte** dataB, SizeT dataSize)
 {
-	FE_CORE_ASSERT(listA != NULL && listB != NULL && listA->isInitialized == TRUE && listB->isInitialized == TRUE, "list or data is null or list hasn't been initialized");
+	if (listA != NULL && listB != NULL && listA->isInitialized == TRUE && listB->isInitialized == TRUE)
+	{
+		FE_CORE_LOG_ERROR("failed to verify equal fe_list");
+		return FALSE;
+	}
+
 	if (listA == NULL || listB == NULL) return FALSE;
 
 	if (listA->count != listB->count) return FALSE;
@@ -278,4 +333,11 @@ Bool FE_ListEqual_impl(FE_List_impl* listA, FE_List_impl* listB, Byte** dataA, B
 	}
 
 	return TRUE;
+}
+
+FE_ListPrintReport()
+{
+#ifdef FE_DEBUG
+	FE_CORE_LOG_SUCCESS("list report | alloc : %lld        free : %lld", allocatedListCount, freedListCount);
+#endif
 }

@@ -13,7 +13,7 @@ void OnRender(Layer* layer);
 void UpdateLayerBaseEventSandbox(FE_Event* event);
 void OnAttachSandboxLayerBase(Layer* layer);
 
-const char* LoadFile(const char* filePath);
+//const char* LoadFile(const char* filePath);
 void emptyf() {}
 
 Layer layer = { .OnUpdate = emptyf,.OnAttach = OnAttachSandboxLayerBase,.OnRender = OnRender, .OnUpdateLayerEvent = UpdateLayerBaseEventSandbox, .OnDetach = emptyf };
@@ -107,34 +107,34 @@ GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path)
 	return GL_TRUE;
 }
 
-const char* LoadFile(const char* filePath)
-{
-	/*char* buffer = 0;
-	long length;
-	FILE* fptr = fopen(filePath, "rb");
-	if (NULL == fptr)
-	{
-		FE_LOG_ERROR("ERROR::sandbox.c shader file named %s couldn't be loaded !", filePath);
-		return NULL;
-	}
-
-	fseek(fptr, 0, SEEK_END);
-	length = ftell(fptr) + 1;
-	fseek(fptr, 0, SEEK_SET);
-	buffer = malloc(length);
-	if (NULL != buffer)
-	{
-		fread(buffer, 1, length, fptr);
-		buffer[length - 1] = '\0';
-		fclose(fptr);
-	}
-	else
-	{
-		FE_LOG_ERROR("ERROR::sandbox.c file buffer of %s is NULL !", filePath);
-	}
-	
-	fclose(fptr);
-	return buffer;*/
-}
+//const char* LoadFile(const char* filePath)
+//{
+//	/*char* buffer = 0;
+//	long length;
+//	FILE* fptr = fopen(filePath, "rb");
+//	if (NULL == fptr)
+//	{
+//		FE_LOG_ERROR("ERROR::sandbox.c shader file named %s couldn't be loaded !", filePath);
+//		return NULL;
+//	}
+//
+//	fseek(fptr, 0, SEEK_END);
+//	length = ftell(fptr) + 1;
+//	fseek(fptr, 0, SEEK_SET);
+//	buffer = malloc(length);
+//	if (NULL != buffer)
+//	{
+//		fread(buffer, 1, length, fptr);
+//		buffer[length - 1] = '\0';
+//		fclose(fptr);
+//	}
+//	else
+//	{
+//		FE_LOG_ERROR("ERROR::sandbox.c file buffer of %s is NULL !", filePath);
+//	}
+//	
+//	fclose(fptr);
+//	return buffer;*/
+//}
 
 #endif

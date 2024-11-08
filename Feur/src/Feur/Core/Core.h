@@ -4,13 +4,13 @@ typedef unsigned char Byte;
 typedef Byte Bool;
 typedef unsigned short Word;
 
-typedef char Int8;
+typedef signed char Int8;
 typedef Byte Uint8;
-typedef short Int16;
+typedef signed short Int16;
 typedef Word Uint16;
-typedef int Int32;
+typedef signed int Int32;
 typedef unsigned int Uint32;
-typedef long long Int64;
+typedef signed long long Int64;
 typedef unsigned long long Uint64;
 typedef float Float32;
 typedef double Double;

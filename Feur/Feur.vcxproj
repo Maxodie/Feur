@@ -151,7 +151,9 @@
     <ClInclude Include="src\Feur\Core\Memory\MemoryAllocator.h" />
     <ClInclude Include="src\Feur\Core\Memory\PoolAllocator.h" />
     <ClInclude Include="src\Feur\Core\Memory\StackAllocator.h" />
+    <ClInclude Include="src\Feur\Core\Utils\FeString.h" />
     <ClInclude Include="src\Feur\Core\Utils\FeurSort.h" />
+    <ClInclude Include="src\Feur\Core\Utils\FileSystem.h" />
     <ClInclude Include="src\Feur\Core\Utils\List.h" />
     <ClInclude Include="src\Feur\Core\Utils\Optional.h" />
     <ClInclude Include="src\Feur\Core\Window\Window.h" />
@@ -170,9 +172,12 @@
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
     <ClInclude Include="src\Platform\Vulkan\Debug\VulkanDebug.h" />
     <ClInclude Include="src\Platform\Vulkan\Debug\VulkanValidationLayer.h" />
+    <ClInclude Include="src\Platform\Vulkan\RenderPipeline\VulkanRenderPipeline.h" />
+    <ClInclude Include="src\Platform\Vulkan\RenderPipeline\VulkanShader.h" />
     <ClInclude Include="src\Platform\Vulkan\Setup\VulkanDevice.h" />
     <ClInclude Include="src\Platform\Vulkan\Setup\VulkanImageView.h" />
     <ClInclude Include="src\Platform\Vulkan\Setup\VulkanSetup.h" />
+    <ClInclude Include="src\Platform\Vulkan\Setup\VulkanStructures.h" />
     <ClInclude Include="src\Platform\Vulkan\Setup\VulkanSwapChain.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanBuffers.h" />
     <ClInclude Include="src\Platform\Vulkan\VulkanGraphicsContext.h" />
@@ -193,7 +198,9 @@
     <ClCompile Include="src\Feur\Core\Memory\MemoryAllocator.c" />
     <ClCompile Include="src\Feur\Core\Memory\PoolAllocator.c" />
     <ClCompile Include="src\Feur\Core\Memory\StackAllocator.c" />
+    <ClCompile Include="src\Feur\Core\Utils\FeString.c" />
     <ClCompile Include="src\Feur\Core\Utils\FeurSort.c" />
+    <ClCompile Include="src\Feur\Core\Utils\FileSystem.c" />
     <ClCompile Include="src\Feur\Core\Utils\List.c" />
     <ClCompile Include="src\Feur\Core\Utils\Optional.c" />
     <ClCompile Include="src\Feur\Core\Window\Window.c" />
@@ -212,6 +219,8 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.c" />
     <ClCompile Include="src\Platform\Vulkan\Debug\VulkanDebug.c" />
     <ClCompile Include="src\Platform\Vulkan\Debug\VulkanValidationLayer.c" />
+    <ClCompile Include="src\Platform\Vulkan\RenderPipeline\VulkanRenderPipeline.c" />
+    <ClCompile Include="src\Platform\Vulkan\RenderPipeline\VulkanShader.c" />
     <ClCompile Include="src\Platform\Vulkan\Setup\VulkanDevice.c" />
     <ClCompile Include="src\Platform\Vulkan\Setup\VulkanImageView.c" />
     <ClCompile Include="src\Platform\Vulkan\Setup\VulkanSetup.c" />

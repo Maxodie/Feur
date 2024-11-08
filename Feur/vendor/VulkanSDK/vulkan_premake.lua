@@ -18,7 +18,17 @@ project ("Vulkan")
 
     }
 
-    links { "$(ProjectDir)1.3.290.0/Lib/vulkan-1.lib" }
+    --libdirs
+    --{
+        --"$(ProjectDir)1.3.290.0/Lib"
+    --}
+
+    links
+    {
+        "$(ProjectDir)1.3.290.0/Lib/vulkan-1.lib",
+        "$(ProjectDir)1.3.290.0/Lib/shaderc_shared.lib",
+    }
+
     includedirs { "$(ProjectDir)1.3.290.0/Include" }
 
     defines { "_CRT_SECURE_NO_WARNINGS" }

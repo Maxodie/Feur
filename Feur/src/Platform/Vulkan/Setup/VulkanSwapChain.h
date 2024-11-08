@@ -7,9 +7,12 @@ typedef struct VulkanfeSwapChainSupportDetails {
     FE_List(VkPresentModeKHR) presentModes;
 } VulkanfeSwapChainSupportDetails;
 
-void VulkanCreateSwapChain(struct VulkanfeInfo* vkInfo);
+void FE_API VulkanCreateSwapChain(struct FE_VulkanInfo* vkInfo);
+void FE_API VulkanDestroySwapChain(struct FE_VulkanInfo* vkInfo);
 
-VulkanfeSwapChainSupportDetails VulkanQuerySwapChainSupport(const struct VulkanfeInfo* vkInfo, VkPhysicalDevice device);
-VkSurfaceFormatKHR VulkanChooseSwapSurfaceFormat(const void* feListAvailableFormats);
-VkPresentModeKHR VulkanChooseSwapPresentMode(const void* feListAvailablePresentModes);
-VkExtent2D VulkanChooseSwapExtent(const VkSurfaceCapabilitiesKHR* capabilities);
+// "VulkanfeSwapChainSupportDetails" must be cleared using "VulkanClearSwapChainSupport" function
+VulkanfeSwapChainSupportDetails FE_API VulkanQuerySwapChainSupport(const struct FE_VulkanInfo* vkInfo, VkPhysicalDevice device);
+void FE_API VulkanClearSwapChainSupport(VulkanfeSwapChainSupportDetails* vkSwapChainSupportDetails);
+VkSurfaceFormatKHR FE_API VulkanChooseSwapSurfaceFormat(const void* feListAvailableFormats);
+VkPresentModeKHR FE_API VulkanChooseSwapPresentMode(const void* feListAvailablePresentModes);
+VkExtent2D FE_API VulkanChooseSwapExtent(const VkSurfaceCapabilitiesKHR* capabilities);

@@ -3,10 +3,10 @@
 #include "Platform/Vulkan/Setup/VulkanSetup.h"
 #include "Platform/Vulkan/Setup/VulkanDevice.h"
 
-void FE_API VulkanCreateSwapChain(VulkanfeInfo* vkInfo)
+void FE_API VulkanCreateSwapChain(FE_VulkanInfo* vkInfo)
 {
     //get device swapchain data
-    VulkanfeSwapChainSupportDetails swapChainSupport = VulkanQuerySwapChainSupport(vkInfo, vkInfo->physicalDevice);
+    VulkanfeSwapChainSupportDetails swapChainSupport = VulkanQuerySwapChainSupport(vkInfo, vkInfo->physicalDevice.GPU);
 
     //select the best parameters
     VkSurfaceFormatKHR surfaceFormat = VulkanChooseSwapSurfaceFormat(&swapChainSupport.formats);
@@ -37,7 +37,7 @@ void FE_API VulkanCreateSwapChain(VulkanfeInfo* vkInfo)
         .oldSwapchain = VK_NULL_HANDLE
     };
 
-    VulkanfeQueueFamilyIndices indices = VulkanFindQueueFamilies(vkInfo, vkInfo->physicalDevice);
+    FE_VulkanQueueFamilyIndices indices = VulkanFindQueueFamilies(vkInfo, vkInfo->physicalDevice.GPU);
     Uint32 queueFamilyIndices[] = { indices.graphicsFamily.value, indices.presentFamily.value };
 
     if (indices.graphicsFamily.value != indices.presentFamily.value) {
@@ -52,7 +52,7 @@ void FE_API VulkanCreateSwapChain(VulkanfeInfo* vkInfo)
     }
 
     VkResult result = vkCreateSwapchainKHR(vkInfo->device, &createInfo, NULL, &vkInfo->swapChain);
-    FE_CORE_ASSERT(result == VK_SUCCESS, "failed to create swap chain!");
+    FE_CORE_ASSERT(result == VK_SUCCESS, "failed to create swap chain! - %d", result);
 
     FE_ListInit(vkInfo->swapChainImages);
 
@@ -62,9 +62,17 @@ void FE_API VulkanCreateSwapChain(VulkanfeInfo* vkInfo)
 
     vkInfo->swapChainImageFormat = surfaceFormat.format;
     vkInfo->swapChainExtent = extent;
+
+    VulkanClearSwapChainSupport(&swapChainSupport);
 }
 
-VulkanfeSwapChainSupportDetails FE_API VulkanQuerySwapChainSupport(const struct VulkanfeInfo* vkInfo, VkPhysicalDevice device)
+void FE_API VulkanDestroySwapChain(FE_VulkanInfo* vkInfo)
+{
+    vkDestroySwapchainKHR(vkInfo->device, vkInfo->swapChain, NULL);
+    FE_ListClear(vkInfo->swapChainImages);
+}
+
+VulkanfeSwapChainSupportDetails FE_API VulkanQuerySwapChainSupport(const struct FE_VulkanInfo* vkInfo, VkPhysicalDevice device)
 {
     //set details : capabilities, format and presentMode
     VulkanfeSwapChainSupportDetails details = { 0 };
@@ -91,6 +99,12 @@ VulkanfeSwapChainSupportDetails FE_API VulkanQuerySwapChainSupport(const struct 
     //
 
     return details;
+}
+
+void VulkanClearSwapChainSupport(VulkanfeSwapChainSupportDetails* vkSwapChainSupportDetails)
+{
+    FE_ListClear(vkSwapChainSupportDetails->formats);
+    FE_ListClear(vkSwapChainSupportDetails->presentModes);
 }
 
 VkSurfaceFormatKHR FE_API VulkanChooseSwapSurfaceFormat(const void* feListAvailableFormats)

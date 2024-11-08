@@ -29,17 +29,23 @@ static void VulkanShowDebug(
 	VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 	const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData)
 {
-	if (messageSeverity < VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
+	switch (messageSeverity)
 	{
-		FE_CORE_LOG_DEBUG("Vulkan Validation layer: %s", pCallbackData->pMessage);
-	}
-	else if(messageSeverity > VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
-	{
+	case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
 		FE_CORE_LOG_ERROR("Vulkan Validation layer: %s", pCallbackData->pMessage);
-	}
-	else
-	{
+		break;
+	case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
 		FE_CORE_LOG_WARNING("Vulkan Validation layer: %s", pCallbackData->pMessage);
+		break;
+	case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
+		FE_CORE_LOG_DEBUG("Vulkan Validation layer: %s", pCallbackData->pMessage);
+		break;
+	case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
+		FE_CORE_LOG_DEBUG("Vulkan Validation layer: %s", pCallbackData->pMessage);
+		break;
+	default:
+		FE_CORE_LOG_DEBUG("Vulkan Validation layer: %s", pCallbackData->pMessage);
+		break;
 	}
 }
 
@@ -49,8 +55,8 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(
 	const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
 	void* pUserData) 
 {
-	VulkanfeDebugger* vkfeDebugger = pUserData;
-	if (vkfeDebugger->enableFullVulkanDebugMsg || messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
+	FE_VulkanDebugger* debugger = pUserData;
+	if (debugger->enableFullVulkanDebugMsg || messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
 	{
 		VulkanShowDebug(messageSeverity, pCallbackData);
 	}
@@ -58,35 +64,46 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(
 	return VK_FALSE;
 }
 
-void FE_API VulkanInitDefaultDebug(VulkanfeDebugger* vkfeDebugger)
-{
-	vkfeDebugger->enableFullVulkanDebugMsg = TRUE;
-}
-
-void FE_API VulkanPopulateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT* createInfo, VulkanfeInfo* vkInfo)
+void FE_API VulkanPopulateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT* createInfo, FE_VulkanInfo* vkInfo)
 {
 	createInfo->sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
-	createInfo->messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
-	createInfo->messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+	
+	createInfo->messageSeverity =	VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT | 
+									VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | 
+									VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | 
+									VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+	
+	createInfo->messageType =	VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | 
+								VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | 
+								VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT |
+								VK_DEBUG_UTILS_MESSAGE_TYPE_DEVICE_ADDRESS_BINDING_BIT_EXT;
+
 	createInfo->pfnUserCallback = VulkanDebugCallback;
-	createInfo->pUserData = &vkInfo->vkfeDebugger;
+	createInfo->pUserData = &vkInfo->debugger;
 }
 
-void FE_API VulkanSetupDebugMessenger(VulkanfeInfo* vkInfo)
+void FE_API VulkanCreateDebugMessenger(FE_VulkanInfo* vkInfo)
 {
-	if (!vkInfo->enableValidationLayers) return;
+	FE_CORE_LOG_SUCCESS("Initializing Vulkan debugger...");
 
-	VkDebugUtilsMessengerCreateInfoEXT createInfo;
+	//default variables
+	vkInfo->debugger.enableFullVulkanDebugMsg = TRUE;
+	//
+
+	VkDebugUtilsMessengerCreateInfoEXT createInfo = { 0 };
 	VulkanPopulateDebugMessenger(&createInfo, vkInfo);
 	
-	VkResult success = CreateDebugUtilsMessengerEXT(vkInfo->vkInstance, &createInfo, NULL, &vkInfo->vkfeDebugger.callback);
-	FE_CORE_ASSERT(success == VK_SUCCESS, "Vulkan Debug message could not be created");
+	VkResult result = CreateDebugUtilsMessengerEXT(vkInfo->instance, &createInfo, NULL, &vkInfo->debugger.callback);
+	FE_CORE_ASSERT(result == VK_SUCCESS, "Vulkan Debug message could not be created - %d", result);
+
+	FE_CORE_LOG_SUCCESS("Vulkan debugger Initialized");
 }
 
-void FE_API VulkanDestroyDebugMessenger(VulkanfeInfo* vkInfo)
+void FE_API VulkanCleanupDebugMessenger(FE_VulkanInfo* vkInfo)
 {
-	if (vkInfo->enableValidationLayers)
+	if (vkInfo->validationLayer.enableValidationLayers)
 	{
-		DestroyDebugUtilsMessengerEXT(vkInfo->vkInstance, vkInfo->vkfeDebugger.callback, NULL);
+		DestroyDebugUtilsMessengerEXT(vkInfo->instance, vkInfo->debugger.callback, NULL);
+		FE_CORE_LOG_SUCCESS("Shuting down the vulkan debugger");
 	}
 }

@@ -1,32 +1,11 @@
 #pragma once
 #include <vulkan/vulkan.h>
-#include "Platform/Vulkan/Debug/VulkanDebug.h"
-
-typedef struct VulkanfeInfo 
-{
-	VkInstance vkInstance;
-	VulkanfeDebugger vkfeDebugger;
-	FE_List(const char*) validationLayers;
-	FE_List(const char*) deviceExtensions;
-
-	VkPhysicalDevice physicalDevice;
-	VkDevice device;
-	VkQueue graphicsQueue;
-	VkQueue presentQueue;
-	VkSurfaceKHR surface;
+#include <shaderc/shaderc.h>
+#include "Platform/Vulkan/Setup/VulkanStructures.h"
 
 
-	//temp
-	VkSwapchainKHR swapChain;
-	FE_List(VkImage) swapChainImages;
-	FE_List(VkImageView) swapChainImageViews;
-	VkFormat swapChainImageFormat;
-	VkExtent2D swapChainExtent;
+void FE_API CreateVulkanInstance(FE_VulkanInfo* vkInfo);
+void FE_API VulkanCleanup(FE_VulkanInfo* vkInfo);
 
-	Bool enableValidationLayers;
-
-} VulkanfeInfo;
-
-void FE_API CreateVulkanInstance(VulkanfeInfo* vkInfo);
-void FE_API CreateVulkanSurface(VulkanfeInfo* vkInfo);
-void FE_API VulkanCleanup(VulkanfeInfo* vkInfo);
+void FE_API CreateVulkanSurface(FE_VulkanInfo* vkInfo);
+void FE_API CleanupVulkanSurface(FE_VulkanInfo* vkInfo);

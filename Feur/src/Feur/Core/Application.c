@@ -38,7 +38,7 @@ void FE_API StartApp()
 
 	if (!InitRenderer(&g_fe_App.rendererAPIData))
 	{
-		FE_CORE_LOG_ERROR("Application.c : RenderCommandInit failed !");
+		FE_CORE_LOG_ERROR("failed to initialize the renderer");
 	}
 
 	nuklearGUILayer = CreateNewNuklearGUILayer("NuklearLayer");
@@ -145,6 +145,9 @@ void FE_API ShutdownApp()
 	FE_CORE_LOG_SUCCESS("Renderer shuted down");
 	GetWindowAPI()->DestroyWindow(&g_fe_App.windowData);
 	FE_CORE_LOG_SUCCESS("Window destroyed");
+
+	FE_ListPrintReport();
+
 	FE_MemoryGeneralShutdown();
 	FE_CORE_LOG_SUCCESS("Memory freed");
 	FE_CORE_LOG_SUCCESS("Application closed");

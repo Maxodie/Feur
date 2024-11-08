@@ -49,6 +49,9 @@
     <Filter Include="Platform\Vulkan\Debug">
       <UniqueIdentifier>{60D30ADE-CC3F-C6D8-9533-5E36015FE840}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Platform\Vulkan\RenderPipeline">
+      <UniqueIdentifier>{8F36CF7B-7B5C-99E2-64A2-1EAE5067BEAE}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Platform\Vulkan\Setup">
       <UniqueIdentifier>{8A8F1ADF-F6FB-D5D9-BFEF-6D372B1BF841}</UniqueIdentifier>
     </Filter>
@@ -100,7 +103,13 @@
     <ClInclude Include="src\Feur\Core\Memory\StackAllocator.h">
       <Filter>Feur\Core\Memory</Filter>
     </ClInclude>
+    <ClInclude Include="src\Feur\Core\Utils\FeString.h">
+      <Filter>Feur\Core\Utils</Filter>
+    </ClInclude>
     <ClInclude Include="src\Feur\Core\Utils\FeurSort.h">
+      <Filter>Feur\Core\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Feur\Core\Utils\FileSystem.h">
       <Filter>Feur\Core\Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\Feur\Core\Utils\List.h">
@@ -157,7 +166,16 @@
     <ClInclude Include="src\Platform\Vulkan\Debug\VulkanValidationLayer.h">
       <Filter>Platform\Vulkan\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\RenderPipeline\VulkanRenderPipeline.h">
+      <Filter>Platform\Vulkan\RenderPipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\RenderPipeline\VulkanShader.h">
+      <Filter>Platform\Vulkan\RenderPipeline</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\Setup\VulkanDevice.h">
+      <Filter>Platform\Vulkan\Setup</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\Setup\VulkanImageView.h">
       <Filter>Platform\Vulkan\Setup</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\Setup\VulkanSetup.h">
@@ -188,7 +206,7 @@
       <Filter>Platform\Window\SDL</Filter>
     </ClInclude>
     <ClInclude Include="src\fepch.h" />
-    <ClInclude Include="src\Platform\Vulkan\Setup\VulkanImageView.h" />
+    <ClInclude Include="src\Platform\Vulkan\Setup\VulkanStructures.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Feur\Core\Application.c">
@@ -218,7 +236,13 @@
     <ClCompile Include="src\Feur\Core\Memory\StackAllocator.c">
       <Filter>Feur\Core\Memory</Filter>
     </ClCompile>
+    <ClCompile Include="src\Feur\Core\Utils\FeString.c">
+      <Filter>Feur\Core\Utils</Filter>
+    </ClCompile>
     <ClCompile Include="src\Feur\Core\Utils\FeurSort.c">
+      <Filter>Feur\Core\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Feur\Core\Utils\FileSystem.c">
       <Filter>Feur\Core\Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\Feur\Core\Utils\List.c">
@@ -275,7 +299,16 @@
     <ClCompile Include="src\Platform\Vulkan\Debug\VulkanValidationLayer.c">
       <Filter>Platform\Vulkan\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\RenderPipeline\VulkanRenderPipeline.c">
+      <Filter>Platform\Vulkan\RenderPipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\RenderPipeline\VulkanShader.c">
+      <Filter>Platform\Vulkan\RenderPipeline</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\Setup\VulkanDevice.c">
+      <Filter>Platform\Vulkan\Setup</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Vulkan\Setup\VulkanImageView.c">
       <Filter>Platform\Vulkan\Setup</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\Setup\VulkanSetup.c">
@@ -306,6 +339,5 @@
       <Filter>Platform\Window\SDL</Filter>
     </ClCompile>
     <ClCompile Include="src\fepch.c" />
-    <ClCompile Include="src\Platform\Vulkan\Setup\VulkanImageView.c" />
   </ItemGroup>
 </Project>

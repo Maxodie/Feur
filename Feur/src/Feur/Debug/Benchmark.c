@@ -33,7 +33,7 @@ void FE_API FE_BenchmarkShowDuration(Uint64 nanoSeconds, const char* prefix)
 
 static Uint64 FE_API FE_GetCurrentTimeNs() {
     static Uint64 is_init = 0;
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(FE_PLATFORM_MACOS)
     static mach_timebase_info_data_t info;
     if (0 == is_init) {
         mach_timebase_info(&info);

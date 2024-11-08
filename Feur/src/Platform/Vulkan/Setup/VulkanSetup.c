@@ -2,13 +2,16 @@
 #include "Platform/Vulkan/Setup/VulkanSetup.h"
 #include "Platform/Vulkan/VulkanGraphicsContext.h"
 #include "Platform/Vulkan/Debug/VulkanValidationLayer.h"
+#include "Platform/Vulkan/Debug/VulkanDebug.h"
 
-void FE_API CreateVulkanInstance(VulkanfeInfo* vkInfo)
+void FE_API CreateVulkanInstance(FE_VulkanInfo* vkInfo)
 {
 	//Init validation layers
-	if (vkInfo->enableValidationLayers && !VulkanCheckValidationLayerSupport(vkInfo))
+	if (vkInfo->validationLayer.enableValidationLayers && !VulkanCheckValidationLayerSupport(&vkInfo->validationLayer))
 	{
-		FE_CORE_ASSERT(FALSE, "Vulkan validation layers are enabled but not available");
+		FE_ListClear(vkInfo->validationLayer.validationLayers);
+		FE_CORE_LOG_ERROR("Vulkan validation layers are enabled but not available. Therefore disabling validation layers");
+		vkInfo->validationLayer.enableValidationLayers = FALSE;
 	}
 
 	//Create instance data
@@ -19,42 +22,56 @@ void FE_API CreateVulkanInstance(VulkanfeInfo* vkInfo)
 		.applicationVersion = VK_MAKE_VERSION(1, 0, 0),
 		.pEngineName = "Feur Engine",
 		.engineVersion = VK_MAKE_VERSION(1, 0, 0),
-		.apiVersion = VK_API_VERSION_1_0
+		.apiVersion = VK_API_VERSION_1_3
 	};
 
 	VkInstanceCreateInfo createInfo = 
 	{
 		.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
 		.pApplicationInfo = &appInfo,
+#ifdef FE_PLATFORM_MACOS
+		.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR,
+#endif
 	};
 
 	//setup validation layers/window extensions into the instance data
 	VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = { 0 };
-	if (vkInfo->enableValidationLayers)
+	if (vkInfo->validationLayer.enableValidationLayers)
 	{
-		createInfo.enabledLayerCount = (Uint32)vkInfo->validationLayers.impl.count;
-		createInfo.ppEnabledLayerNames = vkInfo->validationLayers.data;
+		createInfo.enabledLayerCount = (Uint32)vkInfo->validationLayer.validationLayers.impl.count;
+		createInfo.ppEnabledLayerNames = vkInfo->validationLayer.validationLayers.data;
 		VulkanPopulateDebugMessenger(&debugCreateInfo, vkInfo);
 		createInfo.pNext = &debugCreateInfo;
 	}
 	else
 	{
 		createInfo.enabledLayerCount = 0;
+		createInfo.ppEnabledLayerNames = NULL;
 		createInfo.pNext = NULL;
+	}
+
+	//window extension
+	FE_List(const char* const) createInfoExtensions = { 0 };
+	FE_ListInit(createInfoExtensions);
+
+#ifdef FE_PLATFORM_MACOS
+	FE_ListPushValue(createInfoExtensions, const char* const, "VK_KHR_portability_enumeration");
+#endif
+
+	if (vkInfo->validationLayer.enableValidationLayers) {
+		FE_ListPushValue(createInfoExtensions,const char* const, VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 	}
 
 	switch (GetWindowAPI()->API_Type)
 	{
 	case FE_WINDOW_API_GLFW:
-		Vulkan_GLFWsetExtention(&createInfo, vkInfo);
+		Vulkan_GLFWsetExtention(&createInfo, vkInfo, &createInfoExtensions);
 		break;
 	default:
 		FE_CORE_ASSERT(FALSE, "failed to set extention count, Window API not supported yet");
 		return;
 		break;
 	}
-
-	createInfo.enabledLayerCount = 0;
 
 	//Get vulkan extensions
 	Uint32 extensionCount;
@@ -80,12 +97,14 @@ void FE_API CreateVulkanInstance(VulkanfeInfo* vkInfo)
 	FE_MemoryGeneralFree(extensions);
 
 	//create instance
-	VkResult success = vkCreateInstance(&createInfo, NULL, &vkInfo->vkInstance);
-	FE_CORE_ASSERT(success == VK_SUCCESS, "failed to create vulkan instance");
-	
+	VkResult result = vkCreateInstance(&createInfo, NULL, &vkInfo->instance);
+	FE_CORE_ASSERT(result == VK_SUCCESS, "failed to create vulkan instance - %d", result);
+	FE_ListClear(createInfoExtensions);
+
+	FE_CORE_LOG_SUCCESS("Vulkan instance created");
 }
 
-void FE_API CreateVulkanSurface(VulkanfeInfo* vkInfo)
+void FE_API CreateVulkanSurface(FE_VulkanInfo* vkInfo)
 {
 	switch (GetWindowAPI()->API_Type)
 	{
@@ -99,16 +118,12 @@ void FE_API CreateVulkanSurface(VulkanfeInfo* vkInfo)
 	}
 }
 
-void FE_API VulkanCleanup(VulkanfeInfo* vkInfo)
+void FE_API CleanupVulkanSurface(FE_VulkanInfo* vkInfo)
 {
-	for (SizeT i = 0; i < vkInfo->swapChainImageViews.impl.count; i++)
-	{
-		vkDestroyImageView(vkInfo->device, vkInfo->swapChainImageViews.data[i], NULL);
-	}
+	vkDestroySurfaceKHR(vkInfo->instance, vkInfo->surface, NULL);
+}
 
-	vkDestroySwapchainKHR(vkInfo->device, vkInfo->swapChain, NULL);
-	vkDestroyDevice(vkInfo->device, NULL);
-	VulkanDestroyDebugMessenger(vkInfo);
-	vkDestroySurfaceKHR(vkInfo->vkInstance, vkInfo->surface, NULL);
-	vkDestroyInstance(vkInfo->vkInstance, NULL);
+void FE_API VulkanCleanup(FE_VulkanInfo* vkInfo)
+{
+	vkDestroyInstance(vkInfo->instance, NULL);
 }

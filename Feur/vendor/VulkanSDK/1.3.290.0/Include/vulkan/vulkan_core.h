@@ -4027,7 +4027,7 @@ typedef VkResult (VKAPI_PTR *PFN_vkCreateGraphicsPipelines)(VkDevice device, VkP
 typedef VkResult (VKAPI_PTR *PFN_vkCreateComputePipelines)(VkDevice device, VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkComputePipelineCreateInfo* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines);
 typedef void (VKAPI_PTR *PFN_vkDestroyPipeline)(VkDevice device, VkPipeline pipeline, const VkAllocationCallbacks* pAllocator);
 typedef VkResult (VKAPI_PTR *PFN_vkCreatePipelineLayout)(VkDevice device, const VkPipelineLayoutCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPipelineLayout* pPipelineLayout);
-typedef void (VKAPI_PTR *PFN_vkDestroyPipelineLayout)(VkDevice device, VkPipelineLayout pipelineLayout, const VkAllocationCallbacks* pAllocator);
+typedef void (VKAPI_PTR *PFN_vkDestroyPipelineLayout)(VkDevice device, VkPipelineLayout layout, const VkAllocationCallbacks* pAllocator);
 typedef VkResult (VKAPI_PTR *PFN_vkCreateSampler)(VkDevice device, const VkSamplerCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSampler* pSampler);
 typedef void (VKAPI_PTR *PFN_vkDestroySampler)(VkDevice device, VkSampler sampler, const VkAllocationCallbacks* pAllocator);
 typedef VkResult (VKAPI_PTR *PFN_vkCreateDescriptorSetLayout)(VkDevice device, const VkDescriptorSetLayoutCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorSetLayout* pSetLayout);
@@ -4475,7 +4475,7 @@ VKAPI_ATTR VkResult VKAPI_CALL vkCreatePipelineLayout(
 
 VKAPI_ATTR void VKAPI_CALL vkDestroyPipelineLayout(
     VkDevice                                    device,
-    VkPipelineLayout                            pipelineLayout,
+    VkPipelineLayout                            layout,
     const VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateSampler(
@@ -5463,7 +5463,7 @@ typedef struct VkDescriptorUpdateTemplateCreateInfo {
     VkDescriptorUpdateTemplateType            templateType;
     VkDescriptorSetLayout                     descriptorSetLayout;
     VkPipelineBindPoint                       pipelineBindPoint;
-    VkPipelineLayout                          pipelineLayout;
+    VkPipelineLayout                          layout;
     uint32_t                                  set;
 } VkDescriptorUpdateTemplateCreateInfo;
 

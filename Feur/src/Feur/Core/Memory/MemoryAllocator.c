@@ -5,7 +5,11 @@ struct FE_MemoryGeneralAllocator
 {
     FE_MemoryFreeListAllocator freeListAllocator;
     void* mainFreeListMem;
-} FE_MemoryGeneralAllocator;
+#ifdef FE_DEBUG
+    Uint64 allocCount;
+    Uint64 freeCount;
+#endif
+} FE_MemoryGeneralAllocator = { 0 };
 
 FE_FORCEINLINE_FUN void* FE_API FE_MemoryCustomMalloc(SizeT size)
 {
@@ -32,15 +36,25 @@ FE_FORCEINLINE_FUN void FE_API FE_MemoryGeneralShutdown()
 {
     FE_MemoryFreeListAllocatorShutdown(&FE_MemoryGeneralAllocator.freeListAllocator);
     free(FE_MemoryGeneralAllocator.mainFreeListMem);
+
+#ifdef FE_DEBUG
+    FE_CORE_LOG_SUCCESS("Memory report | alloc : %lld      free : %lld", FE_MemoryGeneralAllocator.allocCount, FE_MemoryGeneralAllocator.freeCount);
+#endif
 }
 
 FE_FORCEINLINE_FUN void* FE_API FE_MemoryGeneralAlloc(SizeT size)
 {
+#ifdef FE_DEBUG
+    FE_MemoryGeneralAllocator.allocCount++;
+#endif
     return FE_MemoryFreeListAllocatorAlloc(&FE_MemoryGeneralAllocator.freeListAllocator, size, FE_MEMORY_BASE_ALIGNEMENT);
 }
 
 FE_FORCEINLINE_FUN void FE_API FE_MemoryGeneralFree(void* ptr)
 {
+#ifdef FE_DEBUG
+    FE_MemoryGeneralAllocator.freeCount++;
+#endif
     FE_MemoryFreeListAllocatorFree(&FE_MemoryGeneralAllocator.freeListAllocator, ptr);
 }
 

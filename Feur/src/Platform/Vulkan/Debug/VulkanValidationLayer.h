@@ -1,4 +1,4 @@
 #pragma once
 
-void FE_API VulkanInitValidationLayer(struct VulkanfeInfo* vkInfo);
-Bool FE_API VulkanCheckValidationLayerSupport(const struct VulkanfeInfo* vkInfo);
+void FE_API VulkanInitValidationLayer(struct FE_VulkanValidationLayer* vkValidationLayer);
+Bool FE_API VulkanCheckValidationLayerSupport(const struct FE_VulkanValidationLayer* vkValidationLayer);
