@@ -7,5 +7,4 @@
 void FE_API CreateVulkanInstance(FE_VulkanInfo* vkInfo);
 void FE_API VulkanCleanup(FE_VulkanInfo* vkInfo);
 
-void FE_API CreateVulkanSurface(FE_VulkanInfo* vkInfo);
 void FE_API CleanupVulkanSurface(FE_VulkanInfo* vkInfo);

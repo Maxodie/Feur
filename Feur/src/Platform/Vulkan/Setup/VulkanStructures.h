@@ -1,5 +1,23 @@
 #pragma once
 
+typedef struct VulkanfeSwapChainSupportDetails 
+{
+	VkSurfaceCapabilitiesKHR capabilities;
+	FE_List(VkSurfaceFormatKHR) formats;
+	FE_List(VkPresentModeKHR) presentModes;
+} VulkanfeSwapChainSupportDetails;
+
+typedef struct FE_VulkanSwapChain
+{
+	VulkanfeSwapChainSupportDetails details;
+	VkSwapchainKHR handle;
+
+	FE_List(VkImage) images;
+	FE_List(VkImageView) imageViews;
+	VkFormat imageFormat;
+	VkExtent2D extent;
+} FE_VulkanSwapChain;
+
 typedef struct FE_VulkanQueueFamilyIndices
 {
 	FE_Optional(Uint32) graphicsFamily;
@@ -11,24 +29,25 @@ typedef struct FE_VulkanPysicalDevice
 	VkPhysicalDevice GPU;
 	VkPhysicalDeviceProperties properties;
 	VkPhysicalDeviceFeatures features;
-	VkPhysicalDeviceMemoryProperties memoryProperties;
-	Bool supportDeviceLocalHostVisible;
 	Uint32 graphicsQueueIndex;
+	VkPhysicalDeviceMemoryProperties memoryProperties;
 	Uint32 presentQueueIndex;
 	Uint32 transferQueueIndex;
+	Bool supportDeviceLocalHostVisible;
 } FE_VulkanPysicalDevice;
-
-typedef struct FE_VulkanDebugger
-{
-	VkDebugUtilsMessengerEXT callback;
-	Bool enableFullVulkanDebugMsg;
-} FE_VulkanDebugger;
 
 typedef struct FE_VulkanValidationLayer
 {
 	Bool enableValidationLayers;
 	FE_List(const char* const) validationLayers;
 } FE_VulkanValidationLayer;
+
+typedef struct FE_VulkanDebugger
+{
+	FE_VulkanValidationLayer validationLayer;
+	VkDebugUtilsMessengerEXT callback;
+	Bool enableFullVulkanDebugMsg;
+} FE_VulkanDebugger;
 
 typedef struct FE_VulkanPipeline
 {
@@ -40,27 +59,23 @@ typedef struct FE_VulkanInfo
 {
 	VkInstance instance;
 	FE_VulkanDebugger debugger;
-	FE_VulkanValidationLayer validationLayer;
 
 	FE_VulkanPysicalDevice physicalDevice;
-	VkDevice device;
+	VkDevice logicalDevice;
+
+	PFN_vkCmdEndRenderingKHR vkCmdEndRenderingKHR;
+	PFN_vkCmdBeginRenderingKHR vkCmdBeginRenderingKHR;
+
 	VkQueue graphicsQueue;
 	VkQueue presentQueue;
+	FE_VulkanQueueFamilyIndices queueFamilyIndices;
 	VkSurfaceKHR surface;
+
+	FE_VulkanSwapChain swapChain;
 
 	FE_VulkanPipeline graphicsPipeline;
 
 	//shaderc
 	shaderc_compiler_t shaderCompiler;
-
-	//temp
-	VkSwapchainKHR swapChain;
-	FE_List(VkImage) swapChainImages;
-	FE_List(VkImageView) swapChainImageViews;
-
-	VkFormat swapChainImageFormat;
-	VkExtent2D swapChainExtent;
-
-
 
 } FE_VulkanInfo;

@@ -181,6 +181,9 @@
     <ClInclude Include="src\Platform\Vulkan\Setup\VulkanSetup.h">
       <Filter>Platform\Vulkan\Setup</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\Vulkan\Setup\VulkanStructures.h">
+      <Filter>Platform\Vulkan\Setup</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\Setup\VulkanSwapChain.h">
       <Filter>Platform\Vulkan\Setup</Filter>
     </ClInclude>
@@ -206,7 +209,6 @@
       <Filter>Platform\Window\SDL</Filter>
     </ClInclude>
     <ClInclude Include="src\fepch.h" />
-    <ClInclude Include="src\Platform\Vulkan\Setup\VulkanStructures.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Feur\Core\Application.c">

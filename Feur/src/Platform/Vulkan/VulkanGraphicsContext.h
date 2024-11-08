@@ -1,5 +1,7 @@
 #pragma once
 
+void FE_API CreateVulkanSurface(struct FE_VulkanInfo* vkInfo);
+
 //GLFW
 void FE_API Vulkan_GLFWwindowHintParameters();
 void FE_API Vulkan_GLFWgraphicsContextInit(WindowData* windowData);

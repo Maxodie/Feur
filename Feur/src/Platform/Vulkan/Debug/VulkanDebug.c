@@ -56,7 +56,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(
 	void* pUserData) 
 {
 	FE_VulkanDebugger* debugger = pUserData;
-	if (debugger->enableFullVulkanDebugMsg || messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
+	if (debugger->validationLayer.enableValidationLayers && debugger->enableFullVulkanDebugMsg || messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
 	{
 		VulkanShowDebug(messageSeverity, pCallbackData);
 	}
@@ -101,7 +101,7 @@ void FE_API VulkanCreateDebugMessenger(FE_VulkanInfo* vkInfo)
 
 void FE_API VulkanCleanupDebugMessenger(FE_VulkanInfo* vkInfo)
 {
-	if (vkInfo->validationLayer.enableValidationLayers)
+	if (vkInfo->debugger.validationLayer.enableValidationLayers)
 	{
 		DestroyDebugUtilsMessengerEXT(vkInfo->instance, vkInfo->debugger.callback, NULL);
 		FE_CORE_LOG_SUCCESS("Shuting down the vulkan debugger");

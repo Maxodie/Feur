@@ -1,6 +1,7 @@
 #include "fepch.h"
 #include "Platform/Vulkan/VulkanRendererAPI.h"
 
+#include "Platform/Vulkan/VulkanGraphicsContext.h"
 #include "Platform/Vulkan/Setup/VulkanSetup.h"
 #include "Platform/Vulkan/Setup/VulkanDevice.h"
 #include "Platform/Vulkan/Setup/VulkanSwapChain.h"
@@ -16,11 +17,11 @@ Bool FE_API VulkanInit_impl(RendererAPIData* apiData)
 	FE_VulkanInfo* vkInfo = FE_MemoryGeneralAlloc(sizeof(FE_VulkanInfo));
 	FE_CORE_ASSERT(vkInfo != NULL, "Failed allocate memory for VulkanInfo");
 
-	VulkanInitValidationLayer(&vkInfo->validationLayer);
+	VulkanInitValidationLayer(&vkInfo->debugger.validationLayer);
 
 	CreateVulkanInstance(vkInfo);
 
-	if (vkInfo->validationLayer.enableValidationLayers)
+	if (vkInfo->debugger.validationLayer.enableValidationLayers)
 	{
 		VulkanCreateDebugMessenger(vkInfo);
 	}
@@ -31,8 +32,8 @@ Bool FE_API VulkanInit_impl(RendererAPIData* apiData)
 	VulkanCreateLogicalDevice(vkInfo);
 	VulkanCreateSwapChain(vkInfo);
 
-	//VulkanCreateImageView(vkInfo);
-	//VulkanCreateGraphicsPipeline(vkInfo);
+	VulkanCreateImageView(vkInfo);
+	VulkanCreateGraphicsPipeline(vkInfo);
 
 	apiData->nativeInfoAPI = vkInfo;
 	return TRUE;
@@ -61,22 +62,22 @@ void FE_API VulkanShutdown_impl(RendererAPIData* apiData)
 {
 	FE_VulkanInfo* vkInfo = (FE_VulkanInfo*)apiData->nativeInfoAPI;
 	
-	//VulkanCleanupGraphicsPipeline(vkInfo);
-	//VulkanDestroyImageView(vkInfo);
+	VulkanCleanupGraphicsPipeline(vkInfo);
+	VulkanDestroyImageView(vkInfo);
 	VulkanDestroySwapChain(vkInfo);
 	VulkanDestroyLogicalDevice(vkInfo);
 	CleanupVulkanSurface(vkInfo);
 
-	if (vkInfo->validationLayer.enableValidationLayers)
+	if (vkInfo->debugger.validationLayer.enableValidationLayers)
 	{
 		VulkanCleanupDebugMessenger(vkInfo);
 	}
 
 	VulkanCleanup(vkInfo);
 
-	if (vkInfo->validationLayer.enableValidationLayers)
+	if (vkInfo->debugger.validationLayer.enableValidationLayers)
 	{
-		FE_ListClear(vkInfo->validationLayer.validationLayers);
+		FE_ListClear(vkInfo->debugger.validationLayer.validationLayers);
 	}
 
 	FE_MemoryGeneralFree(vkInfo);

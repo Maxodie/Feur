@@ -7,11 +7,11 @@
 void FE_API CreateVulkanInstance(FE_VulkanInfo* vkInfo)
 {
 	//Init validation layers
-	if (vkInfo->validationLayer.enableValidationLayers && !VulkanCheckValidationLayerSupport(&vkInfo->validationLayer))
+	if (vkInfo->debugger.validationLayer.enableValidationLayers && !VulkanCheckValidationLayerSupport(&vkInfo->debugger.validationLayer))
 	{
-		FE_ListClear(vkInfo->validationLayer.validationLayers);
+		FE_ListClear(vkInfo->debugger.validationLayer.validationLayers);
 		FE_CORE_LOG_ERROR("Vulkan validation layers are enabled but not available. Therefore disabling validation layers");
-		vkInfo->validationLayer.enableValidationLayers = FALSE;
+		vkInfo->debugger.validationLayer.enableValidationLayers = FALSE;
 	}
 
 	//Create instance data
@@ -36,10 +36,10 @@ void FE_API CreateVulkanInstance(FE_VulkanInfo* vkInfo)
 
 	//setup validation layers/window extensions into the instance data
 	VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = { 0 };
-	if (vkInfo->validationLayer.enableValidationLayers)
+	if (vkInfo->debugger.validationLayer.enableValidationLayers)
 	{
-		createInfo.enabledLayerCount = (Uint32)vkInfo->validationLayer.validationLayers.impl.count;
-		createInfo.ppEnabledLayerNames = vkInfo->validationLayer.validationLayers.data;
+		createInfo.enabledLayerCount = (Uint32)vkInfo->debugger.validationLayer.validationLayers.impl.count;
+		createInfo.ppEnabledLayerNames = vkInfo->debugger.validationLayer.validationLayers.data;
 		VulkanPopulateDebugMessenger(&debugCreateInfo, vkInfo);
 		createInfo.pNext = &debugCreateInfo;
 	}
@@ -58,7 +58,7 @@ void FE_API CreateVulkanInstance(FE_VulkanInfo* vkInfo)
 	FE_ListPushValue(createInfoExtensions, const char* const, "VK_KHR_portability_enumeration");
 #endif
 
-	if (vkInfo->validationLayer.enableValidationLayers) {
+	if (vkInfo->debugger.validationLayer.enableValidationLayers) {
 		FE_ListPushValue(createInfoExtensions,const char* const, VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 	}
 
@@ -77,11 +77,6 @@ void FE_API CreateVulkanInstance(FE_VulkanInfo* vkInfo)
 	Uint32 extensionCount;
 	vkEnumerateInstanceExtensionProperties(NULL, &extensionCount, NULL);
 	VkExtensionProperties* extensions = FE_MemoryGeneralAlloc(extensionCount * sizeof(VkExtensionProperties));
-	//if (extensions == NULL)
-	//{
-	//	FE_CORE_ASSERT(FALSE, "failed to allocate memory for extensions properties");
-	//	return FALSE;
-	//}
 
 	vkEnumerateInstanceExtensionProperties(NULL, &extensionCount, extensions);
 
@@ -102,20 +97,6 @@ void FE_API CreateVulkanInstance(FE_VulkanInfo* vkInfo)
 	FE_ListClear(createInfoExtensions);
 
 	FE_CORE_LOG_SUCCESS("Vulkan instance created");
-}
-
-void FE_API CreateVulkanSurface(FE_VulkanInfo* vkInfo)
-{
-	switch (GetWindowAPI()->API_Type)
-	{
-	case FE_WINDOW_API_GLFW:
-		Vulkan_GLFWcreateSurface(vkInfo);
-		break;
-	default:
-		FE_CORE_ASSERT(FALSE, "failed to create surface, Window API not supported yet");
-		return;
-		break;
-	}
 }
 
 void FE_API CleanupVulkanSurface(FE_VulkanInfo* vkInfo)

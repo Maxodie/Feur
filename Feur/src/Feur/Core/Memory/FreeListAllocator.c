@@ -93,6 +93,8 @@ void FE_API FE_MemoryFreeListAllocatorFree(FE_MemoryFreeListAllocator* allocator
         currentFreeBlock = currentFreeBlock->next;
     }
 
+    FE_CORE_ASSERT((FreeBlock*)block_start != NULL, "the pointer %p shouldn't have been freed", ptr);
+
     if (prevFreeBlock == NULL)
     {
         prevFreeBlock = (FreeBlock*)block_start;

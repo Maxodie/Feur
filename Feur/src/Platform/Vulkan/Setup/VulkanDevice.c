@@ -29,7 +29,7 @@ void FE_API VulkanPickPhysicalDevice(FE_VulkanInfo* vkInfo)
 	/*------------------ Search for physical device ------------------*/
 	for (Uint32 i = 0; i < deviceCount; i++)
 	{
-		if (VulkanSelectPhysicalDevice(vkInfo, devices[i])) {
+		if (VulkanTryLoadingPhysicalDevice(vkInfo, devices[i])) {
 			break;
 		}
 	}
@@ -59,7 +59,7 @@ void FE_API VulkanPickPhysicalDevice(FE_VulkanInfo* vkInfo)
 	FE_CORE_LOG_SUCCESS("Vulkan physical device selected");
 }
 
-Bool FE_API VulkanSelectPhysicalDevice(FE_VulkanInfo* vkInfo, VkPhysicalDevice device)
+Bool FE_API VulkanTryLoadingPhysicalDevice(FE_VulkanInfo* vkInfo, VkPhysicalDevice device)
 {
 	/*--------------------- Check For Physical Device Support ---------------------*/
 	VkPhysicalDeviceProperties deviceProperties;
@@ -102,21 +102,19 @@ Bool FE_API VulkanSelectPhysicalDevice(FE_VulkanInfo* vkInfo, VkPhysicalDevice d
 
 
 	/*--------------------- Check For Queues Family ---------------------*/
-	FE_VulkanQueueFamilyIndices indices = VulkanFindQueueFamilies(vkInfo, device);
+	VulkanLoadQueueFamilies(vkInfo, device);
 	//Bool extensionsSupported = VulkanSelectLogicalDevice(vkInfo, device);
 
-	Bool swapChainAdequate = FALSE;
-	VulkanfeSwapChainSupportDetails swapChainSupport = VulkanQuerySwapChainSupport(vkInfo, device);
-	swapChainAdequate = !(swapChainSupport.formats.impl.count == 0) && !(swapChainSupport.presentModes.impl.count == 0);
+	//Bool swapChainAdequate = FALSE;
+	//VulkanfeSwapChainSupportDetails swapChainSupport = VulkanCreateSwapChainSupportByQuery(vkInfo, device);
+	//swapChainAdequate = !(swapChainSupport.formats.impl.count == 0) && !(swapChainSupport.presentModes.impl.count == 0);
+	//VulkanClearSwapChainSupport(&swapChainSupport);
 
-	VulkanClearSwapChainSupport(&swapChainSupport);
-	return VulkanIsQueueFamilyIndicesCompleted(&indices) && /*extensionsSupported && */ swapChainAdequate;
+	return VulkanIsQueueFamilyIndicesCompleted(&vkInfo->queueFamilyIndices);//&& /*extensionsSupported && */ swapChainAdequate;
 }
 
-FE_VulkanQueueFamilyIndices FE_API VulkanFindQueueFamilies(const FE_VulkanInfo* vkInfo, VkPhysicalDevice device)
+void FE_API VulkanLoadQueueFamilies(const FE_VulkanInfo* vkInfo, VkPhysicalDevice device)
 {
-	FE_VulkanQueueFamilyIndices indices = { 0 };
-
 	Uint32 queueFamilyCount = 0;
 	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, NULL);
 
@@ -128,92 +126,85 @@ FE_VulkanQueueFamilyIndices FE_API VulkanFindQueueFamilies(const FE_VulkanInfo* 
 	{
 		if (queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) 
 		{
-			FE_OptionalSetValue(indices.graphicsFamily, i);
+			FE_OptionalSetValue(vkInfo->queueFamilyIndices.graphicsFamily, i);
 		}
-		
+
 		vkGetPhysicalDeviceSurfaceSupportKHR(device, i, vkInfo->surface, &presentSupport);
 
 		if (presentSupport) {
-			FE_OptionalSetValue(indices.presentFamily, i);
+			FE_OptionalSetValue(vkInfo->queueFamilyIndices.presentFamily, i);
 		}
 
-		if (VulkanIsQueueFamilyIndicesCompleted(&indices))
+		if (VulkanIsQueueFamilyIndicesCompleted(&vkInfo->queueFamilyIndices))
 		{
 			break;
 		}
 	}
 
 	FE_MemoryGeneralFree(queueFamilies);
-
-	return indices;
 }
 
 void FE_API VulkanCreateLogicalDevice(FE_VulkanInfo* vkInfo)
 {
-	FE_VulkanPysicalDevice* physicalDevice = &vkInfo->physicalDevice;
 	/*--------------------- Check For Device Extension Support ---------------------*/
-	Bool portabilityExtensionRequired = FALSE;
 
 	uint32_t extensionCount = 0;
-	vkEnumerateDeviceExtensionProperties(physicalDevice->GPU, NULL, &extensionCount, NULL);
-
-	if (extensionCount > 0)
-	{
-		VkExtensionProperties* availableExtensions = FE_MemoryGeneralAlloc(extensionCount * sizeof(VkExtensionProperties));
-		vkEnumerateDeviceExtensionProperties(physicalDevice->GPU, NULL, &extensionCount, availableExtensions);
-
-		for (Uint32 i = 0; i < extensionCount; i++)
-		{
-			if (strcmp(availableExtensions[i].extensionName, "VK_KHR_portability_subset") == 0)
-			{
-				FE_CORE_LOG_DEBUG("Adding required device extension 'VK_KHR_portability_subset'");
-				portabilityExtensionRequired = TRUE;
-			}
-		}
-
-		FE_MemoryGeneralFree(availableExtensions);
-	}
+	vkEnumerateDeviceExtensionProperties(vkInfo->physicalDevice.GPU, NULL, &extensionCount, NULL);
 
 	FE_List(const char*) requiredDeviceExtensionsNames = { 0 };
 	FE_ListInit(requiredDeviceExtensionsNames);
 	FE_ListReserve(requiredDeviceExtensionsNames, 6);
 	FE_ListPushValue(requiredDeviceExtensionsNames, const char*, "VK_KHR_swapchain");
 
-	if (portabilityExtensionRequired)
+	if (extensionCount > 0)
 	{
-		FE_ListPushValue(requiredDeviceExtensionsNames, const char*, "VK_KHR_portability_subset");
+		VkExtensionProperties* availableExtensions = FE_MemoryGeneralAlloc(extensionCount * sizeof(VkExtensionProperties));
+		vkEnumerateDeviceExtensionProperties(vkInfo->physicalDevice.GPU, NULL, &extensionCount, availableExtensions);
+
+		for (Uint32 i = 0; i < extensionCount; i++)
+		{
+			if (strcmp(availableExtensions[i].extensionName, "VK_KHR_portability_subset") == 0)
+			{
+				FE_CORE_LOG_DEBUG("Adding required device extension 'VK_KHR_portability_subset'");
+				FE_ListPushValue(requiredDeviceExtensionsNames, const char*, "VK_KHR_portability_subset");
+			}
+		}
+
+		FE_MemoryGeneralFree(availableExtensions);
 	}
 
+	/*--------------------- Device Feature and Dynamic rendering features ---------------------*/
 	VkPhysicalDeviceFeatures2 deviceFeature = {
 		.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR,
-		.features.samplerAnisotropy = physicalDevice->features.samplerAnisotropy,
-		.features.fillModeNonSolid = physicalDevice->features.fillModeNonSolid,
-		.features.shaderClipDistance = physicalDevice->features.shaderClipDistance,
+		.features.samplerAnisotropy = vkInfo->physicalDevice.features.samplerAnisotropy,
+		.features.fillModeNonSolid = vkInfo->physicalDevice.features.fillModeNonSolid,
+		.features.shaderClipDistance = vkInfo->physicalDevice.features.shaderClipDistance,
 	};
 
 	if (!deviceFeature.features.shaderClipDistance)
 	{
-		FE_CORE_LOG_ERROR("ShaderClipDistance not supported by vulkan device '%s'", physicalDevice->properties.deviceName);
+		FE_CORE_LOG_ERROR("ShaderClipDistance not supported by vulkan device '%s'", vkInfo->physicalDevice.properties.deviceName);
 	}
 
-	VkPhysicalDeviceDynamicRenderingFeatures dynamicrendering = {
+	VkPhysicalDeviceDynamicRenderingFeatures dynamicRenderingFeatures = {
 		.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
 		.dynamicRendering = VK_TRUE,
-		.pNext = &dynamicrendering
 	};
+
+	deviceFeature.pNext = &dynamicRenderingFeatures;
+
 	FE_ListPushValue(requiredDeviceExtensionsNames, const char*, VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME);
 
 	/*--------------------- Find Queue Families ---------------------*/
-	FE_VulkanQueueFamilyIndices indices = VulkanFindQueueFamilies(vkInfo, vkInfo->physicalDevice.GPU);
-	
+
 	FE_List(VkDeviceQueueCreateInfo) queueCreateInfos = { 0 };
 	FE_ListInit(queueCreateInfos);
 
 	FE_List(Uint32) uniqueQueueFamilies = { 0 };
 	FE_ListInit(uniqueQueueFamilies);
 	FE_ListReserve(uniqueQueueFamilies, 2);
-	FE_ListPush(uniqueQueueFamilies, indices.graphicsFamily.value);
-	FE_ListPush(uniqueQueueFamilies, indices.presentFamily.value);
+	FE_ListPush(uniqueQueueFamilies, vkInfo->queueFamilyIndices.graphicsFamily.value);
+	FE_ListPush(uniqueQueueFamilies, vkInfo->queueFamilyIndices.presentFamily.value);
 
 	FE_ListRemoveDuplicate(uniqueQueueFamilies);
 
@@ -232,13 +223,15 @@ void FE_API VulkanCreateLogicalDevice(FE_VulkanInfo* vkInfo)
 			.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
 			.queueFamilyIndex = uniqueQueueFamilies.data[i],
 			.queueCount = 1,
-			.pQueuePriorities = &queuePriority
+			.pQueuePriorities = &queuePriority,
+			.flags = 0,
+			.pNext = VK_NULL_HANDLE,
 		};
 		FE_ListPush(queueCreateInfos, queueCreateInfo);
 	}
 
 	/*--------------------- Fill Create infos ---------------------*/
-	VkDeviceCreateInfo createInfo = {
+	VkDeviceCreateInfo deviceCreateInfo = {
 		.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
 		.enabledExtensionCount = (Uint32)requiredDeviceExtensionsNames.impl.count,
 		.ppEnabledExtensionNames = requiredDeviceExtensionsNames.data,
@@ -247,23 +240,28 @@ void FE_API VulkanCreateLogicalDevice(FE_VulkanInfo* vkInfo)
 		.pNext = &deviceFeature,
 	};
 
-	if (vkInfo->validationLayer.enableValidationLayers)
+	if (vkInfo->debugger.validationLayer.enableValidationLayers)
 	{
-		createInfo.enabledLayerCount = (Uint32)vkInfo->validationLayer.validationLayers.impl.count;
-		createInfo.ppEnabledLayerNames = vkInfo->validationLayer.validationLayers.data;
+		deviceCreateInfo.enabledLayerCount = (Uint32)vkInfo->debugger.validationLayer.validationLayers.impl.count;
+		deviceCreateInfo.ppEnabledLayerNames = vkInfo->debugger.validationLayer.validationLayers.data;
 	}
 	else 
 	{
-		createInfo.enabledLayerCount = 0;
+		deviceCreateInfo.enabledLayerCount = 0;
 	}
 
-	//create device based on pyshical device and createInfo
-	VkResult result = vkCreateDevice(vkInfo->physicalDevice.GPU, &createInfo, NULL, &vkInfo->device);
+	//create device based on pyshical device and deviceCreateInfo
+	VkResult result = vkCreateDevice(vkInfo->physicalDevice.GPU, &deviceCreateInfo, NULL, &vkInfo->logicalDevice);
 	FE_CORE_ASSERT(result == VK_SUCCESS, "failed to create logical device! - %d", result);
 
-	//store queues into vkInfo->*Queue
-	vkGetDeviceQueue(vkInfo->device, indices.graphicsFamily.value, 0, &vkInfo->graphicsQueue);
-	vkGetDeviceQueue(vkInfo->device, indices.presentFamily.value, 0, &vkInfo->presentQueue);
+	/*--------------------- Dynamic Rendering Related ---------------------*/
+
+	vkInfo->vkCmdBeginRenderingKHR = (PFN_vkCmdBeginRenderingKHR)vkGetInstanceProcAddr(vkInfo->instance, "vkCmdBeginRendering");
+	vkInfo->vkCmdEndRenderingKHR = (PFN_vkCmdEndRenderingKHR)vkGetInstanceProcAddr(vkInfo->instance, "vkCmdEndRendering");
+
+	/*--------------------- Store Queues ---------------------*/
+	vkGetDeviceQueue(vkInfo->logicalDevice, vkInfo->queueFamilyIndices.graphicsFamily.value, 0, &vkInfo->graphicsQueue);
+	vkGetDeviceQueue(vkInfo->logicalDevice, vkInfo->queueFamilyIndices.presentFamily.value, 0, &vkInfo->presentQueue);
 
 	FE_ListClear(requiredDeviceExtensionsNames);
 	FE_ListClear(uniqueQueueFamilies);
@@ -274,5 +272,5 @@ void FE_API VulkanCreateLogicalDevice(FE_VulkanInfo* vkInfo)
 
 void FE_API VulkanDestroyLogicalDevice(FE_VulkanInfo* vkInfo)
 {
-	vkDestroyDevice(vkInfo->device, NULL);
+	vkDestroyDevice(vkInfo->logicalDevice, NULL);
 }

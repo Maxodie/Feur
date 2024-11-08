@@ -7,7 +7,13 @@ typedef struct FE_List_impl {
 } FE_List_impl;
 
 //FE_List must be freed with FE_ListClear(a)
-#  define FE_List(type)  struct { FE_List_impl impl; type* data; }
+#define FE_List(type)  struct { FE_List_impl impl; type* data; }
+
+//Put list as a parameter
+#define FE_ListParameterPtr(type) void*
+////Convert list parameter to FE_List(type)
+//#define FE_ListParameterRead(newVariable, parameterPtrVariableName, type) FE_List(type) newVariable = { impl_list_##parameterPtrVariableName, data_list_##parameterPtrVariableName }
+
 
 //with 'fe_list' an FE_List(type)
 #define FE_ListInit(fe_list) FE_ListInit_impl(&(fe_list).impl, (Byte**)&(fe_list).data)

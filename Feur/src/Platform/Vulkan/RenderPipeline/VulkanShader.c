@@ -129,7 +129,7 @@ VkShaderModule FE_API VulkanCreateShaderModule(FE_VulkanInfo* vkInfo, const char
 	};
 
 	VkShaderModule shaderModule;
-	VkResult result = vkCreateShaderModule(vkInfo->device, &createInfo, NULL, &shaderModule);
+	VkResult result = vkCreateShaderModule(vkInfo->logicalDevice, &createInfo, NULL, &shaderModule);
 	
 	FE_MemoryGeneralFree(code);
 

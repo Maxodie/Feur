@@ -155,7 +155,7 @@ void FE_API VulkanCreateGraphicsPipeline(FE_VulkanInfo* vkInfo)
 		.pPushConstantRanges = NULL // Optionnal
 	};
 
-	VkResult result = vkCreatePipelineLayout(vkInfo->device, &pipelineLayoutInfo, NULL, &vkInfo->graphicsPipeline.layout);
+	VkResult result = vkCreatePipelineLayout(vkInfo->logicalDevice, &pipelineLayoutInfo, NULL, &vkInfo->graphicsPipeline.layout);
 	FE_CORE_ASSERT(result == VK_SUCCESS, "failed to create vulkan pipeline layout - %d", result);
 
 	/*---------------------- Graphics Pipeline ----------------------*/
@@ -182,7 +182,7 @@ void FE_API VulkanCreateGraphicsPipeline(FE_VulkanInfo* vkInfo)
 	VkPipelineRenderingCreateInfo pipelineRenderingCreateInfo = {
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO,
 		.colorAttachmentCount = 1,
-		.pColorAttachmentFormats = &vkInfo->swapChainImageFormat,
+		.pColorAttachmentFormats = &vkInfo->swapChain.imageFormat,
 		.depthAttachmentFormat = VK_FORMAT_UNDEFINED,
 		.stencilAttachmentFormat = VK_FORMAT_UNDEFINED,
 		.pNext = VK_NULL_HANDLE,
@@ -190,18 +190,18 @@ void FE_API VulkanCreateGraphicsPipeline(FE_VulkanInfo* vkInfo)
 
 	pipelineInfo.pNext = &pipelineRenderingCreateInfo;
 
-	result = vkCreateGraphicsPipelines(vkInfo->device, VK_NULL_HANDLE, 1, &pipelineInfo, NULL, &vkInfo->graphicsPipeline.handle);
+	result = vkCreateGraphicsPipelines(vkInfo->logicalDevice, VK_NULL_HANDLE, 1, &pipelineInfo, NULL, &vkInfo->graphicsPipeline.handle);
 	FE_CORE_ASSERT(result == VK_SUCCESS, "failed to create vulkan graphics pipeline");
 
 	// cleanup shader modules
-	vkDestroyShaderModule(vkInfo->device, fragmentShader, NULL);
-	vkDestroyShaderModule(vkInfo->device, vertexShader, NULL);
+	vkDestroyShaderModule(vkInfo->logicalDevice, fragmentShader, NULL);
+	vkDestroyShaderModule(vkInfo->logicalDevice, vertexShader, NULL);
 }
 
 void VulkanCleanupGraphicsPipeline(FE_VulkanInfo* vkInfo)
 {
-	vkDestroyPipeline(vkInfo->device, vkInfo->graphicsPipeline.handle, NULL);
-	vkDestroyPipelineLayout(vkInfo->device, vkInfo->graphicsPipeline.layout, NULL);
+	vkDestroyPipeline(vkInfo->logicalDevice, vkInfo->graphicsPipeline.handle, NULL);
+	vkDestroyPipelineLayout(vkInfo->logicalDevice, vkInfo->graphicsPipeline.layout, NULL);
 	
 	VulkanDestroyShaderCompiler(vkInfo);
 }

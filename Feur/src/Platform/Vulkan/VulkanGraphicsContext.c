@@ -56,6 +56,20 @@ void FE_API Vulkan_GLFWsetExtention(VkInstanceCreateInfo* createInfo, const FE_V
 	createInfo->ppEnabledExtensionNames = extensions->data;
 }
 
+void FE_API CreateVulkanSurface(FE_VulkanInfo* vkInfo)
+{
+	switch (GetWindowAPI()->API_Type)
+	{
+	case FE_WINDOW_API_GLFW:
+		Vulkan_GLFWcreateSurface(vkInfo);
+		break;
+	default:
+		FE_CORE_ASSERT(FALSE, "failed to create vulkan surface, Window API not supported yet");
+		return;
+		break;
+	}
+}
+
 void Vulkan_GLFWcreateSurface(FE_VulkanInfo* vkInfo)
 {
 	VkResult result = glfwCreateWindowSurface(vkInfo->instance, GetApp()->windowData.nativeWindow, NULL, &vkInfo->surface);

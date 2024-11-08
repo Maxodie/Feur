@@ -4,16 +4,16 @@
 
 void FE_API VulkanCreateImageView(FE_VulkanInfo* vkInfo)
 {
-	FE_ListInit(vkInfo->swapChainImageViews);
-	FE_ListResize(vkInfo->swapChainImageViews, vkInfo->swapChainImages.impl.count);
+	FE_ListInit(vkInfo->swapChain.imageViews);
+	FE_ListResize(vkInfo->swapChain.imageViews, vkInfo->swapChain.images.impl.count);
 
-	for (size_t i = 0; i < vkInfo->swapChainImages.impl.count; i++)
+	for (size_t i = 0; i < vkInfo->swapChain.images.impl.count; i++)
 	{
 		VkImageViewCreateInfo createInfo = {
 			.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
-			.image = vkInfo->swapChainImages.data[i],
+			.image = vkInfo->swapChain.images.data[i],
 			.viewType = VK_IMAGE_VIEW_TYPE_2D,
-			.format = vkInfo->swapChainImageFormat,
+			.format = vkInfo->swapChain.imageFormat,
 			.components.r = VK_COMPONENT_SWIZZLE_IDENTITY,
 			.components.g = VK_COMPONENT_SWIZZLE_IDENTITY,
 			.components.b = VK_COMPONENT_SWIZZLE_IDENTITY,
@@ -25,17 +25,17 @@ void FE_API VulkanCreateImageView(FE_VulkanInfo* vkInfo)
 			.subresourceRange.layerCount = 1,
 		};
 
-		VkResult result = vkCreateImageView(vkInfo->device, &createInfo, NULL, &vkInfo->swapChainImageViews.data[i]);
+		VkResult result = vkCreateImageView(vkInfo->logicalDevice, &createInfo, NULL, &vkInfo->swapChain.imageViews.data[i]);
 		FE_CORE_ASSERT(result == VK_SUCCESS, "failed to create image view ! - %d", result);
 	}
 }
 
 void FE_API VulkanDestroyImageView(FE_VulkanInfo* vkInfo)
 {
-	for (SizeT i = 0; i < vkInfo->swapChainImageViews.impl.count; i++)
+	for (SizeT i = 0; i < vkInfo->swapChain.imageViews.impl.count; i++)
 	{
-		vkDestroyImageView(vkInfo->device, vkInfo->swapChainImageViews.data[i], NULL);
+		vkDestroyImageView(vkInfo->logicalDevice, vkInfo->swapChain.imageViews.data[i], NULL);
 	}
 
-	FE_ListClear(vkInfo->swapChainImageViews);
+	FE_ListClear(vkInfo->swapChain.imageViews);
 }
