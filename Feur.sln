@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Feur", "Feur", "{1E1BC55D-0AD3-06AB-73DA-DF065FB1A19B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sandbox", "build\Sandbox\Sandbox.vcxproj", "{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sandbox", "Sandbox\Sandbox.vcxproj", "{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Feur", "build\Feur\Feur.vcxproj", "{372F857C-2366-860D-CC52-6C10B868020F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Feur", "Feur\Feur.vcxproj", "{372F857C-2366-860D-CC52-6C10B868020F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GUI", "GUI", "{3177F67E-9DE1-AAF5-E61F-5C9B52C9884A}"
 EndProject
