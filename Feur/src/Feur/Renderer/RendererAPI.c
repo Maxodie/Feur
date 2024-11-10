@@ -9,8 +9,10 @@
 
 static RendererAPI rendererAPI;
 
-void InitRendererAPISelection()
+void InitRendererAPISelection(RendererAPIData* apiData)
 {
+	apiData->defaultClearColor = (ILDA_vector4f){ .x = 120, .y = 200, .z = 40, .w = 255 };
+
 #ifdef FE_RENDER_SELECTED_API_OPENGL
 	rendererAPI.API_Type = FE_RENDERER_API_TYPE_OPENGL;
 #elif defined(FE_RENDER_SELECTED_API_VULKAN)

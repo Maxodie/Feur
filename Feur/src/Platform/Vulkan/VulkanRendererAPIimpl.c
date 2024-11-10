@@ -18,7 +18,8 @@ static FE_VulkanInfo* vkInfo;
 Bool VulkanInit_impl(RendererAPIData* apiData)
 {
 	vkInfo = FE_MemoryGeneralAlloc(sizeof(FE_VulkanInfo));
-	vkInfo->resizeRequested = FALSE; 
+	vkInfo->apiData = apiData;
+
 	VulkanInitValidationLayer(&vkInfo->debugger.validationLayer);
 
 	VulkanCreateInstance(vkInfo);
@@ -32,8 +33,12 @@ Bool VulkanInit_impl(RendererAPIData* apiData)
 	VulkanInitDefaultDeviceSelection(vkInfo);
 	VulkanPickPhysicalDevice(vkInfo);
 	VulkanCreateLogicalDevice(vkInfo);
-	VulkanInitSwapChain(vkInfo);
 
+	VulkanInitSwapChainSupportData(vkInfo);
+	VulkanCreateSwapChain(vkInfo);
+	VulkanInitSwapChainImages(vkInfo);
+
+	VulkanInitImageViewsDefaultData(vkInfo);
 	VulkanCreateImageView(vkInfo);
 	VulkanCreateGraphicsPipeline(vkInfo);
 
@@ -59,8 +64,13 @@ void VulkanFramePrepare_impl()
 		&vkInfo->imageIndex
 	);
 
-	if (result == VK_ERROR_OUT_OF_DATE_KHR) {
-		vkInfo->resizeRequested = TRUE;
+	/*if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+		VulkanResizeSwapChain(vkInfo, GetApp()->windowData.w, GetApp()->windowData.h);
+		return;
+	}
+	else*/ if(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+	{
+		FE_CORE_LOG_ERROR("failed to prepare the frame : %d", result);
 		return;
 	}
 
@@ -69,14 +79,14 @@ void VulkanFramePrepare_impl()
 
 Bool VulkanFrameCommandListBegin_impl()
 {
-	if (!CanVulkanContinueRendering()) return;
+	//if (!CanVulkanContinueRendering()) return FALSE;
 
 	return VulkanCommandBufferBegin(vkInfo->cmdBuffers[vkInfo->currentFrame], FALSE);
 }
 
 void VulkanBeginRendering_impl(ILDA_vector4f* clearColor)
 {
-	if (!CanVulkanContinueRendering()) return;
+	//if (!CanVulkanContinueRendering()) return;
 
 	for (SizeT i = 0; i < vkInfo->swapChain.images.impl.count; i++)
 	{
@@ -147,7 +157,7 @@ void VulkanBeginRendering_impl(ILDA_vector4f* clearColor)
 
 void VulkanSetViewport_impl(Uint32 x, Uint32 y, Uint32 width, Uint32 height, Uint32 minDepth, Uint32 maxDepth)
 {
-	if (!CanVulkanContinueRendering()) return;
+	//if (!CanVulkanContinueRendering()) return;
 
 	VkViewport viewPort = {
 		.x = (float)x,
@@ -163,7 +173,7 @@ void VulkanSetViewport_impl(Uint32 x, Uint32 y, Uint32 width, Uint32 height, Uin
 
 void VulkanSetScissor_impl(Uint32 width, Uint32 height)
 {
-	if (!CanVulkanContinueRendering()) return;
+	//if (!CanVulkanContinueRendering()) return;
 
 	VkRect2D scissor = { 
 		.offset.x = 0,
@@ -177,21 +187,21 @@ void VulkanSetScissor_impl(Uint32 width, Uint32 height)
 
 void VulkanBindPipeline_impl()
 {
-	if (!CanVulkanContinueRendering()) return;
+	//if (!CanVulkanContinueRendering()) return;
 
 	VulkanGraphicsPipelineBind(vkInfo->cmdBuffers[vkInfo->currentFrame], VK_PIPELINE_BIND_POINT_GRAPHICS, vkInfo->graphicsPipeline.handle);
 }
 
 void VulkanDrawIndex_impl()
 {
-	if (!CanVulkanContinueRendering()) return;
+	//if (!CanVulkanContinueRendering()) return;
 
 	vkCmdDraw(vkInfo->cmdBuffers[vkInfo->currentFrame], 6, 1, 0, 0);
 }
 
 void VulkanEndRendering_impl()
 {
-	if (!CanVulkanContinueRendering()) return;
+	//if (!CanVulkanContinueRendering()) return;
 
 	vkInfo->vkCmdEndRenderingKHR(vkInfo->cmdBuffers[vkInfo->currentFrame]);
 
@@ -222,14 +232,14 @@ void VulkanEndRendering_impl()
 
 Bool VulkanFrameCommandListEnd_impl()
 {
-	if (!CanVulkanContinueRendering()) return;
+	//if (!CanVulkanContinueRendering()) return FALSE;
 
 	return VulkanCommandBufferEnd(vkInfo->cmdBuffers[vkInfo->currentFrame]);
 }
 
 Bool VulkanFrameSubmit_impl()
 {
-	if (!CanVulkanContinueRendering()) return;
+	//if (!CanVulkanContinueRendering()) return FALSE;
 
 	VkSubmitInfo submitInfo = {
 		.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
@@ -269,10 +279,10 @@ Bool VulkanFramePresent_impl()
 
 	VkResult result = vkQueuePresentKHR(vkInfo->presentQueue, &presentInfo);
 
-	if (result == VK_ERROR_OUT_OF_DATE_KHR) {
-		vkInfo->resizeRequested = TRUE;
+	/*if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+		VulkanResizeSwapChain(vkInfo, GetApp()->windowData.w, GetApp()->windowData.h);
 	}
-	else if (result != VK_SUCCESS)
+	else*/ if (result != VK_SUCCESS)
 	{
 		FE_CORE_LOG_ERROR("failed to present vulkan frame : %d", result);
 		return FALSE;
@@ -287,12 +297,6 @@ Bool VulkanFramePresent_impl()
 void VulkanWaitIdle_impl()
 {
 	vkDeviceWaitIdle(vkInfo->logicalDevice);
-
-	if (vkInfo->resizeRequested)
-	{
-		VulkanResizeSwapChain(vkInfo, GetApp()->windowData.w, GetApp()->windowData.h);
-		vkInfo->resizeRequested = FALSE;
-	}
 }
 
 void VulkanShutdown_impl()
@@ -301,8 +305,14 @@ void VulkanShutdown_impl()
 	VulkanDestroyCommandBuffers(vkInfo);
 	VulkanDestroyCommandPool(vkInfo);
 	VulkanCleanupGraphicsPipeline(vkInfo);
+
 	VulkanDestroyImageView(vkInfo);
-	VulkanShutdownSwapChain(vkInfo);
+	VulkanShutdownImageViewsDefaultData(vkInfo);
+
+	VulkanShutdownSwapChainImages(vkInfo);
+	VulkanDestroySwapChain(vkInfo);
+	VulkanShutdownSwapChainSupportData(vkInfo);
+
 	VulkanDestroyLogicalDevice(vkInfo);
 	VulkanCleanupSurface(vkInfo);
 
@@ -323,10 +333,25 @@ void VulkanShutdown_impl()
 
 void VulkanOnWindowResized_impl(Uint32 x, Uint32 y, Uint32 width, Uint32 height)
 {
-	
+	VulkanResizeSwapChain(vkInfo, width, height);
+
+	VulkanFramePrepare_impl();
+	VulkanFrameCommandListBegin_impl();
+	VulkanBeginRendering_impl(&vkInfo->apiData->defaultClearColor);
+
+	VulkanSetViewport_impl(0, 0, width, height, 0, 1);
+	VulkanSetScissor_impl(width, height);
+	VulkanBindPipeline_impl();
+
+	VulkanDrawIndex_impl();
+	VulkanEndRendering_impl();
+	VulkanFrameCommandListEnd_impl();
+	VulkanFrameSubmit_impl();
+	VulkanFramePresent_impl();
+	VulkanWaitIdle_impl();
 }
 
 Bool CanVulkanContinueRendering()
 {
-	return !vkInfo->resizeRequested;
+	return TRUE;
 }

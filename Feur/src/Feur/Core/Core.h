@@ -17,6 +17,7 @@ typedef double Double;
 typedef size_t SizeT;
 typedef uintptr_t UintptrT;
 typedef Double MaxAlignT; //based on the cstddef c++ using : most aligned type
+typedef clock_t ClockT;
 
 
 #define FE_API _cdecl

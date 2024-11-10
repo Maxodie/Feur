@@ -2,28 +2,13 @@
 #include "Platform/Vulkan/Setup/VulkanSwapChain.h"
 #include "Platform/Vulkan/Setup/VulkanSetup.h"
 #include "Platform/Vulkan/Setup/VulkanDevice.h"
-
-void VulkanInitSwapChain(FE_VulkanInfo* vkInfo)
-{
-    //get device swapchain data
-    VulkanCreateSwapChainSupportByQuery(vkInfo);
-
-    //select the best parameters
-    VkSurfaceFormatKHR surfaceFormat = VulkanChooseSwapSurfaceFormat(&vkInfo->swapChain.details.formats);
-    VkPresentModeKHR presentMode = VulkanChooseSwapPresentMode(&vkInfo->swapChain.details.presentModes);
-    VkExtent2D extent = VulkanChooseSwapExtent(&vkInfo->swapChain.details.capabilities);
-
-    vkInfo->swapChain.imageFormat = surfaceFormat.format;
-    vkInfo->swapChain.details.selectedSurfaceFormat = surfaceFormat;
-    vkInfo->swapChain.details.selectedPresentMode = presentMode;
-    vkInfo->swapChain.extent = extent;
-
-    VulkanCreateSwapChain(vkInfo);
-    VulkanCreateSwapChainImages(vkInfo);
-}
+#include "Platform/Vulkan/Setup/VulkanImageView.h"
 
 void VulkanCreateSwapChain(FE_VulkanInfo* vkInfo)
 {
+    //get device swapchain data
+    VulkanSwapChainSupportByQuery(vkInfo);
+
     Uint32 imageCount = vkInfo->swapChain.details.capabilities.minImageCount + 1;
 
     if (vkInfo->swapChain.details.capabilities.maxImageCount > 0 && imageCount > vkInfo->swapChain.details.capabilities.maxImageCount)// if maxImageCount == 0 then imageCount is illimited
@@ -68,69 +53,101 @@ void VulkanCreateSwapChain(FE_VulkanInfo* vkInfo)
     FE_CORE_LOG_SUCCESS("Vulkan swapchain created successfuly");
 }
 
-void VulkanCreateSwapChainImages(FE_VulkanInfo* vkInfo)
-{
-    FE_ListInit(vkInfo->swapChain.images);
-
-    //cache and retrieving the swap chain data
-    Uint32 imageCount;
-    vkGetSwapchainImagesKHR(vkInfo->logicalDevice, vkInfo->swapChain.handle, &imageCount, NULL);
-    FE_ListResize(vkInfo->swapChain.images, imageCount);
-    vkInfo->imageBarriers = FE_MemoryGeneralAlloc(sizeof(VkImageMemoryBarrier) * vkInfo->swapChain.images.impl.count);
-    vkGetSwapchainImagesKHR(vkInfo->logicalDevice, vkInfo->swapChain.handle, &imageCount, vkInfo->swapChain.images.data);
-
-    //setup frames in flight
-    vkInfo->swapChain.maxFramesInFlight = imageCount - 1;
-    vkInfo->currentFrame = 0;
-}
-
 void VulkanDestroySwapChain(FE_VulkanInfo* vkInfo)
 {
     vkDestroySwapchainKHR(vkInfo->logicalDevice, vkInfo->swapChain.handle, NULL);
 }
 
-void VulkanShutdownSwapChain(FE_VulkanInfo* vkInfo)
+void VulkanInitSwapChainImages(FE_VulkanInfo* vkInfo)
 {
+    FE_ListInit(vkInfo->swapChain.images);
 
-    FE_MemoryGeneralFree(vkInfo->imageBarriers);
-    FE_ListClear(vkInfo->swapChain.images);
-    VulkanDestroySwapChain(vkInfo);
-    VulkanClearSwapChainSupport(vkInfo);
+    Uint32 imageCount;
+    vkGetSwapchainImagesKHR(vkInfo->logicalDevice, vkInfo->swapChain.handle, &imageCount, NULL);
+    FE_ListResize(vkInfo->swapChain.images, imageCount);
+    vkInfo->imageBarriers = FE_MemoryGeneralAlloc(sizeof(VkImageMemoryBarrier) * vkInfo->swapChain.images.impl.count);
+
+    VulkanSwapChainImagesQuery(vkInfo);
 }
 
-Bool VulkanCreateSwapChainSupportByQuery(FE_VulkanInfo* vkInfo)
+void VulkanShutdownSwapChainImages(FE_VulkanInfo* vkInfo)
 {
-    //Set details : capabilities, format and presentMode
+    FE_ListClear(vkInfo->swapChain.images); 
+    FE_MemoryGeneralFree(vkInfo->imageBarriers);
+}
+
+void VulkanSwapChainImagesQuery(FE_VulkanInfo* vkInfo)
+{
+    //cache and retrieving the swap chain data
+    vkGetSwapchainImagesKHR(vkInfo->logicalDevice, vkInfo->swapChain.handle, &vkInfo->swapChain.images.impl.count, vkInfo->swapChain.images.data);
+
+    //setup frames in flight
+    vkInfo->swapChain.maxFramesInFlight = vkInfo->swapChain.images.impl.count - 1;
+    vkInfo->currentFrame = 0;
+}
+
+void VulkanInitSwapChainSupportData(FE_VulkanInfo* vkInfo)
+{
     FE_ListInit(vkInfo->swapChain.details.formats);
     FE_ListInit(vkInfo->swapChain.details.presentModes);
 
-    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(vkInfo->physicalDevice.GPU, vkInfo->surface, &vkInfo->swapChain.details.capabilities);
-
-    //Formats
     Uint32 formatCount;
     vkGetPhysicalDeviceSurfaceFormatsKHR(vkInfo->physicalDevice.GPU, vkInfo->surface, &formatCount, NULL);
 
-    if (formatCount) {
+    if (formatCount) 
+    {
         FE_ListResize(vkInfo->swapChain.details.formats, formatCount);
-        vkGetPhysicalDeviceSurfaceFormatsKHR(vkInfo->physicalDevice.GPU, vkInfo->surface, &formatCount, vkInfo->swapChain.details.formats.data);
     }
 
-    //Present modes
     Uint32 presentModeCount;
     vkGetPhysicalDeviceSurfacePresentModesKHR(vkInfo->physicalDevice.GPU, vkInfo->surface, &presentModeCount, NULL);
 
-    if (presentModeCount) {
+    if (presentModeCount) 
+    {
         FE_ListResize(vkInfo->swapChain.details.presentModes, formatCount);
-        vkGetPhysicalDeviceSurfacePresentModesKHR(vkInfo->physicalDevice.GPU, vkInfo->surface, &presentModeCount, vkInfo->swapChain.details.presentModes.data);
     }
-
-    return TRUE;
 }
 
-void VulkanClearSwapChainSupport(FE_VulkanInfo* vkInfo)
+void VulkanShutdownSwapChainSupportData(FE_VulkanInfo* vkInfo)
 {
     FE_ListClear(vkInfo->swapChain.details.formats);
     FE_ListClear(vkInfo->swapChain.details.presentModes);
+}
+
+Bool VulkanSwapChainSupportByQuery(FE_VulkanInfo* vkInfo)
+{
+    //Set details : capabilities, format and presentMode
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(vkInfo->physicalDevice.GPU, vkInfo->surface, &vkInfo->swapChain.details.capabilities);
+
+    //Formats
+    if (vkInfo->swapChain.details.formats.impl.count)
+    {
+        vkGetPhysicalDeviceSurfaceFormatsKHR(
+            vkInfo->physicalDevice.GPU, vkInfo->surface, 
+            &vkInfo->swapChain.details.formats.impl.count, vkInfo->swapChain.details.formats.data
+        );
+    }
+
+    //Present modes
+    if (vkInfo->swapChain.details.presentModes.impl.count)
+    {
+        vkGetPhysicalDeviceSurfacePresentModesKHR(
+            vkInfo->physicalDevice.GPU, vkInfo->surface,
+            &vkInfo->swapChain.details.presentModes.impl.count, vkInfo->swapChain.details.presentModes.data
+        );
+    }
+
+    //select the best parameters
+    VkSurfaceFormatKHR surfaceFormat = VulkanChooseSwapSurfaceFormat(&vkInfo->swapChain.details.formats);
+    VkPresentModeKHR presentMode = VulkanChooseSwapPresentMode(&vkInfo->swapChain.details.presentModes);
+    VkExtent2D extent = VulkanChooseSwapExtent(&vkInfo->swapChain.details.capabilities);
+
+    vkInfo->swapChain.imageFormat = surfaceFormat.format;
+    vkInfo->swapChain.details.selectedSurfaceFormat = surfaceFormat;
+    vkInfo->swapChain.details.selectedPresentMode = presentMode;
+    vkInfo->swapChain.extent = extent;
+
+    return TRUE;
 }
 
 VkSurfaceFormatKHR VulkanChooseSwapSurfaceFormat(FE_ListParameterPtr(VkSurfaceFormatKHR) pAvailableFormats)
@@ -181,10 +198,12 @@ VkExtent2D VulkanChooseSwapExtent(const VkSurfaceCapabilitiesKHR* capabilities)
 
 void VulkanResizeSwapChain(FE_VulkanInfo* vkInfo, Uint32 width, Uint32 height)
 {
+    vkDeviceWaitIdle(vkInfo->logicalDevice);
+
+    VulkanDestroyImageView(vkInfo);
     VulkanDestroySwapChain(vkInfo);
 
-    vkInfo->swapChain.extent.width = width < vkInfo->swapChain.details.capabilities.minImageExtent.width ? width : vkInfo->swapChain.details.capabilities.minImageExtent.width;
-    vkInfo->swapChain.extent.height = height < vkInfo->swapChain.details.capabilities.minImageExtent.height ? width : vkInfo->swapChain.details.capabilities.minImageExtent.height;
-
     VulkanCreateSwapChain(vkInfo);
+    VulkanSwapChainImagesQuery(vkInfo);
+    VulkanCreateImageView(vkInfo);
 }

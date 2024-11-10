@@ -8,13 +8,19 @@ typedef struct FE_App
 	WindowData windowData;
 	RendererAPIData rendererAPIData;
 	LayerStack layerStack;
+
+	ClockT startTime;
+	ClockT endTime;
+	Uint32 targetFps;
 } FE_App;
 
 void FE_API StartApp_impl();
 void FE_API RunApp_impl();
 
 void FE_API StartApp();
-void FE_API AppUpdate();
+Double FE_API GetDeltaTime();
+void FE_API AppUpdate(Double deltaTime);
+void FE_API ConsumeDeltaTime(Double deltaTime);
 
 void FE_API AddLayerApp(Layer* newLayer);
 void FE_API InsertLayerApp(Layer* newLayer, Uint32 position);

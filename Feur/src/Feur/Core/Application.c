@@ -18,11 +18,18 @@ void FE_API StartApp_impl()
 
 void FE_API RunApp_impl()
 {
+	g_fe_App.endTime = clock();
+	double deltaTime;
+
 	while (g_IsAppRunning)
 	{
+		deltaTime = GetDeltaTime();
+
 		PullWindowEvent();
-		AppUpdate();
+		AppUpdate(deltaTime);
 		Render();
+
+		ConsumeDeltaTime(deltaTime);
 	}
 
 	ShutdownApp();
@@ -31,7 +38,7 @@ void FE_API RunApp_impl()
 void FE_API StartApp()
 {
 	FE_MemoryGeneralInit(FE_MEMORY_DEFAULT_STACK_ALLOCATION_SIZE);
-	InitRendererAPISelection();
+	InitRendererAPISelection(&g_fe_App.rendererAPIData);
 	LoadWindow();
 	InitInputAPI();
 	FE_LayerStackInit(&g_fe_App.layerStack);
@@ -43,9 +50,31 @@ void FE_API StartApp()
 
 	nuklearGUILayer = CreateNewNuklearGUILayer("NuklearLayer");
 	AddLayerApp(&nuklearGUILayer);
+
+	g_fe_App.targetFps = 1000 / 165;
 }
 
-void FE_API AppUpdate()
+Double GetDeltaTime()
+{
+	g_fe_App.startTime = clock();
+	return ((Double)(g_fe_App.startTime - g_fe_App.endTime)) / CLOCKS_PER_SEC;
+}
+
+void ConsumeDeltaTime(Double deltaTime)
+{
+	g_fe_App.endTime = clock();
+	DWORD elapsedTimeMs = (DWORD)(g_fe_App.endTime - g_fe_App.startTime);
+	//FE_CORE_LOG_DEBUG("ms : %d", elapsedTimeMs);
+
+	if (g_fe_App.targetFps > elapsedTimeMs)
+	{
+		DWORD msToConsume = (DWORD)ILDA_clamp(g_fe_App.targetFps - elapsedTimeMs, 0, 1000);
+		Sleep(msToConsume);
+	}
+
+}
+
+void FE_API AppUpdate(Double deltaTime)
 {
 	for (int i = 0; i < g_fe_App.layerStack.stackedlayers.impl.count; i++)
 	{
@@ -126,13 +155,11 @@ void FE_API Render()
 {
 	RenderCommandFramePrepare();
 	RenderCommandFrameCommandListBegin();
-	ILDA_vector4f color = { .x = 120, .y = 200, .z = 40, .w = 255 };
-	RenderCommandBeginRendering(&color);
+	RenderCommandBeginRendering(&g_fe_App.rendererAPIData.defaultClearColor);
 	
 	RenderCommandSetRendererViewport(0, 0, g_fe_App.windowData.w, g_fe_App.windowData.h, 0, 1);
 	RenderCommandSetScissor(g_fe_App.windowData.w, g_fe_App.windowData.h);
 	RenderCommandBindPipeline();
-	
 
 	Layer* layer;
 	for (SizeT i = 0; i < FE_LayerStackGetCount(&g_fe_App.layerStack); i++)

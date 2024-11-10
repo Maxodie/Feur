@@ -1,8 +1,6 @@
 #include "fepch.h"
 #include "Feur/Debug/Benchmark.h"
 
-static Uint64 FE_GetCurrentTimeNs();
-
 void FE_API FE_BenchmarkStartClock(FE_Benchmark* benchmark)
 {
     benchmark->startTime = FE_GetCurrentTimeNs();
@@ -31,13 +29,14 @@ void FE_API FE_BenchmarkShowDuration(Uint64 nanoSeconds, const char* prefix)
     FE_CORE_LOG_DEBUG("%s [%lu:%03lu:%03lu:%03lu]", prefix, seconds, miliSeconds, macroSeconds, ns);
 }
 
-static Uint64 FE_API FE_GetCurrentTimeNs() {
-    static Uint64 is_init = 0;
+Uint64 FE_API FE_GetCurrentTimeNs() 
+{
+    static Bool is_init = FALSE;
 #if defined(__APPLE__) || defined(FE_PLATFORM_MACOS)
     static mach_timebase_info_data_t info;
-    if (0 == is_init) {
+    if (FALSE == is_init) {
         mach_timebase_info(&info);
-        is_init = 1;
+        is_init = TRUE;
     }
     Uint64 now;
     now = mach_absolute_time();
@@ -46,9 +45,9 @@ static Uint64 FE_API FE_GetCurrentTimeNs() {
     return now;
 #elif defined(__linux)
     static struct timespec linux_rate;
-    if (0 == is_init) {
+    if (FALSE == is_init) {
         clock_getres(CLOCKID, &linux_rate);
-        is_init = 1;
+        is_init = TRUE;
     }
     Uint64 now;
     struct timespec spec;
@@ -57,9 +56,9 @@ static Uint64 FE_API FE_GetCurrentTimeNs() {
     return now;
 #elif defined(_WIN32)
     static LARGE_INTEGER win_frequency;
-    if (0 == is_init) {
+    if (FALSE == is_init) {
         QueryPerformanceFrequency(&win_frequency);
-        is_init = 1;
+        is_init = TRUE;
     }
     LARGE_INTEGER now;
     QueryPerformanceCounter(&now);

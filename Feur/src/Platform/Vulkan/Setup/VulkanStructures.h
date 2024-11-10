@@ -91,6 +91,6 @@ typedef struct FE_VulkanInfo
 	VkCommandBuffer* cmdBuffers;//static array
 	VkImageMemoryBarrier* imageBarriers;//static array
 
-	Bool resizeRequested;
+	RendererAPIData* apiData;
 
 } FE_VulkanInfo;

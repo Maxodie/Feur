@@ -2,11 +2,19 @@
 #include "Platform/Vulkan/Setup/VulkanImageView.h"
 #include "Platform/Vulkan/Setup/VulkanSetup.h"
 
-void VulkanCreateImageView(FE_VulkanInfo* vkInfo)
+void VulkanInitImageViewsDefaultData(FE_VulkanInfo* vkInfo)
 {
 	FE_ListInit(vkInfo->swapChain.imageViews);
 	FE_ListResize(vkInfo->swapChain.imageViews, vkInfo->swapChain.images.impl.count);
+}
 
+void VulkanShutdownImageViewsDefaultData(FE_VulkanInfo* vkInfo)
+{
+	FE_ListClear(vkInfo->swapChain.imageViews);
+}
+
+void VulkanCreateImageView(FE_VulkanInfo* vkInfo)
+{
 	for (size_t i = 0; i < vkInfo->swapChain.images.impl.count; i++)
 	{
 		VkImageViewCreateInfo createInfo = {
@@ -36,6 +44,4 @@ void VulkanDestroyImageView(FE_VulkanInfo* vkInfo)
 	{
 		vkDestroyImageView(vkInfo->logicalDevice, vkInfo->swapChain.imageViews.data[i], NULL);
 	}
-
-	FE_ListClear(vkInfo->swapChain.imageViews);
 }

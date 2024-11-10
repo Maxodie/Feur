@@ -29,6 +29,10 @@ typedef struct FE_Benchmark
 	Uint64 endTime;
 } FE_Benchmark;
 
+#define FE_NS_TIME_PER_SEC 1000000000
+#define FE_NS_TIME_PER_MS 1000000
+Uint64 FE_API FE_GetCurrentTimeNs();
+
 void FE_API FE_BenchmarkStartClock(FE_Benchmark* benchmark);
 void FE_API FE_BenchmarkStopClock(FE_Benchmark* benchmark);
 Uint64 FE_API FE_BenchmarkClockNsDuration(FE_Benchmark* benchmark);

@@ -4,6 +4,7 @@ typedef enum { FE_RENDERER_API_TYPE_OPENGL, FE_RENDERER_API_TYPE_VULKAN } Render
 
 typedef struct RendererAPIData
 {
+	ILDA_vector4f defaultClearColor;
 	void* nativeInfoAPI;
 } RendererAPIData;
 
@@ -31,5 +32,5 @@ typedef struct RendererAPI
 	Renderer_API_Type API_Type;
 } RendererAPI;
 
-void InitRendererAPISelection();
+void InitRendererAPISelection(RendererAPIData* apiData);
 const RendererAPI* GetRendererAPI();

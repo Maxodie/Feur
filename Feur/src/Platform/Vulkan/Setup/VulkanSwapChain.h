@@ -1,15 +1,18 @@
 #pragma once
 #include <vulkan/vulkan.h>
 
-void VulkanInitSwapChain(struct FE_VulkanInfo* vkInfo);
 void VulkanCreateSwapChain(struct FE_VulkanInfo* vkInfo);
-void VulkanCreateSwapChainImages(struct FE_VulkanInfo* vkInfo);
 void VulkanDestroySwapChain(struct FE_VulkanInfo* vkInfo);
-void VulkanShutdownSwapChain(struct FE_VulkanInfo* vkInfo);
+
+void VulkanInitSwapChainImages(struct FE_VulkanInfo* vkInfo);
+void VulkanShutdownSwapChainImages(struct FE_VulkanInfo* vkInfo);
+
+void VulkanSwapChainImagesQuery(struct FE_VulkanInfo* vkInfo);
 
 // "VulkanfeSwapChainSupportDetails" must be cleared using "VulkanClearSwapChainSupport" function
-Bool VulkanCreateSwapChainSupportByQuery(struct FE_VulkanInfo* vkInfo);
-void VulkanClearSwapChainSupport(struct FE_VulkanInfo* vkInfo);
+void VulkanInitSwapChainSupportData(struct FE_VulkanInfo* vkInfo);
+void VulkanShutdownSwapChainSupportData(struct FE_VulkanInfo* vkInfo);
+Bool VulkanSwapChainSupportByQuery(struct FE_VulkanInfo* vkInfo);
 VkSurfaceFormatKHR VulkanChooseSwapSurfaceFormat(FE_ListParameterPtr(VkSurfaceFormatKHR) pAvailableFormats);
 VkPresentModeKHR VulkanChooseSwapPresentMode(FE_ListParameterPtr(VkSurfaceFormatKHR) pAvailablePresentModes);
 VkExtent2D VulkanChooseSwapExtent(const VkSurfaceCapabilitiesKHR* capabilities);

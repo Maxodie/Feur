@@ -243,7 +243,7 @@ Bool FE_API FE_ListReserve_impl(FE_List_impl* list, Byte** data, SizeT amount, S
 
 Bool FE_ListResize_impl(FE_List_impl* list, Byte** data, SizeT amount, SizeT dataSize)
 {
-	if (!FE_ListCheck(list, data))
+	if (!FE_ListCheck(list, data) || list->count >= amount)
 	{
 		FE_CORE_LOG_ERROR("failed to resize fe_list");
 		return FALSE;
@@ -339,5 +339,6 @@ FE_ListPrintReport()
 {
 #ifdef FE_DEBUG
 	FE_CORE_LOG_SUCCESS("list report | alloc : %lld        free : %lld", allocatedListCount, freedListCount);
+	FE_CORE_LOG_SUCCESS(allocatedListCount == freedListCount ? "no memory leak in FE_List detected ! " : "memory leak detected");
 #endif
 }

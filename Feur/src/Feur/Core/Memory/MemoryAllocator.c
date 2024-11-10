@@ -39,6 +39,7 @@ FE_FORCEINLINE_FUN void FE_API FE_MemoryGeneralShutdown()
 
 #ifdef FE_DEBUG
     FE_CORE_LOG_SUCCESS("Memory report | alloc : %lld      free : %lld", FE_MemoryGeneralAllocator.allocCount, FE_MemoryGeneralAllocator.freeCount);
+    FE_CORE_LOG_SUCCESS(FE_MemoryGeneralAllocator.allocCount == FE_MemoryGeneralAllocator.freeCount ? "no memory leak detected ! " : "memory leak detected");
 #endif
 }
 
