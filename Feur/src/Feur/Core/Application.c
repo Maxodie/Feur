@@ -124,8 +124,15 @@ void FE_API PullWindowEvent()
 
 void FE_API Render()
 {
-	RenderCommandClearScreenColor();
-	RenderCommandClear();
+	RenderCommandFramePrepare();
+	RenderCommandFrameCommandListBegin();
+	ILDA_vector4f color = { .x = 120, .y = 200, .z = 40, .w = 255 };
+	RenderCommandBeginRendering(&color);
+	
+	RenderCommandSetRendererViewport(0, 0, g_fe_App.windowData.w, g_fe_App.windowData.h, 0, 1);
+	RenderCommandSetScissor(g_fe_App.windowData.w, g_fe_App.windowData.h);
+	RenderCommandBindPipeline();
+	
 
 	Layer* layer;
 	for (SizeT i = 0; i < FE_LayerStackGetCount(&g_fe_App.layerStack); i++)
@@ -133,6 +140,13 @@ void FE_API Render()
 		layer = g_fe_App.layerStack.stackedlayers.data[i];
 		layer->OnRender(layer);
 	}
+
+	RenderCommandDrawIndex();
+	RenderCommandEndRendering();
+	RenderCommandFrameCommandListEnd();
+	RenderCommandFrameSubmit();
+	RenderCommandFramePresent();
+	RenderCommandWaitIdle();
 
 	GetWindowAPI()->Update(&g_fe_App.windowData);
 }

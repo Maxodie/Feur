@@ -24,7 +24,7 @@ void FE_API RendererEndScene()
 
 void FE_API RendererOnWindowResize(Uint32 width, Uint32 height)
 {
-	RenderCommandSetRendererViewport(0, 0, width, height);
+	RenderCommandOnWindowResized(0, 0, width, height);
 }
 
 void FE_API RendererShutdown(RendererAPIData* apiData)

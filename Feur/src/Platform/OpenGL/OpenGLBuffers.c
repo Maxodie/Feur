@@ -3,7 +3,7 @@
 
 #include "glad/glad.h"
 
-void FE_API InitOpenGL_VertexArrayBuffer()
+void InitOpenGL_VertexArrayBuffer()
 {
 	
 }

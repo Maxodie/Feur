@@ -157,7 +157,7 @@
     <ClInclude Include="src\Platform\OpenGL\OpenGLGraphicsContext.h">
       <Filter>Platform\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h">
+    <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPIimpl.h">
       <Filter>Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Vulkan\Debug\VulkanDebug.h">
@@ -193,7 +193,7 @@
     <ClInclude Include="src\Platform\Vulkan\VulkanGraphicsContext.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Vulkan\VulkanRendererAPI.h">
+    <ClInclude Include="src\Platform\Vulkan\VulkanRendererAPIimpl.h">
       <Filter>Platform\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Window\GLFW\GLFWWindowsInput.h">
@@ -209,6 +209,7 @@
       <Filter>Platform\Window\SDL</Filter>
     </ClInclude>
     <ClInclude Include="src\fepch.h" />
+    <ClInclude Include="src\Platform\Vulkan\Setup\VulkanCommands.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Feur\Core\Application.c">
@@ -292,7 +293,7 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLGraphicsContext.c">
       <Filter>Platform\OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.c">
+    <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPIimpl.c">
       <Filter>Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Vulkan\Debug\VulkanDebug.c">
@@ -325,7 +326,7 @@
     <ClCompile Include="src\Platform\Vulkan\VulkanGraphicsContext.c">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Vulkan\VulkanRendererAPI.c">
+    <ClCompile Include="src\Platform\Vulkan\VulkanRendererAPIimpl.c">
       <Filter>Platform\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Window\GLFW\GLFWWindowsInput.c">
@@ -341,5 +342,6 @@
       <Filter>Platform\Window\SDL</Filter>
     </ClCompile>
     <ClCompile Include="src\fepch.c" />
+    <ClCompile Include="src\Platform\Vulkan\Setup\VulkanCommands.c" />
   </ItemGroup>
 </Project>

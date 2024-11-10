@@ -4,7 +4,7 @@
 #include "Platform/Vulkan/Debug/VulkanValidationLayer.h"
 #include "Platform/Vulkan/Debug/VulkanDebug.h"
 
-void FE_API CreateVulkanInstance(FE_VulkanInfo* vkInfo)
+void VulkanCreateInstance(FE_VulkanInfo* vkInfo)
 {
 	//Init validation layers
 	if (vkInfo->debugger.validationLayer.enableValidationLayers && !VulkanCheckValidationLayerSupport(&vkInfo->debugger.validationLayer))
@@ -47,7 +47,7 @@ void FE_API CreateVulkanInstance(FE_VulkanInfo* vkInfo)
 	{
 		createInfo.enabledLayerCount = 0;
 		createInfo.ppEnabledLayerNames = NULL;
-		createInfo.pNext = NULL;
+		createInfo.pNext = VK_NULL_HANDLE;
 	}
 
 	//window extension
@@ -99,12 +99,57 @@ void FE_API CreateVulkanInstance(FE_VulkanInfo* vkInfo)
 	FE_CORE_LOG_SUCCESS("Vulkan instance created");
 }
 
-void FE_API CleanupVulkanSurface(FE_VulkanInfo* vkInfo)
-{
-	vkDestroySurfaceKHR(vkInfo->instance, vkInfo->surface, NULL);
-}
-
-void FE_API VulkanCleanup(FE_VulkanInfo* vkInfo)
+void VulkanDestroyInstance(FE_VulkanInfo* vkInfo)
 {
 	vkDestroyInstance(vkInfo->instance, NULL);
+}
+
+void VulkanCreateSemaphoresAndFences(FE_VulkanInfo* vkInfo)
+{
+	Bool resultFailed = FALSE;
+	// Semaphores and fences
+	vkInfo->imageAvailableSemaphores = FE_MemoryGeneralAlloc(sizeof(VkSemaphore) * vkInfo->swapChain.maxFramesInFlight);
+	vkInfo->queueCompleteSemaphores = FE_MemoryGeneralAlloc(sizeof(VkSemaphore) * vkInfo->swapChain.maxFramesInFlight);
+	vkInfo->inFlightFences = FE_MemoryGeneralAlloc(sizeof(VkFence) * vkInfo->swapChain.maxFramesInFlight);
+
+	VkSemaphoreCreateInfo semaphoreCreateInfo = {
+			.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
+			.flags = 0,
+			.pNext = VK_NULL_HANDLE,
+	};
+
+	VkFenceCreateInfo fenceCreateInfo = {
+			.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
+			.flags = VK_FENCE_CREATE_SIGNALED_BIT,
+			.pNext = VK_NULL_HANDLE,
+	};
+
+	for (Uint32 i = 0; i < vkInfo->swapChain.maxFramesInFlight; i++)
+	{
+		resultFailed = vkCreateSemaphore(vkInfo->logicalDevice, &semaphoreCreateInfo, NULL, &vkInfo->imageAvailableSemaphores[i]) != VK_SUCCESS;
+		resultFailed += vkCreateSemaphore(vkInfo->logicalDevice, &semaphoreCreateInfo, NULL, &vkInfo->queueCompleteSemaphores[i]) != VK_SUCCESS;
+		resultFailed += vkCreateFence(vkInfo->logicalDevice, &fenceCreateInfo, NULL, &vkInfo->inFlightFences[i]) != VK_SUCCESS;
+
+		FE_CORE_ASSERT(resultFailed == FALSE, "Vulkan failed to create semaphores and fences");
+	}
+
+	FE_CORE_ASSERT(resultFailed == FALSE, "Vulkan failed to create semaphores and fences");
+
+	FE_CORE_LOG_SUCCESS("Vulkand semaphores and fences successfuly created");
+}
+
+void VulkanDestroySemaphoresAndFences(FE_VulkanInfo* vkInfo)
+{
+	if (vkInfo->swapChain.maxFramesInFlight == 0) return;
+
+	for (Uint32 i = 0; i < vkInfo->swapChain.maxFramesInFlight; i++)
+	{
+		vkDestroySemaphore(vkInfo->logicalDevice, vkInfo->imageAvailableSemaphores[i], NULL);
+		vkDestroySemaphore(vkInfo->logicalDevice, vkInfo->queueCompleteSemaphores[i], NULL);
+		vkDestroyFence(vkInfo->logicalDevice, vkInfo->inFlightFences[i], NULL);
+	}
+
+	FE_MemoryGeneralFree(vkInfo->imageAvailableSemaphores);
+	FE_MemoryGeneralFree(vkInfo->queueCompleteSemaphores);
+	FE_MemoryGeneralFree(vkInfo->inFlightFences);
 }

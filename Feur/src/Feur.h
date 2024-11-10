@@ -6,6 +6,7 @@
 
 //Math
 #include "ILDA_utils/ILDA_utils.h"
+#include "ILDA_vector/ILDA_vector.h"
 
 //Core
 #include "Feur/Core/Core.h"

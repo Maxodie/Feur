@@ -3,8 +3,8 @@
 #include <shaderc/shaderc.h>
 #include "Platform/Vulkan/Setup/VulkanStructures.h"
 
+void VulkanCreateInstance(FE_VulkanInfo* vkInfo);
+void VulkanDestroyInstance(FE_VulkanInfo* vkInfo);
 
-void FE_API CreateVulkanInstance(FE_VulkanInfo* vkInfo);
-void FE_API VulkanCleanup(FE_VulkanInfo* vkInfo);
-
-void FE_API CleanupVulkanSurface(FE_VulkanInfo* vkInfo);
+void VulkanCreateSemaphoresAndFences(FE_VulkanInfo* vkInfo);
+void VulkanDestroySemaphoresAndFences(FE_VulkanInfo* vkInfo);

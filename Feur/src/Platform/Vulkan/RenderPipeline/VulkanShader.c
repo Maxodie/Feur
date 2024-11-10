@@ -13,7 +13,7 @@ void VulkanDestroyShaderCompiler(FE_VulkanInfo* vkInfo)
 	shaderc_compiler_release(vkInfo->shaderCompiler);
 }
 
-VkShaderModule FE_API VulkanCreateShaderModule(FE_VulkanInfo* vkInfo, const char* shaderName, VulkanShaderKind kind)
+VkShaderModule VulkanCreateShaderModule(FE_VulkanInfo* vkInfo, const char* shaderName, VulkanShaderKind kind)
 {
 	char* fileName = FE_StringFormatAlloc("vulkan/%s.%s", shaderName, kind == VERTEX_SHADER ? "vert" : "frag");
 

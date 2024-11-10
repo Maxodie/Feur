@@ -2,41 +2,52 @@
 #include "Feur/Renderer/RendererAPI.h"
 #include "Feur/Renderer/Buffers.h"
 
-#include "Platform/OpenGL/OpenGLRendererAPI.h"
+#include "Platform/OpenGL/OpenGLRendererAPIimpl.h"
 #include "Platform/OpenGL/OpenGLBuffers.h"
-#include "Platform/Vulkan/VulkanRendererAPI.h"
+#include "Platform/Vulkan/VulkanRendererAPIimpl.h"
 #include "Platform/Vulkan/VulkanBuffers.h"
 
 static RendererAPI rendererAPI;
 
-void FE_API InitRendererAPISelection()
+void InitRendererAPISelection()
 {
 #ifdef FE_RENDER_SELECTED_API_OPENGL
-	rendererAPI.API_Type = FE_RENDERER_API_OPENGL;
+	rendererAPI.API_Type = FE_RENDERER_API_TYPE_OPENGL;
 #elif defined(FE_RENDER_SELECTED_API_VULKAN)
-	rendererAPI.API_Type = FE_RENDERER_API_VULKAN;
+	rendererAPI.API_Type = FE_RENDERER_API_TYPE_VULKAN;
 #endif
 
 	switch (rendererAPI.API_Type)
 	{
-	case FE_RENDERER_API_OPENGL:
-		rendererAPI.Clear = OpenGLClear_impl;
-		rendererAPI.ClearScreenColor = OpenGLClearScreenColor_impl;
+	case FE_RENDERER_API_TYPE_OPENGL:
+		rendererAPI.BeginRendering = OpenGLBeginRendering_impl;
 		rendererAPI.DrawIndex = OpenGLDrawIndex_impl;
-		rendererAPI.SetViewport = OpenGLSetViewport_impl;
+		rendererAPI.OnWindowResized = OpenGLOnWindowResize_impl;
 		rendererAPI.Init = OpenGLInit_impl;
 		rendererAPI.Shutdown = OpenGLShutdown_impl;
 
 		GetRenderer_VertexArray_Buffer()->InitVaoBuffer = InitOpenGL_VertexArrayBuffer;
 		break;
 
-	case FE_RENDERER_API_VULKAN:
-		rendererAPI.Clear = VulkanClear_impl;
-		rendererAPI.ClearScreenColor = VulkanClearScreenColor_impl;
-		rendererAPI.DrawIndex = VulkanDrawIndex_impl;
-		rendererAPI.SetViewport = VulkanSetViewport_impl;
+	case FE_RENDERER_API_TYPE_VULKAN:
 		rendererAPI.Init = VulkanInit_impl;
+
+		rendererAPI.FramePrepare = VulkanFramePrepare_impl;
+		rendererAPI.FrameCommandListBegin = VulkanFrameCommandListBegin_impl;
+		rendererAPI.BeginRendering = VulkanBeginRendering_impl;
+		rendererAPI.SetViewport = VulkanSetViewport_impl;
+		rendererAPI.SetScissor = VulkanSetScissor_impl;
+		rendererAPI.BindPipeline = VulkanBindPipeline_impl;
+		rendererAPI.DrawIndex = VulkanDrawIndex_impl;
+		rendererAPI.EndRendering = VulkanEndRendering_impl;
+		rendererAPI.FrameCommandListEnd = VulkanFrameCommandListEnd_impl;
+		rendererAPI.FrameSubmit = VulkanFrameSubmit_impl;
+		rendererAPI.FramePresent = VulkanFramePresent_impl;
+		rendererAPI.WaitIdle = VulkanWaitIdle_impl;
+
 		rendererAPI.Shutdown = VulkanShutdown_impl;
+
+		rendererAPI.OnWindowResized = VulkanOnWindowResized_impl;
 
 		GetRenderer_VertexArray_Buffer()->InitVaoBuffer = InitVulkan_VertexArrayBuffer;
 		break;
@@ -47,7 +58,7 @@ void FE_API InitRendererAPISelection()
 	}
 }
 
-const RendererAPI* FE_API GetRendererAPI()
+const RendererAPI* GetRendererAPI()
 {
 	return &rendererAPI;
 }

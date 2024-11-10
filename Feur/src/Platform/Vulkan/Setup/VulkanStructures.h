@@ -5,6 +5,8 @@ typedef struct VulkanfeSwapChainSupportDetails
 	VkSurfaceCapabilitiesKHR capabilities;
 	FE_List(VkSurfaceFormatKHR) formats;
 	FE_List(VkPresentModeKHR) presentModes;
+	VkPresentModeKHR selectedPresentMode;
+	VkSurfaceFormatKHR selectedSurfaceFormat;
 } VulkanfeSwapChainSupportDetails;
 
 typedef struct FE_VulkanSwapChain
@@ -16,6 +18,7 @@ typedef struct FE_VulkanSwapChain
 	FE_List(VkImageView) imageViews;
 	VkFormat imageFormat;
 	VkExtent2D extent;
+	Uint32 maxFramesInFlight;
 } FE_VulkanSwapChain;
 
 typedef struct FE_VulkanQueueFamilyIndices
@@ -72,10 +75,22 @@ typedef struct FE_VulkanInfo
 	VkSurfaceKHR surface;
 
 	FE_VulkanSwapChain swapChain;
+	Uint32 currentFrame;
+	Uint32 imageIndex;
+
+	VkSemaphore* imageAvailableSemaphores;//static array
+	VkSemaphore* queueCompleteSemaphores;//static array
+	VkFence* inFlightFences;//static array
 
 	FE_VulkanPipeline graphicsPipeline;
 
 	//shaderc
 	shaderc_compiler_t shaderCompiler;
+
+	VkCommandPool graphicsCommandPool;
+	VkCommandBuffer* cmdBuffers;//static array
+	VkImageMemoryBarrier* imageBarriers;//static array
+
+	Bool resizeRequested;
 
 } FE_VulkanInfo;

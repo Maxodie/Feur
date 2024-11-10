@@ -3,17 +3,17 @@
 #include "Platform/Vulkan/Setup/VulkanSetup.h"
 #include "Platform/Vulkan/Setup/VulkanSwapChain.h"
 
-Bool FE_API VulkanIsQueueFamilyIndicesCompleted(FE_VulkanQueueFamilyIndices* vkQueueFamilyIndices)
+Bool VulkanIsQueueFamilyIndicesCompleted(FE_VulkanQueueFamilyIndices* vkQueueFamilyIndices)
 {
 	return vkQueueFamilyIndices->graphicsFamily.hasValue && vkQueueFamilyIndices->presentFamily.hasValue;
 }
 
-void FE_API VulkanInitDefaultDeviceSelection(FE_VulkanInfo* vkInfo)
+void VulkanInitDefaultDeviceSelection(FE_VulkanInfo* vkInfo)
 {
 	vkInfo->physicalDevice.GPU = VK_NULL_HANDLE;
 }
 
-void FE_API VulkanPickPhysicalDevice(FE_VulkanInfo* vkInfo)
+void VulkanPickPhysicalDevice(FE_VulkanInfo* vkInfo)
 {
 	FE_VulkanPysicalDevice* fePhysicalDevice = &vkInfo->physicalDevice;
 
@@ -59,7 +59,7 @@ void FE_API VulkanPickPhysicalDevice(FE_VulkanInfo* vkInfo)
 	FE_CORE_LOG_SUCCESS("Vulkan physical device selected");
 }
 
-Bool FE_API VulkanTryLoadingPhysicalDevice(FE_VulkanInfo* vkInfo, VkPhysicalDevice device)
+Bool VulkanTryLoadingPhysicalDevice(FE_VulkanInfo* vkInfo, VkPhysicalDevice device)
 {
 	/*--------------------- Check For Physical Device Support ---------------------*/
 	VkPhysicalDeviceProperties deviceProperties;
@@ -113,7 +113,7 @@ Bool FE_API VulkanTryLoadingPhysicalDevice(FE_VulkanInfo* vkInfo, VkPhysicalDevi
 	return VulkanIsQueueFamilyIndicesCompleted(&vkInfo->queueFamilyIndices);//&& /*extensionsSupported && */ swapChainAdequate;
 }
 
-void FE_API VulkanLoadQueueFamilies(const FE_VulkanInfo* vkInfo, VkPhysicalDevice device)
+void VulkanLoadQueueFamilies(FE_VulkanInfo* vkInfo, VkPhysicalDevice device)
 {
 	Uint32 queueFamilyCount = 0;
 	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, NULL);
@@ -144,7 +144,7 @@ void FE_API VulkanLoadQueueFamilies(const FE_VulkanInfo* vkInfo, VkPhysicalDevic
 	FE_MemoryGeneralFree(queueFamilies);
 }
 
-void FE_API VulkanCreateLogicalDevice(FE_VulkanInfo* vkInfo)
+void VulkanCreateLogicalDevice(FE_VulkanInfo* vkInfo)
 {
 	/*--------------------- Check For Device Extension Support ---------------------*/
 
@@ -270,7 +270,7 @@ void FE_API VulkanCreateLogicalDevice(FE_VulkanInfo* vkInfo)
 	FE_CORE_LOG_SUCCESS("Vulkan logical device created");
 }
 
-void FE_API VulkanDestroyLogicalDevice(FE_VulkanInfo* vkInfo)
+void VulkanDestroyLogicalDevice(FE_VulkanInfo* vkInfo)
 {
 	vkDestroyDevice(vkInfo->logicalDevice, NULL);
 }

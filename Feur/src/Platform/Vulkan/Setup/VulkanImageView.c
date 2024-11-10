@@ -2,7 +2,7 @@
 #include "Platform/Vulkan/Setup/VulkanImageView.h"
 #include "Platform/Vulkan/Setup/VulkanSetup.h"
 
-void FE_API VulkanCreateImageView(FE_VulkanInfo* vkInfo)
+void VulkanCreateImageView(FE_VulkanInfo* vkInfo)
 {
 	FE_ListInit(vkInfo->swapChain.imageViews);
 	FE_ListResize(vkInfo->swapChain.imageViews, vkInfo->swapChain.images.impl.count);
@@ -30,7 +30,7 @@ void FE_API VulkanCreateImageView(FE_VulkanInfo* vkInfo)
 	}
 }
 
-void FE_API VulkanDestroyImageView(FE_VulkanInfo* vkInfo)
+void VulkanDestroyImageView(FE_VulkanInfo* vkInfo)
 {
 	for (SizeT i = 0; i < vkInfo->swapChain.imageViews.impl.count; i++)
 	{

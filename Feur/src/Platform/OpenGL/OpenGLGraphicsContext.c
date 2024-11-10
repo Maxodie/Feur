@@ -4,7 +4,7 @@
 
 #include <GLFW/glfw3.h>
 
-void FE_API OpenGL_GLFWwindowHintParameters()
+void OpenGL_GLFWwindowHintParameters()
 {
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -13,7 +13,7 @@ void FE_API OpenGL_GLFWwindowHintParameters()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 }
 
-void FE_API OpenGL_GLFWgraphicsContextInit(WindowData* windowData)
+void OpenGL_GLFWgraphicsContextInit(WindowData* windowData)
 {
 	glfwMakeContextCurrent((GLFWwindow*)windowData->nativeWindow);
 	int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
@@ -25,7 +25,7 @@ void FE_API OpenGL_GLFWgraphicsContextInit(WindowData* windowData)
 	FE_CORE_LOG_SUCCESS("   Version: %s", (const char*)glGetString(GL_VERSION));
 }
 
-void FE_API OpenGL_GLFWGraphicsContextSwapBuffers(WindowData* windowData)
+void OpenGL_GLFWGraphicsContextSwapBuffers(WindowData* windowData)
 {
 	glfwSwapBuffers((GLFWwindow*)windowData->nativeWindow);
 }

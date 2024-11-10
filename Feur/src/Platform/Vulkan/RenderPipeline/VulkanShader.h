@@ -6,6 +6,6 @@ typedef enum VulkanShaderKind {
 	FRAGMENT_SHADER 
 } VulkanShaderKind;
 
-void FE_API VulkanCreateShaderCompiler(struct FE_VulkanInfo* vkInfo);
-void FE_API VulkanDestroyShaderCompiler(struct FE_VulkanInfo* vkInfo);
-VkShaderModule FE_API VulkanCreateShaderModule(struct FE_VulkanInfo* vkInfo, const char* shaderName, VulkanShaderKind kind);
+void VulkanCreateShaderCompiler(struct FE_VulkanInfo* vkInfo);
+void VulkanDestroyShaderCompiler(struct FE_VulkanInfo* vkInfo);
+VkShaderModule VulkanCreateShaderModule(struct FE_VulkanInfo* vkInfo, const char* shaderName, VulkanShaderKind kind);

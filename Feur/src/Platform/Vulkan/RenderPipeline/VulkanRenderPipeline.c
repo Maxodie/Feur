@@ -4,7 +4,7 @@
 
 #include "Platform/Vulkan/RenderPipeline/VulkanShader.h"
 
-void FE_API VulkanCreateGraphicsPipeline(FE_VulkanInfo* vkInfo)
+void VulkanCreateGraphicsPipeline(FE_VulkanInfo* vkInfo)
 {
 	VulkanCreateShaderCompiler(vkInfo);
 
@@ -73,10 +73,16 @@ void FE_API VulkanCreateGraphicsPipeline(FE_VulkanInfo* vkInfo)
 
 	VkPipelineVertexInputStateCreateInfo  vertexInputInfo = {
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
-		.vertexBindingDescriptionCount = 1,
-		.pVertexBindingDescriptions = &bindingDescription, // Optionnal
-		.vertexAttributeDescriptionCount = sizeof(attributeDescription) / sizeof(VkVertexInputAttributeDescription),
-		.pVertexAttributeDescriptions = attributeDescription
+		//.vertexBindingDescriptionCount = 1,
+		//.pVertexBindingDescriptions = &bindingDescription, // Optionnal
+		//.vertexAttributeDescriptionCount = sizeof(attributeDescription) / sizeof(VkVertexInputAttributeDescription),
+		//.pVertexAttributeDescriptions = attributeDescription
+
+		//FIXME: remove once we have our vertex buffers
+		.vertexBindingDescriptionCount = 0,
+		.pVertexBindingDescriptions = VK_NULL_HANDLE, // Optionnal
+		.vertexAttributeDescriptionCount = 0,
+		.pVertexAttributeDescriptions = VK_NULL_HANDLE
 	};
 	
 	/*---------------------- Input Assembly ----------------------*/
@@ -204,4 +210,9 @@ void VulkanCleanupGraphicsPipeline(FE_VulkanInfo* vkInfo)
 	vkDestroyPipelineLayout(vkInfo->logicalDevice, vkInfo->graphicsPipeline.layout, NULL);
 	
 	VulkanDestroyShaderCompiler(vkInfo);
+}
+
+void VulkanGraphicsPipelineBind(VkCommandBuffer cmdBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline)
+{
+	vkCmdBindPipeline(cmdBuffer, pipelineBindPoint, pipeline);
 }

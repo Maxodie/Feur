@@ -6,7 +6,7 @@
 #include <vulkan/vulkan.h>
 #include <GLFW/glfw3.h>
 
-void FE_API Vulkan_GLFWwindowHintParameters()
+void Vulkan_GLFWwindowHintParameters()
 {
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	/*glfwWindowHint(GLFW_SAMPLES, 4);
@@ -14,7 +14,7 @@ void FE_API Vulkan_GLFWwindowHintParameters()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);*/
 }
 
-void FE_API Vulkan_GLFWgraphicsContextInit(WindowData* windowData)
+void Vulkan_GLFWgraphicsContextInit(WindowData* windowData)
 {
 
 
@@ -28,12 +28,12 @@ void FE_API Vulkan_GLFWgraphicsContextInit(WindowData* windowData)
 	FE_CORE_LOG_SUCCESS("   Version: %s", (const char*)glGetString(GL_VERSION))*/
 }
 
-void FE_API Vulkan_GLFWgraphicsContextSwapBuffers(WindowData* windowData)
+void Vulkan_GLFWgraphicsContextSwapBuffers(WindowData* windowData)
 {
 	//glfwSwapBuffers((GLFWwindow*)windowData->nativeWindow);
 }
 
-void FE_API Vulkan_GLFWsetExtention(VkInstanceCreateInfo* createInfo, const FE_VulkanInfo* vkInfo, void* extensionsFeList)
+void Vulkan_GLFWsetExtention(VkInstanceCreateInfo* createInfo, const FE_VulkanInfo* vkInfo, void* extensionsFeList)
 {
 	Uint32 glfwExtensionCount = 0;
 	const char* const* glfwExtensions;
@@ -56,7 +56,7 @@ void FE_API Vulkan_GLFWsetExtention(VkInstanceCreateInfo* createInfo, const FE_V
 	createInfo->ppEnabledExtensionNames = extensions->data;
 }
 
-void FE_API CreateVulkanSurface(FE_VulkanInfo* vkInfo)
+void CreateVulkanSurface(FE_VulkanInfo* vkInfo)
 {
 	switch (GetWindowAPI()->API_Type)
 	{
@@ -74,4 +74,9 @@ void Vulkan_GLFWcreateSurface(FE_VulkanInfo* vkInfo)
 {
 	VkResult result = glfwCreateWindowSurface(vkInfo->instance, GetApp()->windowData.nativeWindow, NULL, &vkInfo->surface);
 	FE_CORE_ASSERT(result == VK_SUCCESS, "failed to create window surface! - %d", result);
+}
+
+void VulkanCleanupSurface(FE_VulkanInfo* vkInfo)
+{
+	vkDestroySurfaceKHR(vkInfo->instance, vkInfo->surface, NULL);
 }

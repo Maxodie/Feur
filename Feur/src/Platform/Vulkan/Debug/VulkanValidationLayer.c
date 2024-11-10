@@ -2,7 +2,7 @@
 #include "Platform/Vulkan/Debug/VulkanValidationLayer.h"
 #include "Platform/Vulkan/Setup/VulkanSetup.h"
 
-void FE_API VulkanInitValidationLayer(FE_VulkanValidationLayer* vkValidationLayer)
+void VulkanInitValidationLayer(FE_VulkanValidationLayer* vkValidationLayer)
 {
 #ifdef FE_DEBUG
 	FE_ListInit(vkValidationLayer->validationLayers);
@@ -13,7 +13,7 @@ void FE_API VulkanInitValidationLayer(FE_VulkanValidationLayer* vkValidationLaye
 #endif
 }
 
-Bool FE_API VulkanCheckValidationLayerSupport(const FE_VulkanValidationLayer* vkValidationLayer)
+Bool VulkanCheckValidationLayerSupport(const FE_VulkanValidationLayer* vkValidationLayer)
 {
 	Uint32 availableLayerCount;
 	vkEnumerateInstanceLayerProperties(&availableLayerCount, NULL);

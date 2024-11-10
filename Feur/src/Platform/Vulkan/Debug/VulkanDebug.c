@@ -3,7 +3,7 @@
 #include "Platform/Vulkan/Setup/VulkanSetup.h"
 #include <vulkan/vulkan.h>
 
-VkResult FE_API CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pCallback)
+VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pCallback)
 {	
 	PFN_vkCreateDebugUtilsMessengerEXT func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
 	if (func != NULL) 
@@ -16,7 +16,7 @@ VkResult FE_API CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugU
 	}
 }
 
-void FE_API DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT callback, const VkAllocationCallbacks* pAllocator)
+void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT callback, const VkAllocationCallbacks* pAllocator)
 {
 	PFN_vkDestroyDebugUtilsMessengerEXT func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
 	if (func != NULL) 
@@ -64,7 +64,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(
 	return VK_FALSE;
 }
 
-void FE_API VulkanPopulateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT* createInfo, FE_VulkanInfo* vkInfo)
+void VulkanPopulateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT* createInfo, FE_VulkanInfo* vkInfo)
 {
 	createInfo->sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
 	
@@ -82,7 +82,7 @@ void FE_API VulkanPopulateDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT* cre
 	createInfo->pUserData = &vkInfo->debugger;
 }
 
-void FE_API VulkanCreateDebugMessenger(FE_VulkanInfo* vkInfo)
+void VulkanCreateDebugMessenger(FE_VulkanInfo* vkInfo)
 {
 	FE_CORE_LOG_SUCCESS("Initializing Vulkan debugger...");
 
@@ -99,7 +99,7 @@ void FE_API VulkanCreateDebugMessenger(FE_VulkanInfo* vkInfo)
 	FE_CORE_LOG_SUCCESS("Vulkan debugger Initialized");
 }
 
-void FE_API VulkanCleanupDebugMessenger(FE_VulkanInfo* vkInfo)
+void VulkanCleanupDebugMessenger(FE_VulkanInfo* vkInfo)
 {
 	if (vkInfo->debugger.validationLayer.enableValidationLayers)
 	{

@@ -3,24 +3,39 @@
 
 #include "Feur/Renderer/RendererAPI.h"
 
-Bool FE_API RenderCommandInit(RendererAPIData* api)
+Bool RenderCommandInit(RendererAPIData* api)
 {
 	return GetRendererAPI()->Init(api);
 }
 
-void FE_API RenderCommandClearScreenColor()
+void RenderCommandFramePrepare()
 {
-	GetRendererAPI()->ClearScreenColor();
+	GetRendererAPI()->FramePrepare();
 }
 
-void FE_API RenderCommandSetRendererViewport(Uint32 w, Uint32 h, Uint32 width, Uint32 height)
+void RenderCommandFrameCommandListBegin()
 {
-	GetRendererAPI()->SetViewport(w, h, width, height);
+	GetRendererAPI()->FrameCommandListBegin();
 }
 
-void FE_API RenderCommandClear()
+void FE_API RenderCommandSetRendererViewport(Uint32 w, Uint32 h, Uint32 width, Uint32 height, Uint32 minDepth, Uint32 maxDepth)
 {
-	GetRendererAPI()->Clear();
+	GetRendererAPI()->SetViewport(w, h, width, height, minDepth, maxDepth);
+}
+
+void RenderCommandSetScissor(Uint32 width, Uint32 height)
+{
+	GetRendererAPI()->SetScissor(width, height);
+}
+
+void RenderCommandBindPipeline()
+{
+	GetRendererAPI()->BindPipeline();
+}
+
+void FE_API RenderCommandBeginRendering(ILDA_vector4f * clearColor)
+{
+	GetRendererAPI()->BeginRendering(clearColor);
 }
 
 void FE_API RenderCommandDrawIndex()
@@ -28,7 +43,37 @@ void FE_API RenderCommandDrawIndex()
 	GetRendererAPI()->DrawIndex();
 }
 
-void FE_API RenderCommandShutDown(RendererAPIData* apiData)
+void RenderCommandEndRendering()
 {
-	GetRendererAPI()->Shutdown(apiData);
+	GetRendererAPI()->EndRendering();
+}
+
+void RenderCommandFrameCommandListEnd()
+{
+	GetRendererAPI()->FrameCommandListEnd();
+}
+
+void RenderCommandFrameSubmit()
+{
+	GetRendererAPI()->FrameSubmit();
+}
+
+void RenderCommandFramePresent()
+{
+	GetRendererAPI()->FramePresent();
+}
+
+void RenderCommandWaitIdle()
+{
+	GetRendererAPI()->WaitIdle();
+}
+
+void RenderCommandShutDown()
+{
+	GetRendererAPI()->Shutdown();
+}
+
+void RenderCommandOnWindowResized(Uint32 w, Uint32 h, Uint32 width, Uint32 height)
+{
+	GetRendererAPI()->OnWindowResized(w, h, width, height);
 }
