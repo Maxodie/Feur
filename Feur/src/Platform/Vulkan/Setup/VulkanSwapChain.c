@@ -79,10 +79,10 @@ void VulkanShutdownSwapChainImages(FE_VulkanInfo* vkInfo)
 void VulkanSwapChainImagesQuery(FE_VulkanInfo* vkInfo)
 {
     //cache and retrieving the swap chain data
-    vkGetSwapchainImagesKHR(vkInfo->logicalDevice, vkInfo->swapChain.handle, &vkInfo->swapChain.images.impl.count, vkInfo->swapChain.images.data);
+    vkGetSwapchainImagesKHR(vkInfo->logicalDevice, vkInfo->swapChain.handle, &(Uint32)vkInfo->swapChain.images.impl.count, vkInfo->swapChain.images.data);
 
     //setup frames in flight
-    vkInfo->swapChain.maxFramesInFlight = vkInfo->swapChain.images.impl.count - 1;
+    vkInfo->swapChain.maxFramesInFlight = (Uint32)vkInfo->swapChain.images.impl.count - 1;
     vkInfo->currentFrame = 0;
 }
 
@@ -124,7 +124,7 @@ Bool VulkanSwapChainSupportByQuery(FE_VulkanInfo* vkInfo)
     {
         vkGetPhysicalDeviceSurfaceFormatsKHR(
             vkInfo->physicalDevice.GPU, vkInfo->surface, 
-            &vkInfo->swapChain.details.formats.impl.count, vkInfo->swapChain.details.formats.data
+            &(Uint32)vkInfo->swapChain.details.formats.impl.count, vkInfo->swapChain.details.formats.data
         );
     }
 
@@ -133,7 +133,7 @@ Bool VulkanSwapChainSupportByQuery(FE_VulkanInfo* vkInfo)
     {
         vkGetPhysicalDeviceSurfacePresentModesKHR(
             vkInfo->physicalDevice.GPU, vkInfo->surface,
-            &vkInfo->swapChain.details.presentModes.impl.count, vkInfo->swapChain.details.presentModes.data
+            &(Uint32)vkInfo->swapChain.details.presentModes.impl.count, vkInfo->swapChain.details.presentModes.data
         );
     }
 

@@ -14,14 +14,14 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 --IncludeDir["SDL2"] = "Feur/vendor/SDL2/SDL/include"
 IncludeDir["Glad"] = "Feur/vendor/Glad/include"
-IncludeDir["GLFW"] = "Feur/vendor/GLFW/GLFW/include"
-IncludeDir["nuklear"] = "Feur/vendor/Nuklear"
+IncludeDir["GLFW"] = "Feur/vendor/glfw/GLFW/include"
+IncludeDir["nuklear"] = "Feur/vendor/nuklear"
 IncludeDir["Mathilda"] = "Feur/vendor/Mathilda/Mathilda/include"
 IncludeDir["Vulkan"] = "Feur/vendor/VulkanSDK/1.3.290.0/Include"
 
 group "Dependencies"
 	group "Window"
-		include "Feur/vendor/GLFW"
+		include "Feur/vendor/glfw/premake5.lua"
 		--include "Feur/vendor/SDL2/SDL/SDL2.lua"
 		--include "Feur/vendor/SDL2/SDL/SDL2main.lua"
 
@@ -30,7 +30,7 @@ group "Dependencies"
         include "Feur/vendor/VulkanSDK/Vulkan_premake.lua"
 
 	group "GUI"
-		include "Feur/vendor/Nuklear/nuklearPremake.lua"
+		include "Feur/vendor/nuklear/nuklearPremake.lua"
 
 	group "Math"
 		include "Feur/vendor/Mathilda/include_premake5.lua"

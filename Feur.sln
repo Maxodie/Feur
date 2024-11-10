@@ -9,7 +9,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Feur", "build\Feur\Feur.vcx
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GUI", "GUI", "{3177F67E-9DE1-AAF5-E61F-5C9B52C9884A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Nuklear", "Feur\vendor\Nuklear\build\Nuklear.vcxproj", "{37E3B690-A3C2-352C-ACDA-C00218399C8D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Nuklear", "Feur\vendor\nuklear\build\Nuklear.vcxproj", "{37E3B690-A3C2-352C-ACDA-C00218399C8D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Math", "Math", "{96E0C85D-8298-0AAB-EB9F-E306D776A59B}"
 EndProject
@@ -23,7 +23,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Vulkan", "Feur\vendor\Vulka
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Window", "Window", "{E46B640B-D0CE-F3AF-7954-2C666596BF32}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLFW", "Feur\vendor\GLFW\build\GLFW.vcxproj", "{154B857C-0182-860D-AA6E-6C109684020F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLFW", "Feur\vendor\glfw\build\GLFW.vcxproj", "{154B857C-0182-860D-AA6E-6C109684020F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
