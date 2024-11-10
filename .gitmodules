@@ -1,7 +1,7 @@
-[submodule "glfw"]
+[submodule "glfw/GLFW"]
 	path = Feur/vendor/GLFW/GLFW
 	url = https://github.com/glfw/glfw.git
-[submodule "Feur/vendor/Nuklear"]
+[submodule "Feur/vendor/Nuklear/Nuklear"]
 	path = Feur/vendor/Nuklear/Nuklear
 	url = https://github.com/Immediate-Mode-UI/Nuklear
 [submodule "Feur/vendor/Mathilda"]
