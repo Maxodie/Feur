@@ -1,4 +1,4 @@
-[submodule "glfw/glfw"]
+[submodule "Feur/vendor/glfw/glfw"]
 	path = Feur/vendor/glfw/GLFW
 	url = https://github.com/glfw/glfw.git
 [submodule "Feur/vendor/nuklear/Nuklear"]
