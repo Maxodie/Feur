@@ -4,7 +4,7 @@ bin/
 bin-int/
 Binaries/
 Feur/vendor/SDL2/SDL/Intermediate/
-
+build/
 # Files
 *.user
 *.obj
@@ -14,3 +14,4 @@ Feur/vendor/SDL2/SDL/Intermediate/
 *.vcxproj
 *.vcxproj.filters
 *.vcxproj.user
+

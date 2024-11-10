@@ -1,4 +1,5 @@
 project "Glad"
+    location "build"
     kind "StaticLib"
     language "C"
 
@@ -22,7 +23,7 @@ project "Glad"
 
         systemversion "latest"
         staticruntime "On"
-     
+
     filter "system:windows"
         systemversion "latest"
         staticruntime "On"

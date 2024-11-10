@@ -1,4 +1,5 @@
 project "SDL2main"
+    location "build"
 	kind          "StaticLib"
 	language      "C"
 
@@ -18,7 +19,7 @@ project "SDL2main"
 
 	includedirs     {"include"}
 
-	files           {"src/main/windows/*.c"}	
+	files           {"src/main/windows/*.c"}
 
 	systemversion    "latest"
 	defines {
@@ -42,7 +43,7 @@ project "SDL2main"
 
 
 	filter "configurations:Development"    -- These are the configurations I tend to
-		defines {                          -- use in my projects, but I have added 
+		defines {                          -- use in my projects, but I have added
 			         "NDEBUG"              -- the default ones anyway.
 		}
 		runtime      "Release"

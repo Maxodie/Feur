@@ -1,4 +1,5 @@
 project ("Vulkan")
+    location "build"
     kind "StaticLib"
     language "C"
     uuid "4ABD8B07-B672-04FD-3F67-FED3AB1BFB00"
@@ -25,8 +26,8 @@ project ("Vulkan")
 
     links
     {
-        "$(ProjectDir)1.3.290.0/Lib/vulkan-1.lib",
-        "$(ProjectDir)1.3.290.0/Lib/shaderc_shared.lib",
+        "$(ProjectDir)../1.3.290.0/Lib/vulkan-1.lib",
+        "$(ProjectDir)../1.3.290.0/Lib/shaderc_shared.lib",
     }
 
     includedirs { "$(ProjectDir)1.3.290.0/Include" }

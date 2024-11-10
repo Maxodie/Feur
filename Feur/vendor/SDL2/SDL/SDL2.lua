@@ -1,4 +1,5 @@
 project "SDL2"
+    location "build"
 	filter "system:windows"
 		kind          "StaticLib"
 		staticruntime "on"
