@@ -11,3 +11,6 @@ Feur/vendor/SDL2/SDL/Intermediate/
 *.idb
 *.pdb
 *.tlog
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
