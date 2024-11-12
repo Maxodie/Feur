@@ -1,14 +1,14 @@
 #include "fepch.h"
 #include "Feur/Core/Memory/StackAllocator.h"
 
-void FE_API FE_MemoryStackAllocatorInit(FE_MemoryStackAllocator* allocator, SizeT size, void* memory)
+void FE_DECL FE_MemoryStackAllocatorInit(FE_MemoryStackAllocator* allocator, SizeT size, void* memory)
 {
 	allocator->data = memory;
 	allocator->top = (UintptrT)allocator->data;
 	allocator->size = size;
 }
 
-void* FE_API FE_MemoryStackAllocatorAlloc(FE_MemoryStackAllocator* allocator, SizeT size, SizeT alignment)
+void* FE_DECL FE_MemoryStackAllocatorAlloc(FE_MemoryStackAllocator* allocator, SizeT size, SizeT alignment)
 {
 	//Int8 adjustment = FE_MemoryAlignForwardAdjustment(allocator->top, alignment);
 	//UintptrT alignedAddress = adjustment + allocator->top;
@@ -25,13 +25,13 @@ void* FE_API FE_MemoryStackAllocatorAlloc(FE_MemoryStackAllocator* allocator, Si
 	return (void*)alignedAddress;
 }
 
-void FE_API FE_MemoryStackAllocatorFree(FE_MemoryStackAllocator* allocator)
+void FE_DECL FE_MemoryStackAllocatorFree(FE_MemoryStackAllocator* allocator)
 {
 	FE_MemoryStackAllocatorHeader* header = (FE_MemoryStackAllocatorHeader*)(allocator->top - sizeof(FE_MemoryStackAllocatorHeader));
 	allocator->top = (UintptrT)header->blockStart;
 }
 
-void FE_API FE_MemoryStackAllocatorClear(FE_MemoryStackAllocator* allocator)
+void FE_DECL FE_MemoryStackAllocatorClear(FE_MemoryStackAllocator* allocator)
 {
 	allocator->data = NULL;
 	allocator->top = 0;

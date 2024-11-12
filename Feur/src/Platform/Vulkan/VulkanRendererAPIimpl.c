@@ -1,12 +1,15 @@
 #include "fepch.h"
 #include "Platform/Vulkan/VulkanRendererAPIimpl.h"
 
+#include "Platform/Vulkan/VulkanBuffers.h"
+
 #include "Platform/Vulkan/VulkanGraphicsContext.h"
 #include "Platform/Vulkan/Setup/VulkanSetup.h"
 #include "Platform/Vulkan/Setup/VulkanDevice.h"
 #include "Platform/Vulkan/Setup/VulkanSwapChain.h"
 #include "Platform/Vulkan/Setup/VulkanImageView.h"
 #include "Platform/Vulkan/Setup/VulkanCommands.h"
+#include "Platform/Vulkan/Setup/VulkanMemoryAllocation.h"
 
 #include "Platform/Vulkan/Debug/VulkanValidationLayer.h"
 #include "Platform/Vulkan/Debug/VulkanDebug.h"
@@ -46,6 +49,8 @@ Bool VulkanInit_impl(RendererAPIData* apiData)
 	VulkanCreateCommandBuffers(vkInfo);
 
 	VulkanCreateSemaphoresAndFences(vkInfo);
+
+	VulkanCreateAllocator(vkInfo);
 
 	apiData->nativeInfoAPI = vkInfo;
 	return TRUE;
@@ -301,6 +306,7 @@ void VulkanWaitIdle_impl()
 
 void VulkanShutdown_impl()
 {
+	VulkanDestroyAllocator(vkInfo);
 	VulkanDestroySemaphoresAndFences(vkInfo);
 	VulkanDestroyCommandBuffers(vkInfo);
 	VulkanDestroyCommandPool(vkInfo);

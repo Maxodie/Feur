@@ -7,7 +7,7 @@ typedef struct FE_MemoryPoolAllocator
 	SizeT chunkSize;
 } FE_MemoryPoolAllocator;
 
-void FE_API FE_MemoryPoolAllocatorInit(FE_MemoryPoolAllocator* allocator, SizeT blockSize, SizeT chunkSize, SizeT alignment, const void* memory);
+void FE_DECL FE_MemoryPoolAllocatorInit(FE_MemoryPoolAllocator* allocator, SizeT blockSize, SizeT chunkSize, SizeT alignment, const void* memory);
 
-void* FE_API FE_MemoryPoolAllocatorAlloc(FE_MemoryPoolAllocator* allocator, SizeT size);
-void FE_API FE_MemoryPoolAllocatorFree(FE_MemoryPoolAllocator* allocator, void* ptr);
+void* FE_DECL FE_MemoryPoolAllocatorAlloc(FE_MemoryPoolAllocator* allocator, SizeT size);
+void FE_DECL FE_MemoryPoolAllocatorFree(FE_MemoryPoolAllocator* allocator, void* ptr);

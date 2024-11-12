@@ -9,7 +9,7 @@ void VulkanShutdownSwapChainImages(struct FE_VulkanInfo* vkInfo);
 
 void VulkanSwapChainImagesQuery(struct FE_VulkanInfo* vkInfo);
 
-// "VulkanfeSwapChainSupportDetails" must be cleared using "VulkanClearSwapChainSupport" function
+// "FE_VulkanfeSwapChainSupportDetails" must be cleared using "VulkanClearSwapChainSupport" function
 void VulkanInitSwapChainSupportData(struct FE_VulkanInfo* vkInfo);
 void VulkanShutdownSwapChainSupportData(struct FE_VulkanInfo* vkInfo);
 Bool VulkanSwapChainSupportByQuery(struct FE_VulkanInfo* vkInfo);

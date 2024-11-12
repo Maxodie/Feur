@@ -10,7 +10,7 @@ typedef enum { Pressed, Repeat, Released }keySate;
 
 Input_API g_Input_API;
 
-void FE_API InitInputAPI()
+void FE_DECL InitInputAPI()
 {
 	switch (GetWindowAPI()->API_Type)
 	{
@@ -30,7 +30,7 @@ void FE_API InitInputAPI()
 	}
 }
 
-Bool FE_API IsInputPressed(const FE_KeyCode key_code)
+Bool FE_DECL IsInputPressed(const FE_KeyCode key_code)
 {
 	return g_Input_API.GetKeyPressed(key_code);
 }

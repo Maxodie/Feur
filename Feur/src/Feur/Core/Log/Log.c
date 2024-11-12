@@ -26,7 +26,7 @@ void FE_LoggerGetTime() {
     m_time = localtime(&current_time);
 }
 
-void FE_API FE_PrefixLog(const char* prefix, LOG_LEVEL level)
+void FE_DECL FE_PrefixLog(const char* prefix, LOG_LEVEL level)
 {
     FE_LoggerGetTime();
 
@@ -42,12 +42,12 @@ void FE_API FE_PrefixLog(const char* prefix, LOG_LEVEL level)
         type[level]);
 }
 
-void FE_API FE_SuffixLog()
+void FE_DECL FE_SuffixLog()
 {
     printf("\n%s", colors[LOG_DEBUG]);
 }
 
-void FE_API FE_LoggerLog(const char* prefix, LOG_LEVEL level, const char* fmt, ...) {
+void FE_DECL FE_LoggerLog(const char* prefix, LOG_LEVEL level, const char* fmt, ...) {
 
     va_list args;
     va_start(args, fmt);
@@ -71,7 +71,7 @@ void FE_API FE_LoggerLog(const char* prefix, LOG_LEVEL level, const char* fmt, .
 
 
 
-void FE_API FE_ContextLoggerLog(const char* prefix, LOG_LEVEL level, const char* functionCtx, const char* fileCtx, Uint32 lineCtx, const char* fmt, ...) 
+void FE_DECL FE_ContextLoggerLog(const char* prefix, LOG_LEVEL level, const char* functionCtx, const char* fileCtx, Uint32 lineCtx, const char* fmt, ...) 
 {
 
     va_list args;

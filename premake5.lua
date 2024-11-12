@@ -18,6 +18,7 @@ IncludeDir["GLFW"] = "Feur/vendor/glfw/GLFW/include"
 IncludeDir["nuklear"] = "Feur/vendor/nuklear"
 IncludeDir["Mathilda"] = "Feur/vendor/Mathilda/Mathilda/include"
 IncludeDir["Vulkan"] = "Feur/vendor/VulkanSDK/1.3.290.0/Include"
+IncludeDir["VulkanMemoryAllocator"] = "Feur/vendor/VulkanSDK/VulkanMemoryAllocator/include"
 
 group "Dependencies"
 	group "Window"
@@ -71,6 +72,7 @@ project "Feur"
 		--"%{IncludeDir.SDL2}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.Vulkan}",
+        "%{IncludeDir.VulkanMemoryAllocator}",
         "%{IncludeDir.GLFW}",
 		"%{IncludeDir.nuklear}",
 		"%{IncludeDir.Mathilda}"
@@ -83,7 +85,8 @@ project "Feur"
 		"Glad",
 		"GLFW",
 		"Mathilda",
-        "Vulkan"
+        "Vulkan",
+        "VulkanMemoryAllocator"
 	}
 
 	filter "system:windows"
@@ -91,7 +94,7 @@ project "Feur"
 
 		defines
 		{
-			"FE_PLATFORM_WINDOWS",
+			"FE_PLATFORM_WINDOWS"
 		}
 
 
@@ -100,8 +103,14 @@ project "Feur"
 
 		defines
 		{
-			"FE_PLATFORM_MACOS",
+			"FE_PLATFORM_MACOS"
 		}
+
+    filter "system:linux"
+        defines
+        {
+            "FE_PLATFORM_LINUX"
+        }
 
 	filter "configurations:Debug"
 		defines
@@ -147,7 +156,6 @@ project "Sandbox"
 
 	includedirs
 	{
-		"Feur/vendor/spdlog/include",
 		"Feur/src",
 		"%{IncludeDir.Mathilda}",
 		--temp test includes

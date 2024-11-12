@@ -2,19 +2,19 @@
 
 Bool RenderCommandInit(RendererAPIData* api);
 
-void FE_API RenderCommandFramePrepare();
-void FE_API RenderCommandFrameCommandListBegin();
-void FE_API RenderCommandBeginRendering(ILDA_vector4f * clearColor);
-void FE_API RenderCommandSetRendererViewport(Uint32 w, Uint32 h, Uint32 width, Uint32 height, Uint32 minDepth, Uint32 maxDepth);
-void FE_API RenderCommandSetScissor(Uint32 width, Uint32 height);
-void FE_API RenderCommandBindPipeline();
-void FE_API RenderCommandDrawIndex();
-void FE_API RenderCommandEndRendering();
-void FE_API RenderCommandFrameCommandListEnd();
-void FE_API RenderCommandFrameSubmit();
-void FE_API RenderCommandFramePresent();
-void FE_API RenderCommandWaitIdle();
+void FE_DECL RenderCommandFramePrepare();
+void FE_DECL RenderCommandFrameCommandListBegin();
+void FE_DECL RenderCommandBeginRendering(ILDA_vector4f * clearColor);
+void FE_DECL RenderCommandSetRendererViewport(Uint32 w, Uint32 h, Uint32 width, Uint32 height, Uint32 minDepth, Uint32 maxDepth);
+void FE_DECL RenderCommandSetScissor(Uint32 width, Uint32 height);
+void FE_DECL RenderCommandBindPipeline();
+void FE_DECL RenderCommandDrawIndex();
+void FE_DECL RenderCommandEndRendering();
+void FE_DECL RenderCommandFrameCommandListEnd();
+void FE_DECL RenderCommandFrameSubmit();
+void FE_DECL RenderCommandFramePresent();
+void FE_DECL RenderCommandWaitIdle();
 
 void RenderCommandShutDown();
 
-void FE_API RenderCommandOnWindowResized(Uint32 w, Uint32 h, Uint32 width, Uint32 height);
+void FE_DECL RenderCommandOnWindowResized(Uint32 w, Uint32 h, Uint32 width, Uint32 height);

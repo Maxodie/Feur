@@ -4,7 +4,7 @@
 #include "Platform/Vulkan/VulkanGraphicsContext.h"
 #include <GLFW/glfw3.h>
 
-void FE_API InitWindowCreationHintParameters()
+void FE_DECL InitWindowCreationHintParameters()
 {
 	if (GetWindowAPI()->API_Type == FE_WINDOW_API_GLFW && GetRendererAPI()->API_Type == FE_RENDERER_API_TYPE_OPENGL)
 	{
@@ -20,7 +20,7 @@ void FE_API InitWindowCreationHintParameters()
 	}
 }
 
-void FE_API CreateGraphicsContext(WindowData* windowData)
+void FE_DECL CreateGraphicsContext(WindowData* windowData)
 {
 	if(GetWindowAPI()->API_Type == FE_WINDOW_API_GLFW && GetRendererAPI()->API_Type == FE_RENDERER_API_TYPE_OPENGL)
 	{

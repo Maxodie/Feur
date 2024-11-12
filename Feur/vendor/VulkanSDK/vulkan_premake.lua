@@ -2,7 +2,6 @@ project ("Vulkan")
     location "build"
     kind "StaticLib"
     language "C"
-    uuid "4ABD8B07-B672-04FD-3F67-FED3AB1BFB00"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -16,7 +15,6 @@ project ("Vulkan")
         "1.3.290.0/Source/**.h",
         "1.3.290.0/Source/**.c",
         "1.3.290.0/Include/**.h"
-
     }
 
     --libdirs
@@ -30,7 +28,10 @@ project ("Vulkan")
         "$(ProjectDir)../1.3.290.0/Lib/shaderc_shared.lib",
     }
 
-    includedirs { "$(ProjectDir)1.3.290.0/Include" }
+    includedirs
+    {
+        "$(ProjectDir)../1.3.290.0/Include"
+    }
 
     defines { "_CRT_SECURE_NO_WARNINGS" }
 
@@ -42,3 +43,35 @@ project ("Vulkan")
         defines { "WIN32", "NDEBUG", "PROFILE", "_WINDOWS" }
         symbols "on"
         optimize "On"
+
+
+
+project ("VulkanMemoryAllocator")
+    location "build"
+    kind "StaticLib"
+    language "C++"
+	cppdialect "C++17"
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+    staticruntime "on"
+
+    links
+    {
+        "Vulkan"
+    }
+
+    files
+    {
+        "VulkanMemoryAllocator/include/**.h",
+        "VulkanMemoryAllocatorCompile.cpp"
+    }
+
+    includedirs
+    {
+        "$(ProjectDir)../1.3.290.0/Include"
+    }
+
+    filter "system:windows"
+        linkoptions { "/NODEFAULTLIB:library" }
+

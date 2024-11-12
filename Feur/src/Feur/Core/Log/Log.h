@@ -8,8 +8,8 @@ typedef enum {
     LOG_LEVEL_LEN
 } LOG_LEVEL;
 
-void FE_API FE_LoggerLog(const char* prefix, LOG_LEVEL level, const char* fmt, ...);
-void FE_API FE_ContextLoggerLog(const char* prefix, LOG_LEVEL level, const char* functionCtx, const char* fileCtx, Uint32 lineCtx, const char* fmt, ...);
+void FE_DECL FE_LoggerLog(const char* prefix, LOG_LEVEL level, const char* fmt, ...);
+void FE_DECL FE_ContextLoggerLog(const char* prefix, LOG_LEVEL level, const char* functionCtx, const char* fileCtx, Uint32 lineCtx, const char* fmt, ...);
 
 #define FE_CORE_LOG_DEBUG(...) FE_LoggerLog("CORE", LOG_DEBUG, __VA_ARGS__)
 #define FE_CORE_LOG_SUCCESS(...) FE_LoggerLog("CORE", LOG_SUCCESS, __VA_ARGS__)

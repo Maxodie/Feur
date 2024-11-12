@@ -22,23 +22,23 @@ enum FE_MEMORY_ALLOCATION_INFO
 
 //@TODO general allocation that allocate pool page, maybe with a system of a different sized 
 
-//FE_FORCEINLINE_FUN void* FE_API FE_MemoryCustomMalloc(SizeT size);
-//FE_FORCEINLINE_FUN void* FE_API FE_MemoryCustomCalloc(SizeT size);
-FE_FORCEINLINE_FUN UintptrT FE_API FE_MemoryAlignAddress(UintptrT address, SizeT alignment);
-FE_FORCEINLINE_FUN UintptrT FE_API FE_MemoryAlignForwardAdjustment(UintptrT address, SizeT alignment);
-FE_FORCEINLINE_FUN UintptrT FE_API FE_MemoryAlignForwardAdjustmentWithHeader(UintptrT address, SizeT alignment, SizeT headerSize);
+//FE_FORCEINLINE_FUN void* FE_DECL FE_MemoryCustomMalloc(SizeT size);
+//FE_FORCEINLINE_FUN void* FE_DECL FE_MemoryCustomCalloc(SizeT size);
+FE_FORCEINLINE_FUN UintptrT FE_DECL FE_MemoryAlignAddress(UintptrT address, SizeT alignment);
+FE_FORCEINLINE_FUN UintptrT FE_DECL FE_MemoryAlignForwardAdjustment(UintptrT address, SizeT alignment);
+FE_FORCEINLINE_FUN UintptrT FE_DECL FE_MemoryAlignForwardAdjustmentWithHeader(UintptrT address, SizeT alignment, SizeT headerSize);
 
 #include "Feur/Core/Memory/StackAllocator.h"
 #include "Feur/Core/Memory/PoolAllocator.h"
 #include "Feur/Core/Memory/FreeListAllocator.h"
 
-FE_FORCEINLINE_FUN void FE_API FE_MemoryGeneralInit(SizeT size);
-FE_FORCEINLINE_FUN void FE_API FE_MemoryGeneralShutdown();
+FE_FORCEINLINE_FUN void FE_DECL FE_MemoryGeneralInit(SizeT size);
+FE_FORCEINLINE_FUN void FE_DECL FE_MemoryGeneralShutdown();
 //@TODO maybe made a gameloop allocation using stack alloc (or linear) and free it every frame
-FE_FORCEINLINE_FUN void* FE_API FE_MemoryGeneralAlloc(SizeT size);
-FE_FORCEINLINE_FUN void FE_API FE_MemoryGeneralFree(void* ptr);
-FE_FORCEINLINE_FUN void* FE_API FE_MemoryGeneralRealloc(void* ptr, SizeT size);
+FE_FORCEINLINE_FUN void* FE_DECL FE_MemoryGeneralAlloc(SizeT size);
+FE_FORCEINLINE_FUN void FE_DECL FE_MemoryGeneralFree(void* ptr);
+FE_FORCEINLINE_FUN void* FE_DECL FE_MemoryGeneralRealloc(void* ptr, SizeT size);
 
-void FE_API FE_MemoryStackAllocatorBenchmarkTest();
-void FE_API FE_MemoryPoolAllocatorBenchmarkTest(); 
-void FE_API FE_MemoryFreeListAllocatorBenchmarkTest();
+void FE_DECL FE_MemoryStackAllocatorBenchmarkTest();
+void FE_DECL FE_MemoryPoolAllocatorBenchmarkTest(); 
+void FE_DECL FE_MemoryFreeListAllocatorBenchmarkTest();

@@ -2,7 +2,7 @@
 #include "Feur/Core/Memory/PoolAllocator.h"
 
 //@TODO add parameters to make a page system, divided in same allocation size pages
-void FE_API FE_MemoryPoolAllocatorInit(FE_MemoryPoolAllocator* allocator, SizeT blockSize, SizeT chunkSize, SizeT alignment, const void* memory)
+void FE_DECL FE_MemoryPoolAllocatorInit(FE_MemoryPoolAllocator* allocator, SizeT blockSize, SizeT chunkSize, SizeT alignment, const void* memory)
 {
     FE_CORE_ASSERT(chunkSize >= sizeof(void*), "Pool Allocator minimum size required is 8 byts or sizeof(void*)");
     FE_CORE_ASSERT(blockSize % chunkSize == 0, "ChunkSize can not be divided by blockSize");
@@ -23,7 +23,7 @@ void FE_API FE_MemoryPoolAllocatorInit(FE_MemoryPoolAllocator* allocator, SizeT 
     *it = NULL;
 }
 
-void* FE_API FE_MemoryPoolAllocatorAlloc(FE_MemoryPoolAllocator* allocator, SizeT size)
+void* FE_DECL FE_MemoryPoolAllocatorAlloc(FE_MemoryPoolAllocator* allocator, SizeT size)
 {
     FE_CORE_ASSERT(size <= allocator->chunkSize, "size is too much for the pool allocation");
     FE_CORE_ASSERT(allocator->freeData != NULL, "free data is NULL, not enough chunks");
@@ -33,7 +33,7 @@ void* FE_API FE_MemoryPoolAllocatorAlloc(FE_MemoryPoolAllocator* allocator, Size
     return ptr;
 }
 
-void FE_API FE_MemoryPoolAllocatorFree(FE_MemoryPoolAllocator* allocator, void* ptr)
+void FE_DECL FE_MemoryPoolAllocatorFree(FE_MemoryPoolAllocator* allocator, void* ptr)
 {
     *((void**)ptr) = allocator->freeData;
     allocator->freeData = (void**)(ptr);

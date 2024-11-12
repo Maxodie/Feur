@@ -28,7 +28,7 @@ void InitRendererAPISelection(RendererAPIData* apiData)
 		rendererAPI.Init = OpenGLInit_impl;
 		rendererAPI.Shutdown = OpenGLShutdown_impl;
 
-		GetRenderer_VertexArray_Buffer()->InitVaoBuffer = InitOpenGL_VertexArrayBuffer;
+		//GetRenderer_VertexArray_Buffer()->InitVaoBuffer = InitOpenGL_VertexArrayBuffer;
 		break;
 
 	case FE_RENDERER_API_TYPE_VULKAN:
@@ -51,7 +51,7 @@ void InitRendererAPISelection(RendererAPIData* apiData)
 
 		rendererAPI.OnWindowResized = VulkanOnWindowResized_impl;
 
-		GetRenderer_VertexArray_Buffer()->InitVaoBuffer = InitVulkan_VertexArrayBuffer;
+		//GetRenderer_VertexArray_Buffer()->InitVaoBuffer = InitVulkan_VertexArrayBuffer;
 		break;
 
 	default:

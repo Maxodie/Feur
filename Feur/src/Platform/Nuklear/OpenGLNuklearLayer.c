@@ -22,11 +22,11 @@
 #include <Nuklear/nuklear.h>
 #include <Nuklear/demo/glfw_opengl4/nuklear_glfw_gl4.h>
 
-void FE_API OpenGL_GLFW_NuklearGUILayerEvent_impl(FE_Event* event)
+void FE_DECL OpenGL_GLFW_NuklearGUILayerEvent_impl(FE_Event* event)
 {
 }
 
-void FE_API OpenGL_GLFW_NuklearGUILayerRender_impl(Layer* layer)
+void FE_DECL OpenGL_GLFW_NuklearGUILayerRender_impl(Layer* layer)
 {
 	struct nk_context* context = (struct nk_context*)layer->handledInfo;
 	nk_glfw3_new_frame();
@@ -78,7 +78,7 @@ void FE_API OpenGL_GLFW_NuklearGUILayerRender_impl(Layer* layer)
 	nk_glfw3_render(NK_ANTI_ALIASING_ON);
 }
 
-void FE_API OpenGL_GLFW_NuklearGUILayerOnAttach_impl(Layer* layer)
+void FE_DECL OpenGL_GLFW_NuklearGUILayerOnAttach_impl(Layer* layer)
 {
 	GLFWwindow* window = (GLFWwindow*)GetApp()->windowData.nativeWindow;
 
@@ -90,7 +90,7 @@ void FE_API OpenGL_GLFW_NuklearGUILayerOnAttach_impl(Layer* layer)
 	nk_glfw3_font_stash_end();
 }
 
-void FE_API OpenGL_GLFW_NuklearGUILayerOnDetach_impl()
+void FE_DECL OpenGL_GLFW_NuklearGUILayerOnDetach_impl()
 {
 	nk_glfw3_shutdown();
 }

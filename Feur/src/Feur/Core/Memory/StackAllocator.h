@@ -12,11 +12,11 @@ typedef struct FE_MemoryStackAllocator
 	SizeT size;
 } FE_MemoryStackAllocator;
 
-void FE_API FE_MemoryStackAllocatorInit(FE_MemoryStackAllocator* allocator, SizeT size, void* memory);
+void FE_DECL FE_MemoryStackAllocatorInit(FE_MemoryStackAllocator* allocator, SizeT size, void* memory);
 
-void* FE_API FE_MemoryStackAllocatorAlloc(FE_MemoryStackAllocator* allocator, SizeT size, SizeT alignment);
-void FE_API FE_MemoryStackAllocatorFree(FE_MemoryStackAllocator* allocator);
+void* FE_DECL FE_MemoryStackAllocatorAlloc(FE_MemoryStackAllocator* allocator, SizeT size, SizeT alignment);
+void FE_DECL FE_MemoryStackAllocatorFree(FE_MemoryStackAllocator* allocator);
 
 // this function does not free anything
-void FE_API FE_MemoryStackAllocatorClear(FE_MemoryStackAllocator* allocator);
-void FE_API FE_MemoryStackAllocatorReset(FE_MemoryStackAllocator* allocator);
+void FE_DECL FE_MemoryStackAllocatorClear(FE_MemoryStackAllocator* allocator);
+void FE_DECL FE_MemoryStackAllocatorReset(FE_MemoryStackAllocator* allocator);

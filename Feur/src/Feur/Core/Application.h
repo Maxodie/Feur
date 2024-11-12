@@ -14,27 +14,27 @@ typedef struct FE_App
 	Uint32 targetFps;
 } FE_App;
 
-void FE_API StartApp_impl();
-void FE_API RunApp_impl();
+void FE_DECL StartApp_impl();
+void FE_DECL RunApp_impl();
 
-void FE_API StartApp();
-Double FE_API GetDeltaTime();
-void FE_API AppUpdate(Double deltaTime);
-void FE_API ConsumeDeltaTime(Double deltaTime);
+void FE_DECL StartApp();
+Double FE_DECL GetDeltaTime();
+void FE_DECL AppUpdate(Double deltaTime);
+void FE_DECL ConsumeDeltaTime(Double deltaTime);
 
-void FE_API AddLayerApp(Layer* newLayer);
-void FE_API InsertLayerApp(Layer* newLayer, Uint32 position);
-void FE_API PopLayerApp();
-void FE_API LoadWindow();
-void FE_API PullWindowEvent();
-void FE_API Render();
-void FE_API AppOnEvent(FE_Event event);
-Bool FE_API OnWindowResizing(FE_EventData* windowResizeEvent);
-Bool FE_API OnWindowClose(FE_EventData* windowResizeEvent);
+void FE_DECL AddLayerApp(Layer* newLayer);
+void FE_DECL InsertLayerApp(Layer* newLayer, Uint32 position);
+void FE_DECL PopLayerApp();
+void FE_DECL LoadWindow();
+void FE_DECL PullWindowEvent();
+void FE_DECL Render();
+void FE_DECL AppOnEvent(FE_Event event);
+Bool FE_DECL OnWindowResizing(FE_EventData* windowResizeEvent);
+Bool FE_DECL OnWindowClose(FE_EventData* windowResizeEvent);
 
-void FE_API ShutdownApp();
-void FE_API QuitApp();
+void FE_DECL ShutdownApp();
+void FE_DECL QuitApp();
 
-const FE_App* FE_API GetApp();
+const FE_App* FE_DECL GetApp();
 
 // TODO : some functions does not need to be imported on sandbox, put those function in other headers (_internal) and create utils to put list and weird nerd stuff

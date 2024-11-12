@@ -13,7 +13,7 @@ typedef struct NuklearGUILayerInterface
 
 static NuklearGUILayerInterface nuklearGUILayerInterface;
 
-void FE_API NuklearGUILayerInit()
+void FE_DECL NuklearGUILayerInit()
 {
 	if (GetWindowAPI()->API_Type == FE_WINDOW_API_GLFW && GetRendererAPI()->API_Type == FE_RENDERER_API_TYPE_OPENGL)
 	{
@@ -24,19 +24,19 @@ void FE_API NuklearGUILayerInit()
 	}
 }
 
-void FE_API NuklearGUILayerEvent(FE_Event* event)
+void FE_DECL NuklearGUILayerEvent(FE_Event* event)
 {
 #ifdef FE_RENDER_SELECTED_API_OPENGL
 	nuklearGUILayerInterface.OnEvent(event);
 #endif
 }
 
-void FE_API NuklearGUILayerUpdate()
+void FE_DECL NuklearGUILayerUpdate()
 {
 
 }
 
-void FE_API NuklearGUILayerRender(Layer* layer)
+void FE_DECL NuklearGUILayerRender(Layer* layer)
 {
 #ifdef FE_RENDER_SELECTED_API_OPENGL
 	nuklearGUILayerInterface.OnRender(layer);
@@ -44,21 +44,21 @@ void FE_API NuklearGUILayerRender(Layer* layer)
 }
 
 
-void FE_API NuklearGUILayerOnAttach(Layer* layer)
+void FE_DECL NuklearGUILayerOnAttach(Layer* layer)
 {
 #ifdef FE_RENDER_SELECTED_API_OPENGL
 	nuklearGUILayerInterface.OnAttach(layer);
 #endif
 }
 
-void FE_API NuklearGUILayerOnDetach()
+void FE_DECL NuklearGUILayerOnDetach()
 {
 #ifdef FE_RENDER_SELECTED_API_OPENGL
 	nuklearGUILayerInterface.OnDetach();
 #endif
 }
 
-Layer FE_API CreateNewNuklearGUILayer(char* layerName)
+Layer FE_DECL CreateNewNuklearGUILayer(char* layerName)
 {
 	NuklearGUILayerInit();
 

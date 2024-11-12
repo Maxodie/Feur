@@ -18,7 +18,7 @@ void RenderCommandFrameCommandListBegin()
 	GetRendererAPI()->FrameCommandListBegin();
 }
 
-void FE_API RenderCommandSetRendererViewport(Uint32 w, Uint32 h, Uint32 width, Uint32 height, Uint32 minDepth, Uint32 maxDepth)
+void FE_DECL RenderCommandSetRendererViewport(Uint32 w, Uint32 h, Uint32 width, Uint32 height, Uint32 minDepth, Uint32 maxDepth)
 {
 	GetRendererAPI()->SetViewport(w, h, width, height, minDepth, maxDepth);
 }
@@ -33,12 +33,12 @@ void RenderCommandBindPipeline()
 	GetRendererAPI()->BindPipeline();
 }
 
-void FE_API RenderCommandBeginRendering(ILDA_vector4f * clearColor)
+void FE_DECL RenderCommandBeginRendering(ILDA_vector4f * clearColor)
 {
 	GetRendererAPI()->BeginRendering(clearColor);
 }
 
-void FE_API RenderCommandDrawIndex()
+void FE_DECL RenderCommandDrawIndex()
 {
 	GetRendererAPI()->DrawIndex();
 }

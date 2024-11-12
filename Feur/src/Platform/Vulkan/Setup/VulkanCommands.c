@@ -1,8 +1,6 @@
 #include "fepch.h"
 #include "Platform/Vulkan/Setup/VulkanCommands.h"
-
-#include <shaderc/shaderc.h> 
-#include "Platform/Vulkan/Setup/VulkanStructures.h"
+#include "Platform/Vulkan/Setup/VulkanSetup.h"
 
 Bool VulkanCommandBufferAlloc(VkDevice logicalDevice, VkCommandPool cmdPool, Bool isPrimary, VkCommandBuffer* outCmdBuffer)
 {
@@ -136,5 +134,10 @@ void VulkanCreateCommandBuffers(FE_VulkanInfo* vkInfo)
 
 void VulkanDestroyCommandBuffers(FE_VulkanInfo* vkInfo)
 {
+	for (Uint32 i = 0; i < vkInfo->swapChain.maxFramesInFlight; i++)
+	{
+		VulkanCommandBufferFree(vkInfo->logicalDevice, vkInfo->graphicsCommandPool, &vkInfo->cmdBuffers[i]);
+	}
+
 	FE_MemoryGeneralFree(vkInfo->cmdBuffers);
 }

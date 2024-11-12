@@ -3,7 +3,7 @@
 #include "Feur/Core/Window/Window.h"
 //#include <SDL.h>
 
-Bool FE_API CreateSDLWindow_impl(WindowData* windowData)
+Bool FE_DECL CreateSDLWindow_impl(WindowData* windowData)
 {
 	/*windowData->w = 800;
 	windowData->h = 600;
@@ -25,13 +25,13 @@ Bool FE_API CreateSDLWindow_impl(WindowData* windowData)
 	return TRUE;
 }
 
-void FE_API SDLPollEvent_impl()
+void FE_DECL SDLPollEvent_impl()
 {
 	/*SDL_Event event;
 	SDL_PollEvent(&event);*/
 }
 
-void FE_API SDLDestroyWindow_impl(WindowData* windowData)
+void FE_DECL SDLDestroyWindow_impl(WindowData* windowData)
 {
 	/*SDL_DestroyWindow(windowData->nativeWindow);
 	SDL_Quit();*/

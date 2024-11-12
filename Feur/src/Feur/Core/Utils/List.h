@@ -54,22 +54,22 @@ FE_ListPushArray_impl(&(fe_list).impl, (Byte**)&(fe_list).data, (const void*)&te
 //with 'fe_listA' an FE_List(type); 'fe_listB' an FE_List(type);
 #define FE_ListEqual(fe_listA, fe_listB) FE_ListEqual_impl(&(fe_listA).impl, &(fe_listB).impl, (Byte**)&(fe_listA).data, (Byte**)&(fe_listB).data, sizeof(*(fe_list).data))
 
-Bool FE_API FE_ListInit_impl(FE_List_impl* list, Byte** data);
-Bool FE_API FE_ListPop_impl(FE_List_impl* list, Byte** data);
-Bool FE_API FE_ListRemove_impl(FE_List_impl* list, Byte** data, const void* value, SizeT dataSize);
-Bool FE_API FE_ListRemoveAt_impl(FE_List_impl* list, Byte** data, Uint32 id, SizeT dataSize);
+Bool FE_DECL FE_ListInit_impl(FE_List_impl* list, Byte** data);
+Bool FE_DECL FE_ListPop_impl(FE_List_impl* list, Byte** data);
+Bool FE_DECL FE_ListRemove_impl(FE_List_impl* list, Byte** data, const void* value, SizeT dataSize);
+Bool FE_DECL FE_ListRemoveAt_impl(FE_List_impl* list, Byte** data, Uint32 id, SizeT dataSize);
 
-Bool FE_API FE_ListInsert_impl(FE_List_impl* list, Byte** data, const void* value, Uint32 position, SizeT dataSize);
+Bool FE_DECL FE_ListInsert_impl(FE_List_impl* list, Byte** data, const void* value, Uint32 position, SizeT dataSize);
 
-//Bool FE_API FE_ListPush_impl(FE_List_impl* list, Byte** data, const void* value, SizeT dataSize);
-Bool FE_API FE_ListPushArray_impl(FE_List_impl* list, Byte** data, const void* arrayData, SizeT sizeToPush, SizeT dataSize);
+//Bool FE_DECL FE_ListPush_impl(FE_List_impl* list, Byte** data, const void* value, SizeT dataSize);
+Bool FE_DECL FE_ListPushArray_impl(FE_List_impl* list, Byte** data, const void* arrayData, SizeT sizeToPush, SizeT dataSize);
 
-Bool FE_API FE_ListReserve_impl(FE_List_impl* list, Byte** data, SizeT amount, SizeT dataSize);
-Bool FE_API FE_ListResize_impl(FE_List_impl* list, Byte** data, SizeT amount, SizeT dataSize);
-Bool FE_API FE_ListClear_impl(FE_List_impl* list, Byte** data); 
+Bool FE_DECL FE_ListReserve_impl(FE_List_impl* list, Byte** data, SizeT amount, SizeT dataSize);
+Bool FE_DECL FE_ListResize_impl(FE_List_impl* list, Byte** data, SizeT amount, SizeT dataSize);
+Bool FE_DECL FE_ListClear_impl(FE_List_impl* list, Byte** data); 
 
-Bool FE_API FE_ListRemoveDuplicate_impl(FE_List_impl* list, Byte** data, SizeT dataSize);
+Bool FE_DECL FE_ListRemoveDuplicate_impl(FE_List_impl* list, Byte** data, SizeT dataSize);
 
-Bool FE_API FE_ListEqual_impl(FE_List_impl* listA, FE_List_impl* listB, Byte** dataA, Byte** dataB, SizeT dataSize);
+Bool FE_DECL FE_ListEqual_impl(FE_List_impl* listA, FE_List_impl* listB, Byte** dataA, Byte** dataB, SizeT dataSize);
 
-FE_API FE_ListPrintReport();
+FE_DECL FE_ListPrintReport();

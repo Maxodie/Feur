@@ -106,7 +106,7 @@ Bool VulkanTryLoadingPhysicalDevice(FE_VulkanInfo* vkInfo, VkPhysicalDevice devi
 	//Bool extensionsSupported = VulkanSelectLogicalDevice(vkInfo, device);
 
 	//Bool swapChainAdequate = FALSE;
-	//VulkanfeSwapChainSupportDetails swapChainSupport = VulkanSwapChainSupportByQuery(vkInfo, device);
+	//FE_VulkanfeSwapChainSupportDetails swapChainSupport = VulkanSwapChainSupportByQuery(vkInfo, device);
 	//swapChainAdequate = !(swapChainSupport.formats.impl.count == 0) && !(swapChainSupport.presentModes.impl.count == 0);
 	//VulkanClearSwapChainSupport(&swapChainSupport);
 

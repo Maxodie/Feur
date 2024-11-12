@@ -20,7 +20,11 @@ typedef Double MaxAlignT; //based on the cstddef c++ using : most aligned type
 typedef clock_t ClockT;
 
 
-#define FE_API _cdecl
+#define FE_DECL _cdecl
+
+#define FE_EXTERN extern
+#define FE_INLINE_FUN FE_EXTERN inline
+#define FE_FORCEINLINE_FUN FE_EXTERN __forceinline
 
 #define FALSE 0
 #define TRUE 1
@@ -76,7 +80,3 @@ typedef clock_t ClockT;
 #	define FE_CORE_STATIC_ASSERT(...)
 #	define FE_STATIC_ASSERT(...)
 #endif
-
-#define FE_EXTERN extern
-#define FE_INLINE_FUN FE_EXTERN inline
-#define FE_FORCEINLINE_FUN FE_EXTERN __forceinline

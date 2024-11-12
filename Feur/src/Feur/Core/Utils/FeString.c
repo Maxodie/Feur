@@ -1,7 +1,7 @@
 #include "fepch.h"
 #include "Feur/Core/Utils/FeString.h"
 
-char* FE_API FE_StringFormatV(const char* format, va_list* va_listp)
+char* FE_DECL FE_StringFormatV(const char* format, va_list* va_listp)
 {
 	if (format == NULL || va_listp == NULL)
 	{
@@ -21,7 +21,7 @@ char* FE_API FE_StringFormatV(const char* format, va_list* va_listp)
 	return buffer;
 }
 
-char* FE_API FE_StringFormatAlloc(const char* format, ...)
+char* FE_DECL FE_StringFormatAlloc(const char* format, ...)
 {
 	if (!format)
 	{
@@ -36,7 +36,7 @@ char* FE_API FE_StringFormatAlloc(const char* format, ...)
 	return result;
 }
 
-void FE_API FE_StringFormatFree(char* str)
+void FE_DECL FE_StringFormatFree(char* str)
 {
 	FE_MemoryGeneralFree(str);
 }

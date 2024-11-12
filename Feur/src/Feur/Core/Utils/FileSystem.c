@@ -2,13 +2,13 @@
 #include "Feur/Core/Utils/FileSystem.h"
 #include <sys/stat.h>
 
-Bool FE_API FE_FileSystemExist(const char* path)
+Bool FE_FileSystemExist(const char* path)
 {
 	struct stat fileInfo;
 	return stat(path, &fileInfo) == 0;
 }
 
-Bool FE_API FE_FileSystemOpen(const char* path, FE_FileMode mode, FE_File* outFile)
+Bool FE_FileSystemOpen(const char* path, FE_FileMode mode, FE_File* outFile)
 {
 	outFile->path = path;
 	const char* cmode;
@@ -44,7 +44,7 @@ Bool FE_API FE_FileSystemOpen(const char* path, FE_FileMode mode, FE_File* outFi
 	return TRUE;
 }
 
-Bool FE_API FE_FileSystemClose(FE_File* file)
+Bool FE_FileSystemClose(FE_File* file)
 {
 	if (file != NULL && file->handle != NULL)
 	{
@@ -57,7 +57,7 @@ Bool FE_API FE_FileSystemClose(FE_File* file)
 	return FALSE;
 }
 
-Bool FE_API FE_FileSystemGetSize(FE_File* file, SizeT* outSize)
+Bool FE_FileSystemGetSize(FE_File* file, SizeT* outSize)
 {
 	if (file != NULL && file->handle != NULL)
 	{
@@ -87,7 +87,7 @@ Bool FE_API FE_FileSystemGetSize(FE_File* file, SizeT* outSize)
 	return FALSE;
 }
 
-Bool FE_API FE_FileSystemReadLine(FE_File* file, Int32 maxLength, char** lbuff, Uint64* outLineLength)
+Bool FE_FileSystemReadLine(FE_File* file, Int32 maxLength, char** lbuff, Uint64* outLineLength)
 {
 	if (file != NULL && file->handle != NULL && lbuff && *lbuff && outLineLength > 0)
 	{
@@ -103,7 +103,7 @@ Bool FE_API FE_FileSystemReadLine(FE_File* file, Int32 maxLength, char** lbuff, 
 	return FALSE;
 }
 
-Bool FE_API FE_FileSystemWriteLine(FE_File* file, const char* text)
+Bool FE_FileSystemWriteLine(FE_File* file, const char* text)
 {
 	if (file != NULL && file->handle != NULL)
 	{
@@ -117,7 +117,7 @@ Bool FE_API FE_FileSystemWriteLine(FE_File* file, const char* text)
 	return FALSE;
 }
 
-Bool FE_API FE_FileSystemRead(FE_File* file, SizeT dataSize, void* outData, SizeT* outBytesRead)
+Bool FE_FileSystemRead(FE_File* file, SizeT dataSize, void* outData, SizeT* outBytesRead)
 {
 	if (file != NULL && file->handle != NULL && outBytesRead)
 	{
@@ -135,7 +135,7 @@ Bool FE_API FE_FileSystemRead(FE_File* file, SizeT dataSize, void* outData, Size
 	return FALSE;
 }
 
-Bool FE_API FE_FileSystemReadAllBytes(FE_File* file, Byte* outBytes, SizeT* outBytesRead)
+Bool FE_FileSystemReadAllBytes(FE_File* file, Byte* outBytes, SizeT* outBytesRead)
 {
 	if (file != NULL && file->handle != NULL)
 	{
@@ -156,7 +156,7 @@ Bool FE_API FE_FileSystemReadAllBytes(FE_File* file, Byte* outBytes, SizeT* outB
 	return FALSE;
 }
 
-Bool FE_API FE_FileSystemReadAllText(FE_File* file, char* outText, SizeT* outBytesRead)
+Bool FE_FileSystemReadAllText(FE_File* file, char* outText, SizeT* outBytesRead)
 {
 	if (file != NULL && file->handle != NULL && outBytesRead)
 	{

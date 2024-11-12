@@ -11,12 +11,12 @@ static Bool g_IsAppRunning = TRUE;
 
 Layer nuklearGUILayer;
 
-void FE_API StartApp_impl()
+void FE_DECL StartApp_impl()
 {
 	StartApp();
 }
 
-void FE_API RunApp_impl()
+void FE_DECL RunApp_impl()
 {
 	g_fe_App.endTime = clock();
 	double deltaTime;
@@ -35,7 +35,7 @@ void FE_API RunApp_impl()
 	ShutdownApp();
 }
 
-void FE_API StartApp()
+void FE_DECL StartApp()
 {
 	FE_MemoryGeneralInit(FE_MEMORY_DEFAULT_STACK_ALLOCATION_SIZE);
 	InitRendererAPISelection(&g_fe_App.rendererAPIData);
@@ -63,18 +63,22 @@ Double GetDeltaTime()
 void ConsumeDeltaTime(Double deltaTime)
 {
 	g_fe_App.endTime = clock();
-	DWORD elapsedTimeMs = (DWORD)(g_fe_App.endTime - g_fe_App.startTime);
+	Uint32 elapsedTimeMs = (Uint32)(g_fe_App.endTime - g_fe_App.startTime);
 	//FE_CORE_LOG_DEBUG("ms : %d", elapsedTimeMs);
 
 	if (g_fe_App.targetFps > elapsedTimeMs)
 	{
-		DWORD msToConsume = (DWORD)ILDA_clamp(g_fe_App.targetFps - elapsedTimeMs, 0, 1000);
-		Sleep(msToConsume);
+		Uint32 msToConsume = (Uint32)ILDA_clamp(g_fe_App.targetFps - elapsedTimeMs, 0, 1000);
+#ifdef FE_PLATFORM_WINDOWS
+		Sleep((DWORD)msToConsume);
+#elif defined(FE_PLATFORM_LINUX)
+		usleep((msToConsume % 1000) * 1000)
+#endif
 	}
 
 }
 
-void FE_API AppUpdate(Double deltaTime)
+void FE_DECL AppUpdate(Double deltaTime)
 {
 	for (int i = 0; i < g_fe_App.layerStack.stackedlayers.impl.count; i++)
 	{
@@ -83,23 +87,23 @@ void FE_API AppUpdate(Double deltaTime)
 }
 
 
-void FE_API AddLayerApp(Layer* newLayer)
+void FE_DECL AddLayerApp(Layer* newLayer)
 {
 	FE_LayerStackPush(&g_fe_App.layerStack, newLayer);
 	newLayer->OnAttach(newLayer);
 }
 
-void FE_API InsertLayerApp(Layer* newLayer, Uint32 position)
+void FE_DECL InsertLayerApp(Layer* newLayer, Uint32 position)
 {
 	FE_LayerStackInsert(&g_fe_App.layerStack, newLayer, position);
 }
 
-void FE_API PopLayerApp()
+void FE_DECL PopLayerApp()
 {
 	FE_LayerStackPop(&g_fe_App.layerStack);
 }
 
-void FE_API LoadWindow()
+void FE_DECL LoadWindow()
 {
 	InitWindowAPI();
 	CreateAppWindow(&g_fe_App.windowData);
@@ -108,7 +112,7 @@ void FE_API LoadWindow()
 	g_fe_App.windowData.EventCallback = AppOnEvent;
 }
 
-void FE_API AppOnEvent(FE_Event event)
+void FE_DECL AppOnEvent(FE_Event event)
 {
 	FE_EventDispatcher eventDispatcher = { .eventType = event.eventType, .event = event };
 	DispatchEvent(&eventDispatcher, FE_Event_WindowResize, OnWindowResizing);
@@ -127,7 +131,7 @@ void FE_API AppOnEvent(FE_Event event)
 	}
 }
 
-Bool FE_API OnWindowResizing(FE_EventData* eventData)
+Bool FE_DECL OnWindowResizing(FE_EventData* eventData)
 {
 	if(eventData->windowData->w == 0 || eventData->windowData->h == 0)
 	{
@@ -136,22 +140,22 @@ Bool FE_API OnWindowResizing(FE_EventData* eventData)
 	}
 
 	eventData->windowData->isMinimized = FALSE;
-	RendererOnWindowResize(eventData->windowData->w, eventData->windowData->h);
+	RendererOnWindowResize(eventData->windowData->w, eventData->windowData->h);//not frame limited so it can use a lot of GPU performence now
 	return TRUE;
 }
 
-Bool FE_API OnWindowClose(FE_EventData* eventData)
+Bool FE_DECL OnWindowClose(FE_EventData* eventData)
 {
 	g_IsAppRunning = FALSE;
 	return FALSE;
 }
 
-void FE_API PullWindowEvent()
+void FE_DECL PullWindowEvent()
 {
 	GetWindowAPI()->PollEvent();
 }
 
-void FE_API Render()
+void FE_DECL Render()
 {
 	RenderCommandFramePrepare();
 	RenderCommandFrameCommandListBegin();
@@ -178,7 +182,7 @@ void FE_API Render()
 	GetWindowAPI()->Update(&g_fe_App.windowData);
 }
 
-void FE_API ShutdownApp()
+void FE_DECL ShutdownApp()
 {
 	FE_LayerStackClear(&g_fe_App.layerStack);
 
@@ -215,12 +219,12 @@ void FE_API ShutdownApp()
 //	}
 }
 
-void FE_API QuitApp()
+void FE_DECL QuitApp()
 {
 	g_IsAppRunning = FALSE;
 }
 
-const FE_App* FE_API GetApp()
+const FE_App* FE_DECL GetApp()
 {
 	return &g_fe_App;
 }

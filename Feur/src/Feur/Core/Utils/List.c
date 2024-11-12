@@ -6,12 +6,12 @@ Uint64 allocatedListCount = 0;
 Uint64 freedListCount = 0;
 #endif
 
-Bool FE_API FE_ListCheck(FE_List_impl* list, Byte** data)
+Bool FE_DECL FE_ListCheck(FE_List_impl* list, Byte** data)
 {
 	return list != NULL && NULL != data && list->isInitialized == TRUE;
 }
 
-Bool FE_API FE_ListInit_impl(FE_List_impl* list, Byte** data)
+Bool FE_DECL FE_ListInit_impl(FE_List_impl* list, Byte** data)
 {
 	list->count = 0;
 	list->capacity = 0;
@@ -21,7 +21,7 @@ Bool FE_API FE_ListInit_impl(FE_List_impl* list, Byte** data)
 	return TRUE;
 }
 
-Bool FE_API FE_ListPop_impl(FE_List_impl* list, Byte** data)
+Bool FE_DECL FE_ListPop_impl(FE_List_impl* list, Byte** data)
 {
 	if (!FE_ListCheck(list, data))
 	{
@@ -92,7 +92,7 @@ Bool FE_ListRemoveAt_impl(FE_List_impl* list, Byte** data, Uint32 id, SizeT data
 	return TRUE;
 }
 
-Bool FE_API FE_ListInsert_impl(FE_List_impl* list, Byte** data, const void* value, Uint32 position, SizeT dataSize)
+Bool FE_DECL FE_ListInsert_impl(FE_List_impl* list, Byte** data, const void* value, Uint32 position, SizeT dataSize)
 {
 	if (!FE_ListCheck(list, data) || *data == NULL || position > list->count - 1)
 	{
@@ -137,7 +137,7 @@ Bool FE_API FE_ListInsert_impl(FE_List_impl* list, Byte** data, const void* valu
 }
 
 
-//Bool FE_API FE_ListPush_impl(FE_List_impl* list, Byte** data, const void* value, SizeT dataSize)
+//Bool FE_DECL FE_ListPush_impl(FE_List_impl* list, Byte** data, const void* value, SizeT dataSize)
 //{
 //	FE_CORE_ASSERT(list != NULL && data != NULL && list->isInitialized == TRUE, "list or data is null or list hasn't been initialized");
 //	if (list == NULL) return FALSE;
@@ -172,7 +172,7 @@ Bool FE_API FE_ListInsert_impl(FE_List_impl* list, Byte** data, const void* valu
 //	return TRUE;
 //}
 
-Bool FE_API FE_ListPushArray_impl(FE_List_impl* list, Byte** data, const void* arrayData, SizeT sizeToPush, SizeT dataSize)
+Bool FE_DECL FE_ListPushArray_impl(FE_List_impl* list, Byte** data, const void* arrayData, SizeT sizeToPush, SizeT dataSize)
 {
 	if (!FE_ListCheck(list, data) || arrayData == NULL || sizeToPush <= 0)
 	{
@@ -212,7 +212,7 @@ Bool FE_API FE_ListPushArray_impl(FE_List_impl* list, Byte** data, const void* a
 }
 
 
-Bool FE_API FE_ListReserve_impl(FE_List_impl* list, Byte** data, SizeT amount, SizeT dataSize)
+Bool FE_DECL FE_ListReserve_impl(FE_List_impl* list, Byte** data, SizeT amount, SizeT dataSize)
 {
 	if (!FE_ListCheck(list, data))
 	{
@@ -258,7 +258,7 @@ Bool FE_ListResize_impl(FE_List_impl* list, Byte** data, SizeT amount, SizeT dat
 	return result;
 }
 
-Bool FE_API FE_ListClear_impl(FE_List_impl* list, Byte** data)
+Bool FE_DECL FE_ListClear_impl(FE_List_impl* list, Byte** data)
 {
 	if (!FE_ListCheck(list, data))
 	{

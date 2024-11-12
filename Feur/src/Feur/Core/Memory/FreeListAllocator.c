@@ -1,7 +1,7 @@
 #include "fepch.h"
 #include "FreeListAllocator.h"
 
-void FE_API FE_MemoryFreeListAllocatorInit(FE_MemoryFreeListAllocator* allocator, SizeT size, const void* start)
+void FE_DECL FE_MemoryFreeListAllocatorInit(FE_MemoryFreeListAllocator* allocator, SizeT size, const void* start)
 {
 	FE_CORE_ASSERT(size > sizeof(FreeBlock), "size is too small (less than sizeof(FreeBlock) or 16 bytes)");
     allocator->freeBlocks = (FreeBlock*)start;
@@ -9,13 +9,13 @@ void FE_API FE_MemoryFreeListAllocatorInit(FE_MemoryFreeListAllocator* allocator
 	allocator->freeBlocks->next = NULL;
 }
 
-void FE_API FE_MemoryFreeListAllocatorShutdown(FE_MemoryFreeListAllocator* allocator)
+void FE_DECL FE_MemoryFreeListAllocatorShutdown(FE_MemoryFreeListAllocator* allocator)
 {
     allocator->freeBlocks = NULL;
 }
 
 
-void* FE_API FE_MemoryFreeListAllocatorAlloc(FE_MemoryFreeListAllocator* allocator, SizeT size, Uint8 alignment)
+void* FE_DECL FE_MemoryFreeListAllocatorAlloc(FE_MemoryFreeListAllocator* allocator, SizeT size, Uint8 alignment)
 {
     FE_CORE_ASSERT(size != 0 && alignment != 0, "Size and alignement can not be 0");
     FreeBlock* prevFreeBlock = NULL;
@@ -76,7 +76,7 @@ void* FE_API FE_MemoryFreeListAllocatorAlloc(FE_MemoryFreeListAllocator* allocat
     return NULL;
 }
 
-void FE_API FE_MemoryFreeListAllocatorFree(FE_MemoryFreeListAllocator* allocator, void* ptr)
+void FE_DECL FE_MemoryFreeListAllocatorFree(FE_MemoryFreeListAllocator* allocator, void* ptr)
 {
     FE_CORE_ASSERT(ptr != NULL, "Given pointer is NULL");
     FreeListAllocationHeader* header = (FreeListAllocationHeader*)((UintptrT)ptr - sizeof(FreeListAllocationHeader));
@@ -122,7 +122,7 @@ void FE_API FE_MemoryFreeListAllocatorFree(FE_MemoryFreeListAllocator* allocator
     }
 }
 
-void* FE_API FE_MemoryFreeListAllocatorRealloc(FE_MemoryFreeListAllocator* allocator, void* ptr, SizeT size, Uint8 alignment)
+void* FE_DECL FE_MemoryFreeListAllocatorRealloc(FE_MemoryFreeListAllocator* allocator, void* ptr, SizeT size, Uint8 alignment)
 {
     FE_CORE_ASSERT(ptr != NULL, "the given pointer is NULL")
     FreeListAllocationHeader* header = (FreeListAllocationHeader*)((UintptrT)ptr - sizeof(FreeListAllocationHeader));

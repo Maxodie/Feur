@@ -10,5 +10,5 @@
 	void (*SwapBuffers)(struct WindowData*);
 } GraphicsContext;
 */
-void FE_API InitWindowCreationHintParameters();
-void FE_API CreateGraphicsContext(struct WindowData* WindowData);
+void FE_DECL InitWindowCreationHintParameters();
+void FE_DECL CreateGraphicsContext(struct WindowData* WindowData);

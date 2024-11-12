@@ -1,17 +1,36 @@
 #pragma once
 
-typedef struct VulkanfeSwapChainSupportDetails 
+// push constants for our mesh object draws
+typedef struct FE_VulkanGPUDrawPushConstants {
+	ILDA_matrix4x4 worldMatrix;
+	VkDeviceAddress vertexBuffer;
+} FE_VulkanGPUDrawPushConstants;
+
+typedef struct FE_VulkanAllocatedBuffer {
+	VkBuffer buffer;
+	VmaAllocation allocation;
+	VmaAllocationInfo info;
+} FE_VulkanAllocatedBuffer;
+
+// holds the resources needed for a mesh
+typedef struct FE_VulkanGPUMeshBuffers {
+	FE_VulkanAllocatedBuffer indexBuffer;
+	FE_VulkanAllocatedBuffer vertexBuffer;
+	VkDeviceAddress vertexBufferAddress;
+} FE_VulkanGPUMeshBuffers;
+
+typedef struct FE_VulkanfeSwapChainSupportDetails 
 {
 	VkSurfaceCapabilitiesKHR capabilities;
 	FE_List(VkSurfaceFormatKHR) formats;
 	FE_List(VkPresentModeKHR) presentModes;
 	VkPresentModeKHR selectedPresentMode;
 	VkSurfaceFormatKHR selectedSurfaceFormat;
-} VulkanfeSwapChainSupportDetails;
+} FE_VulkanfeSwapChainSupportDetails;
 
 typedef struct FE_VulkanSwapChain
 {
-	VulkanfeSwapChainSupportDetails details;
+	FE_VulkanfeSwapChainSupportDetails details;
 	VkSwapchainKHR handle;
 
 	FE_List(VkImage) images;
@@ -92,5 +111,7 @@ typedef struct FE_VulkanInfo
 	VkImageMemoryBarrier* imageBarriers;//static array
 
 	RendererAPIData* apiData;
+
+	VmaAllocator allocator;
 
 } FE_VulkanInfo;

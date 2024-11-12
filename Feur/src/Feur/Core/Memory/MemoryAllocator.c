@@ -11,28 +11,28 @@ struct FE_MemoryGeneralAllocator
 #endif
 } FE_MemoryGeneralAllocator = { 0 };
 
-FE_FORCEINLINE_FUN void* FE_API FE_MemoryCustomMalloc(SizeT size)
+FE_FORCEINLINE_FUN void* FE_DECL FE_MemoryCustomMalloc(SizeT size)
 {
     void* data = malloc(size);
     FE_CORE_ASSERT(data != NULL, "failed to malloc");
     return data;
 }
 
-FE_FORCEINLINE_FUN void* FE_API FE_MemoryCustomCalloc(SizeT size)
+FE_FORCEINLINE_FUN void* FE_DECL FE_MemoryCustomCalloc(SizeT size)
 {
     void* data = calloc(1, size);
     FE_CORE_ASSERT(data != NULL, "failed to calloc");
     return data;
 }
 
-FE_FORCEINLINE_FUN void FE_API FE_MemoryGeneralInit(SizeT size)
+FE_FORCEINLINE_FUN void FE_DECL FE_MemoryGeneralInit(SizeT size)
 {
     void* mainFreeListMem = FE_MemoryCustomMalloc(size);
     FE_MemoryGeneralAllocator.mainFreeListMem = mainFreeListMem;
     FE_MemoryFreeListAllocatorInit(&FE_MemoryGeneralAllocator.freeListAllocator, size, mainFreeListMem);
 }
 
-FE_FORCEINLINE_FUN void FE_API FE_MemoryGeneralShutdown()
+FE_FORCEINLINE_FUN void FE_DECL FE_MemoryGeneralShutdown()
 {
     FE_MemoryFreeListAllocatorShutdown(&FE_MemoryGeneralAllocator.freeListAllocator);
     free(FE_MemoryGeneralAllocator.mainFreeListMem);
@@ -43,7 +43,7 @@ FE_FORCEINLINE_FUN void FE_API FE_MemoryGeneralShutdown()
 #endif
 }
 
-FE_FORCEINLINE_FUN void* FE_API FE_MemoryGeneralAlloc(SizeT size)
+FE_FORCEINLINE_FUN void* FE_DECL FE_MemoryGeneralAlloc(SizeT size)
 {
 #ifdef FE_DEBUG
     FE_MemoryGeneralAllocator.allocCount++;
@@ -51,7 +51,7 @@ FE_FORCEINLINE_FUN void* FE_API FE_MemoryGeneralAlloc(SizeT size)
     return FE_MemoryFreeListAllocatorAlloc(&FE_MemoryGeneralAllocator.freeListAllocator, size, FE_MEMORY_BASE_ALIGNEMENT);
 }
 
-FE_FORCEINLINE_FUN void FE_API FE_MemoryGeneralFree(void* ptr)
+FE_FORCEINLINE_FUN void FE_DECL FE_MemoryGeneralFree(void* ptr)
 {
 #ifdef FE_DEBUG
     FE_MemoryGeneralAllocator.freeCount++;
@@ -59,17 +59,17 @@ FE_FORCEINLINE_FUN void FE_API FE_MemoryGeneralFree(void* ptr)
     FE_MemoryFreeListAllocatorFree(&FE_MemoryGeneralAllocator.freeListAllocator, ptr);
 }
 
-FE_FORCEINLINE_FUN void* FE_API FE_MemoryGeneralRealloc(void* ptr, SizeT size)
+FE_FORCEINLINE_FUN void* FE_DECL FE_MemoryGeneralRealloc(void* ptr, SizeT size)
 {
     return FE_MemoryFreeListAllocatorRealloc(&FE_MemoryGeneralAllocator.freeListAllocator, ptr, size, FE_MEMORY_BASE_ALIGNEMENT);
 }
 
-FE_FORCEINLINE_FUN UintptrT FE_API FE_MemoryAlignAddress(UintptrT address, SizeT alignment)
+FE_FORCEINLINE_FUN UintptrT FE_DECL FE_MemoryAlignAddress(UintptrT address, SizeT alignment)
 {
     return (address + (alignment - 1)) & ~(alignment - 1);
 }
 
-FE_FORCEINLINE_FUN UintptrT FE_API FE_MemoryAlignForwardAdjustment(UintptrT address, SizeT alignment)
+FE_FORCEINLINE_FUN UintptrT FE_DECL FE_MemoryAlignForwardAdjustment(UintptrT address, SizeT alignment)
 {
     UintptrT adjustment = (UintptrT)(alignment - (address) & (alignment - 1));
     if (adjustment == alignment) return 0;
@@ -77,7 +77,7 @@ FE_FORCEINLINE_FUN UintptrT FE_API FE_MemoryAlignForwardAdjustment(UintptrT addr
     return adjustment;
 }
 
-FE_FORCEINLINE_FUN UintptrT FE_API FE_MemoryAlignForwardAdjustmentWithHeader(UintptrT address, SizeT alignment, SizeT headerSize)
+FE_FORCEINLINE_FUN UintptrT FE_DECL FE_MemoryAlignForwardAdjustmentWithHeader(UintptrT address, SizeT alignment, SizeT headerSize)
 {
     UintptrT adjustment = FE_MemoryAlignForwardAdjustment(address, alignment);
     UintptrT neededSpace = headerSize;
@@ -107,7 +107,7 @@ FE_FORCEINLINE_FUN UintptrT FE_API FE_MemoryAlignForwardAdjustmentWithHeader(Uin
 #include "ILDA_Matrix/ILDA_matrix.h"
 #include "ILDA_vector/ILDA_vector.h"
 
-void FE_API FE_MemoryStackAllocatorBenchmarkTest()
+void FE_DECL FE_MemoryStackAllocatorBenchmarkTest()
 {
     //TEST MEMORY malloc
     FE_Benchmark AllocBenchmark;
@@ -161,7 +161,7 @@ void FE_API FE_MemoryStackAllocatorBenchmarkTest()
 }
 
 
-void FE_API FE_MemoryPoolAllocatorBenchmarkTest()
+void FE_DECL FE_MemoryPoolAllocatorBenchmarkTest()
 {
     //TEST MEMORY malloc
     FE_Benchmark AllocBenchmark;
