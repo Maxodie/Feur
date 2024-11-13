@@ -39,10 +39,10 @@ FE_ListInsert_impl(&(fe_list).impl, (Byte**)&(fe_list).data, (const void*)&value
 //with 'fe_list' an FE_List(type); 'type' same type of *fe_list.data; 'value' type of 'type';
 #define FE_ListPushValue(fe_list, type, value) { \
 type temp = value; \
-FE_ListPushArray_impl(&(fe_list).impl, (Byte**)&(fe_list).data, (const void*)&temp, 1, sizeof(*(fe_list).data)); \
+FE_ListPushArray_impl(&(fe_list).impl, (Byte**)&(fe_list).data, (const void*)&(type)temp, 1, sizeof(*(fe_list).data)); \
 }
 //with 'fe_list' an FE_List(type); 'value' type of 'type'
-#define FE_ListPushArray(fe_list, arrayDataPtr, sizeToPush) FE_ListPushArray_impl(&(fe_list).impl, (Byte**)&(fe_list).data, (const void*)arrayDataPtr, sizeToPush, sizeof(*(fe_list).data))
+#define FE_ListPushArray(fe_list, arrayDataPtr, countToPush) FE_ListPushArray_impl(&(fe_list).impl, (Byte**)&(fe_list).data, (const void*)arrayDataPtr, countToPush, sizeof(*(fe_list).data))
 //with 'fe_list' an FE_List(type); 'value' type of 'type' it reserve a supplement : list.capacity += amount
 #define FE_ListReserve(fe_list, amount) FE_ListReserve_impl(&(fe_list).impl, (Byte**)&(fe_list).data, amount, sizeof(*(fe_list).data))
 //with 'fe_list' an FE_List(type); 'value' type of 'type' it reserve a supplement : list.capacity += amount and list.count += amount
@@ -62,7 +62,7 @@ Bool FE_DECL FE_ListRemoveAt_impl(FE_List_impl* list, Byte** data, Uint32 id, Si
 Bool FE_DECL FE_ListInsert_impl(FE_List_impl* list, Byte** data, const void* value, Uint32 position, SizeT dataSize);
 
 //Bool FE_DECL FE_ListPush_impl(FE_List_impl* list, Byte** data, const void* value, SizeT dataSize);
-Bool FE_DECL FE_ListPushArray_impl(FE_List_impl* list, Byte** data, const void* arrayData, SizeT sizeToPush, SizeT dataSize);
+Bool FE_DECL FE_ListPushArray_impl(FE_List_impl* list, Byte** data, const void* arrayData, SizeT countToPush, SizeT dataSize);
 
 Bool FE_DECL FE_ListReserve_impl(FE_List_impl* list, Byte** data, SizeT amount, SizeT dataSize);
 Bool FE_DECL FE_ListResize_impl(FE_List_impl* list, Byte** data, SizeT amount, SizeT dataSize);

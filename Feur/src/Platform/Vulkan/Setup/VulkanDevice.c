@@ -185,10 +185,16 @@ void VulkanCreateLogicalDevice(FE_VulkanInfo* vkInfo)
 	{
 		FE_CORE_LOG_ERROR("ShaderClipDistance not supported by vulkan device '%s'", vkInfo->physicalDevice.properties.deviceName);
 	}
+	
+	VkPhysicalDeviceBufferDeviceAddressFeatures deviceFeatureBufferAddress = {
+		.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES,
+		.bufferDeviceAddress = VK_TRUE,
+	};
 
 	VkPhysicalDeviceDynamicRenderingFeatures dynamicRenderingFeatures = {
 		.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
 		.dynamicRendering = VK_TRUE,
+		.pNext = &deviceFeatureBufferAddress
 	};
 
 	deviceFeature.pNext = &dynamicRenderingFeatures;

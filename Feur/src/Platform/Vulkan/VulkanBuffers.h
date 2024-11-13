@@ -4,7 +4,9 @@
 
 void InitVulkan_VertexArrayBuffer();
 
-struct FE_VulkanAllocatedBuffer VulkanCreateBuffer(struct FE_VulkanInfo* vkInfo, SizeT allocSize, VkBufferUsageFlags usage, VmaMemoryUsage memoryUsage);
+struct FE_VulkanAllocatedBuffer VulkanCreateBuffer(struct FE_VulkanInfo* vkInfo, SizeT allocSize, VkBufferUsageFlags usage);
 void VulkanDestroyBuffer(struct FE_VulkanInfo* vkInfo, const struct FE_VulkanAllocatedBuffer* buffer);
 
-struct FE_VulkanGPUMeshBuffers VulkanUploadMeshBuffer(struct FE_VulkanInfo* vkInfo, const FE_Mesh* mesh);
+void VulkanBindMeshBuffer(struct FE_VulkanInfo* vkInfo, VkCommandBuffer cmdBuffer, struct FE_VulkanAllocatedBuffer* verticesBuffer, struct FE_VulkanAllocatedBuffer* indicesBuffer, const FE_Mesh* mesh);
+
+void VulkanCopyBuffer(struct FE_VulkanInfo* vkInfo, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);

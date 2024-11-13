@@ -18,6 +18,11 @@
 
 static FE_VulkanInfo* vkInfo;
 
+FE_Mesh mesh;
+FE_VulkanAllocatedBuffer verticesBuffer;
+FE_VulkanAllocatedBuffer indicesBuffer;
+FE_VulkanAllocatedBuffer stagingBuffer;
+
 Bool VulkanInit_impl(RendererAPIData* apiData)
 {
 	vkInfo = FE_MemoryGeneralAlloc(sizeof(FE_VulkanInfo));
@@ -51,6 +56,82 @@ Bool VulkanInit_impl(RendererAPIData* apiData)
 	VulkanCreateSemaphoresAndFences(vkInfo);
 
 	VulkanCreateAllocator(vkInfo);
+
+	/*
+	test 
+	*/
+	FE_List(Uint32) indices = { 0 };
+	FE_ListInit(indices);
+	Uint32 indicesData[6] = { 0,1,2,2,3,0 };
+	FE_ListPushArray(indices, indicesData, 6);
+
+	FE_Vertex3D defaultVertices[4] = 
+	{
+		(FE_Vertex3D) 
+		{
+			.color = { .x = 0, .y = 1, .z = 1, .w = 1 },
+			.position = { .x = -0.5f, .y = -0.5f, .z = 0},
+		},
+		(FE_Vertex3D)
+		{
+			.color = {.x = 1, .y = 0, .z = 1, .w = 1 },
+			.position = {.x = 0.5f, .y = -0.5f, .z = 0},
+		},
+		(FE_Vertex3D)
+		{
+			.color = {.x = 1, .y = 1, .z = 0, .w = 1 },
+			.position = {.x = 0.5f, .y = 0.5f, .z = 0},
+		},
+		(FE_Vertex3D)
+		{
+			.color = {.x = .1f, .y = .1f, .z = .1f, .w = 1 },
+			.position = {.x = -0.5f, .y = 0.5f, .z = 1},
+		},
+	};
+
+	FE_List(FE_Vertex3D) vertices = { 0 };
+	FE_ListInit(vertices);
+	FE_ListPushArray(vertices, defaultVertices, 4);
+
+	mesh = (FE_Mesh){
+		.indices.data = indices.data,
+		.indices.impl = indices.impl,
+		.vertices.data = vertices.data,
+		.vertices.impl = vertices.impl
+	};
+
+	verticesBuffer = VulkanCreateBuffer(
+		vkInfo, mesh.vertices.impl.count * sizeof(FE_Vertex3D), VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT
+	);
+
+	indicesBuffer = VulkanCreateBuffer(
+		vkInfo, mesh.indices.impl.count * sizeof(Uint32), VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT
+	);
+
+	stagingBuffer = VulkanCreateBuffer(
+		vkInfo, mesh.vertices.impl.count * sizeof(FE_Vertex3D), VK_BUFFER_USAGE_TRANSFER_SRC_BIT
+	);
+
+	//==============================vertices buffer======================================
+	VkResult result = vmaCopyMemoryToAllocation(vkInfo->allocator, mesh.vertices.data, stagingBuffer.allocation, 0, mesh.vertices.impl.count * sizeof(FE_Vertex3D));
+	FE_CORE_ASSERT(result == VK_SUCCESS, "failed to copy memory into vulkan allocator : %d", result);
+	VulkanCopyBuffer(vkInfo, stagingBuffer.buffer, verticesBuffer.buffer, mesh.vertices.impl.count * sizeof(FE_Vertex3D));
+
+	VulkanDestroyBuffer(vkInfo, &stagingBuffer);
+
+	//===============================indices buffer=======================================
+	stagingBuffer = VulkanCreateBuffer(
+		vkInfo, mesh.indices.impl.count * sizeof(Uint32),
+		VK_BUFFER_USAGE_TRANSFER_SRC_BIT);
+
+	result = vmaCopyMemoryToAllocation(vkInfo->allocator, mesh.indices.data, stagingBuffer.allocation, 0, mesh.indices.impl.count * sizeof(Uint32));
+	FE_CORE_ASSERT(result == VK_SUCCESS, "failed to copy memory into vulkan allocator : %d", result);
+	VulkanCopyBuffer(vkInfo, stagingBuffer.buffer, indicesBuffer.buffer, mesh.indices.impl.count * sizeof(Uint32));
+
+	VulkanDestroyBuffer(vkInfo, &stagingBuffer);
+	/*
+	end test
+	*/
 
 	apiData->nativeInfoAPI = vkInfo;
 	return TRUE;
@@ -201,7 +282,8 @@ void VulkanDrawIndex_impl()
 {
 	//if (!CanVulkanContinueRendering()) return;
 
-	vkCmdDraw(vkInfo->cmdBuffers[vkInfo->currentFrame], 6, 1, 0, 0);
+	VulkanBindMeshBuffer(vkInfo, vkInfo->cmdBuffers[vkInfo->currentFrame], &verticesBuffer, &indicesBuffer, &mesh);
+	vkCmdDrawIndexed(vkInfo->cmdBuffers[vkInfo->currentFrame], (Uint32)mesh.indices.impl.count, 1, 0, 0, 0);
 }
 
 void VulkanEndRendering_impl()
@@ -306,6 +388,11 @@ void VulkanWaitIdle_impl()
 
 void VulkanShutdown_impl()
 {
+	//temp
+	VulkanDestroyBuffer(vkInfo, &verticesBuffer);
+	VulkanDestroyBuffer(vkInfo, &indicesBuffer);
+	//temp
+
 	VulkanDestroyAllocator(vkInfo);
 	VulkanDestroySemaphoresAndFences(vkInfo);
 	VulkanDestroyCommandBuffers(vkInfo);

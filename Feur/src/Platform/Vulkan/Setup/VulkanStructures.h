@@ -12,13 +12,6 @@ typedef struct FE_VulkanAllocatedBuffer {
 	VmaAllocationInfo info;
 } FE_VulkanAllocatedBuffer;
 
-// holds the resources needed for a mesh
-typedef struct FE_VulkanGPUMeshBuffers {
-	FE_VulkanAllocatedBuffer indexBuffer;
-	FE_VulkanAllocatedBuffer vertexBuffer;
-	VkDeviceAddress vertexBufferAddress;
-} FE_VulkanGPUMeshBuffers;
-
 typedef struct FE_VulkanfeSwapChainSupportDetails 
 {
 	VkSurfaceCapabilitiesKHR capabilities;
