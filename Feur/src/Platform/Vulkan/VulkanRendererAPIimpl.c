@@ -98,6 +98,7 @@ Bool VulkanInit_impl(RendererAPIData* apiData)
 	VulkanCreateUniformBuffer(vkInfo);
 	VulkanCreateDescriptorPool(vkInfo);
 	VulkanCreateDescriptorSets(vkInfo);
+	VulkanCreateDrawIndexedIndirectCommandsBuffer(vkInfo);
 
 	/*
 	end test
@@ -256,29 +257,22 @@ void VulkanEndScene_impl()
 void VulkanDrawIndex_impl(Uint32 indexCount)
 {
 	//if (!CanVulkanContinueRendering()) return;
+	VulkanAddDrawIndexedIndirectCommandsBuffer(vkInfo, indexCount);
 	VulkanBindBuffers(vkInfo, vkInfo->cmdBuffers[vkInfo->currentFrame]);
-
-	/*VkDrawIndirectCommand  drawIndirectCmd = {
-		.vertexCount = 0,
-		.firstInstance = 0,
-		.indexCount = indexCount,
-		.instanceCount = 1,
-		.vertexOffset = 0,
-	};
 
 	if (vkInfo->physicalDevice.features.multiDrawIndirect)
 	{
-		vkCmdDrawIndirect(vkInfo->cmdBuffers[vkInfo->currentFrame], indexCount, 1, 0, 0, 0);
+		vkCmdDrawIndexedIndirect(vkInfo->cmdBuffers[vkInfo->currentFrame], vkInfo->drawIndexedIndirectCmdBuffer.buffer, 0, 1, 0); //sizeof(cpu_commands[0]) = stride from doc
 	}
 	else
 	{
-		for (Uint32 i = 0; i < ; i++)
+		//for (Uint32 i = 0; i < 1; i++)
 		{
-
+			vkCmdDrawIndexedIndirect(vkInfo->cmdBuffers[vkInfo->currentFrame], vkInfo->drawIndexedIndirectCmdBuffer.buffer, 0, 1, 0); //sizeof(cpu_commands[0]) =  stride from doc
 		}
-	}*/
-	// TODO : indirect rendering (draw on gpu)
-	vkCmdDrawIndexed(vkInfo->cmdBuffers[vkInfo->currentFrame], indexCount, 1, 0, 0, 0);
+	}
+
+	//vkCmdDrawIndexed(vkInfo->cmdBuffers[vkInfo->currentFrame], indexCount, 1, 0, 0, 0);
 }
 
 void VulkanEndRendering_impl()
@@ -385,7 +379,7 @@ void VulkanShutdown_impl()
 {
 	//temp
 	
-
+	VulkanDestroyBuffer(vkInfo, &vkInfo->drawIndexedIndirectCmdBuffer);
 	VulkanDestroyBuffer(vkInfo, &vkInfo->vertexBuffer);
 	VulkanDestroyBuffer(vkInfo, &vkInfo->indexBuffer);
 

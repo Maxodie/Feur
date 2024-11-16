@@ -81,6 +81,32 @@ void VulkanCreateUniformBuffer(FE_VulkanInfo* vkInfo)
 	}
 }
 
+void VulkanCreateDrawIndexedIndirectCommandsBuffer(FE_VulkanInfo* vkInfo)
+{
+	VulkanCreateBuffer(vkInfo, sizeof(VkDrawIndexedIndirectCommand), VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT, &vkInfo->drawIndexedIndirectCmdBuffer);
+}
+
+void VulkanAddDrawIndexedIndirectCommandsBuffer(FE_VulkanInfo* vkInfo, Uint32 indexCount)
+{
+	//must be same amount of descriptor ans drawIndexedIndirectCmd
+	vkInfo->drawIndexedIndirectCmd = (VkDrawIndexedIndirectCommand){
+		.instanceCount = 1,
+		.firstInstance = 0,
+		.firstIndex = 0,
+		.indexCount = indexCount,
+		.vertexOffset = 0,
+	};
+
+	FE_VulkanAllocatedBuffer stagingBuffer;
+	VulkanCreateBuffer(vkInfo, sizeof(VkDrawIndexedIndirectCommand), VK_BUFFER_USAGE_TRANSFER_SRC_BIT, &stagingBuffer);
+
+	VkResult result = vmaCopyMemoryToAllocation(vkInfo->allocator, &vkInfo->drawIndexedIndirectCmd, stagingBuffer.allocation, 0, sizeof(VkDrawIndexedIndirectCommand));
+	FE_CORE_ASSERT(result == VK_SUCCESS, "failed to copy memory into vulkan allocator : %d", result);
+	VulkanCopyBuffer(vkInfo, stagingBuffer.buffer, vkInfo->drawIndexedIndirectCmdBuffer.buffer, sizeof(VkDrawIndexedIndirectCommand));
+
+	VulkanDestroyBuffer(vkInfo, &stagingBuffer);
+}
+
 void VulkanUpdateUniformBuffer(FE_VulkanInfo* vkInfo)
 {
 	ILDA_vector3f axis = { .x = 0, .y = 0.0, .z = 0.0 };

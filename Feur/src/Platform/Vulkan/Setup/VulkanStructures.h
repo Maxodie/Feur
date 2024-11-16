@@ -102,7 +102,9 @@ typedef struct FE_VulkanInfo
 	VkFence* inFlightFences;//static array
 
 	FE_VulkanPipeline graphicsPipeline;
-	FE_VulkanDescriptor descriptor;
+	FE_VulkanDescriptor descriptor;//must be same amount of descriptor ans drawIndexedIndirectCmd
+	VkDrawIndexedIndirectCommand drawIndexedIndirectCmd;
+	FE_VulkanAllocatedBuffer drawIndexedIndirectCmdBuffer;
 
 	//shaderc
 	shaderc_compiler_t shaderCompiler;
