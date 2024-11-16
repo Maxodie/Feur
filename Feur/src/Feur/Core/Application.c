@@ -27,7 +27,6 @@ void FE_DECL RunApp_impl()
 
 		PullWindowEvent();
 		AppUpdate(deltaTime);
-		Render();
 
 		ConsumeDeltaTime(deltaTime);
 	}
@@ -40,13 +39,15 @@ void FE_DECL StartApp()
 	FE_MemoryGeneralInit(FE_MEMORY_DEFAULT_STACK_ALLOCATION_SIZE);
 	InitRendererAPISelection(&g_fe_App.rendererAPIData);
 	LoadWindow();
-	InitInputAPI();
+	FE_InitInputAPI();
 	FE_LayerStackInit(&g_fe_App.layerStack);
 
 	if (!InitRenderer(&g_fe_App.rendererAPIData))
 	{
 		FE_CORE_LOG_ERROR("failed to initialize the renderer");
 	}
+
+	FE_Renderer2DInit();
 
 	nuklearGUILayer = CreateNewNuklearGUILayer("NuklearLayer");
 	AddLayerApp(&nuklearGUILayer);
@@ -78,12 +79,42 @@ void ConsumeDeltaTime(Double deltaTime)
 
 }
 
+void FE_DECL AppPrepareRender()
+{
+	RenderCommandFramePrepare();
+	RenderCommandFrameCommandListBegin();
+	RenderCommandBeginRendering(&g_fe_App.rendererAPIData.defaultClearColor);
+
+	RenderCommandSetRendererViewport(0, 0, g_fe_App.windowData.w, g_fe_App.windowData.h, 0, 1);
+	RenderCommandSetScissor(g_fe_App.windowData.w, g_fe_App.windowData.h);
+	RenderCommandBindPipeline();
+}
+
 void FE_DECL AppUpdate(Double deltaTime)
 {
+	AppPrepareRender();
+	
 	for (int i = 0; i < g_fe_App.layerStack.stackedlayers.impl.count; i++)
 	{
-		g_fe_App.layerStack.stackedlayers.data[i]->OnUpdate();
+		g_fe_App.layerStack.stackedlayers.data[i]->OnUpdate(deltaTime);
 	}
+
+	RenderCommandEndRendering();
+	RenderCommandFrameCommandListEnd();
+	RenderCommandFrameSubmit();
+	RenderCommandFramePresent();
+	RenderCommandWaitIdle();
+
+	FE_Renderer2DReset();
+
+	Layer* layer;
+	for (SizeT i = 0; i < FE_LayerStackGetCount(&g_fe_App.layerStack); i++)
+	{
+		layer = g_fe_App.layerStack.stackedlayers.data[i];
+		layer->OnNuklearRender(layer);
+	}
+
+	GetWindowAPI()->Update(&g_fe_App.windowData);
 }
 
 
@@ -155,37 +186,12 @@ void FE_DECL PullWindowEvent()
 	GetWindowAPI()->PollEvent();
 }
 
-void FE_DECL Render()
-{
-	RenderCommandFramePrepare();
-	RenderCommandFrameCommandListBegin();
-	RenderCommandBeginRendering(&g_fe_App.rendererAPIData.defaultClearColor);
-	
-	RenderCommandSetRendererViewport(0, 0, g_fe_App.windowData.w, g_fe_App.windowData.h, 0, 1);
-	RenderCommandSetScissor(g_fe_App.windowData.w, g_fe_App.windowData.h);
-	RenderCommandBindPipeline();
-
-	Layer* layer;
-	for (SizeT i = 0; i < FE_LayerStackGetCount(&g_fe_App.layerStack); i++)
-	{
-		layer = g_fe_App.layerStack.stackedlayers.data[i];
-		layer->OnRender(layer);
-	}
-
-	RenderCommandDrawIndex();
-	RenderCommandEndRendering();
-	RenderCommandFrameCommandListEnd();
-	RenderCommandFrameSubmit();
-	RenderCommandFramePresent();
-	RenderCommandWaitIdle();
-
-	GetWindowAPI()->Update(&g_fe_App.windowData);
-}
-
 void FE_DECL ShutdownApp()
 {
 	FE_LayerStackClear(&g_fe_App.layerStack);
 
+	FE_Renderer2DShutdown();
+	FE_CORE_LOG_SUCCESS("2D Renderer shuted down");
 	RendererShutdown(&g_fe_App.rendererAPIData);
 	FE_CORE_LOG_SUCCESS("Renderer shuted down");
 	GetWindowAPI()->DestroyWindow(&g_fe_App.windowData);

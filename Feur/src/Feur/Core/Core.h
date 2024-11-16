@@ -19,6 +19,8 @@ typedef uintptr_t UintptrT;
 typedef Double MaxAlignT; //based on the cstddef c++ using : most aligned type
 typedef clock_t ClockT;
 
+#define FE_ALIGN_OF(x) _Alignof(x)
+#define FE_ALIGN_AS(x) _Alignas(x)
 
 #define FE_DECL _cdecl
 

@@ -32,6 +32,7 @@
 #include "ILDA_utils/ILDA_utils.h"
 #include "ILDA_vector/ILDA_vector.h"
 #include "ILDA_matrix/ILDA_matrix.h"
+#include "ILDA_trigo/ILDA_trigo.h"
 
 #include "Feur/Core/Core.h"
 #include "Feur/Core/Log/Log.h"
@@ -53,10 +54,11 @@
 
 #include "Feur/Core/LayerStack.h"
 
-#include "Feur/Renderer/GraphicsContext.h"
-#include "Feur/Renderer/RendererAPI.h"
-#include "Feur/Renderer/Renderer.h"
-#include "Feur/Renderer/Buffers.h"
 #include "Feur/Renderer/Mesh.h"
+#include "Feur/Renderer/Buffers.h"
+#include "Feur/Renderer/RendererAPI.h"
+#include "Feur/Renderer/GraphicsContext.h"
+#include "Feur/Renderer/Renderer.h"
+#include "Feur/Renderer/Renderer2D.h"
 
 #include "Feur/Core/Application.h"

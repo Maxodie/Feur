@@ -13,7 +13,7 @@ Bool OpenGLInit_impl(RendererAPIData* apiData)
 	return TRUE;
 }
 
-void OpenGLOnWindowResize_impl(Uint32 x, Uint32 y, Uint32 width, Uint32 height)
+void OpenGLOnWindowResize_impl(Uint32 x, Uint32 y, Uint32 width, Uint32 height, Uint32 drawIndexCount)
 {
 	glViewport(x, y, width, height);
 }
@@ -24,7 +24,7 @@ void OpenGLBeginRendering_impl(ILDA_vector4f * clearColor)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void OpenGLDrawIndex_impl()
+void OpenGLDrawIndex_impl(Uint32 indexCount)
 {
 }
 

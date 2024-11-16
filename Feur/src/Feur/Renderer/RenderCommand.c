@@ -1,19 +1,18 @@
 #include "fepch.h"
 #include "RenderCommand.h"
 
-#include "Feur/Renderer/RendererAPI.h"
 
-Bool RenderCommandInit(RendererAPIData* api)
+Bool FE_DECL RenderCommandInit(RendererAPIData* api)
 {
 	return GetRendererAPI()->Init(api);
 }
 
-void RenderCommandFramePrepare()
+void FE_DECL RenderCommandFramePrepare()
 {
 	GetRendererAPI()->FramePrepare();
 }
 
-void RenderCommandFrameCommandListBegin()
+void FE_DECL RenderCommandFrameCommandListBegin()
 {
 	GetRendererAPI()->FrameCommandListBegin();
 }
@@ -23,57 +22,67 @@ void FE_DECL RenderCommandSetRendererViewport(Uint32 w, Uint32 h, Uint32 width, 
 	GetRendererAPI()->SetViewport(w, h, width, height, minDepth, maxDepth);
 }
 
-void RenderCommandSetScissor(Uint32 width, Uint32 height)
+void FE_DECL RenderCommandSetScissor(Uint32 width, Uint32 height)
 {
 	GetRendererAPI()->SetScissor(width, height);
 }
 
-void RenderCommandBindPipeline()
+void FE_DECL RenderCommandBindPipeline()
 {
 	GetRendererAPI()->BindPipeline();
 }
 
-void FE_DECL RenderCommandBeginRendering(ILDA_vector4f * clearColor)
+void FE_DECL RenderCommandBeginRendering(FE_Color* clearColor)
 {
 	GetRendererAPI()->BeginRendering(clearColor);
 }
 
-void FE_DECL RenderCommandDrawIndex()
+void FE_DECL RenderCommandBeginScene()
 {
-	GetRendererAPI()->DrawIndex();
+	GetRendererAPI()->BeginScene();
 }
 
-void RenderCommandEndRendering()
+void FE_DECL RenderCommandEndScene()
+{
+	GetRendererAPI()->EndScene();
+}
+
+void FE_DECL RenderCommandDrawIndex(Uint32 indexCount)
+{
+	GetRendererAPI()->DrawIndex(indexCount);
+}
+
+void FE_DECL RenderCommandEndRendering()
 {
 	GetRendererAPI()->EndRendering();
 }
 
-void RenderCommandFrameCommandListEnd()
+void FE_DECL RenderCommandFrameCommandListEnd()
 {
 	GetRendererAPI()->FrameCommandListEnd();
 }
 
-void RenderCommandFrameSubmit()
+void FE_DECL RenderCommandFrameSubmit()
 {
 	GetRendererAPI()->FrameSubmit();
 }
 
-void RenderCommandFramePresent()
+void FE_DECL RenderCommandFramePresent()
 {
 	GetRendererAPI()->FramePresent();
 }
 
-void RenderCommandWaitIdle()
+void FE_DECL RenderCommandWaitIdle()
 {
 	GetRendererAPI()->WaitIdle();
 }
 
-void RenderCommandShutDown()
+void FE_DECL RenderCommandShutDown()
 {
 	GetRendererAPI()->Shutdown();
 }
 
-void RenderCommandOnWindowResized(Uint32 w, Uint32 h, Uint32 width, Uint32 height)
+void FE_DECL RenderCommandOnWindowResized(Uint32 w, Uint32 h, Uint32 width, Uint32 height, Uint32 drawIndexCount)
 {
-	GetRendererAPI()->OnWindowResized(w, h, width, height);
+	GetRendererAPI()->OnWindowResized(w, h, width, height, drawIndexCount);
 }

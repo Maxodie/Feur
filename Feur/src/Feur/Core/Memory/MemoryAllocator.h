@@ -4,9 +4,9 @@
 */
 enum FE_MEMORY_ALLOCATION_INFO
 {
-	FE_MEMORY_DEFAULT_STACK_ALLOCATION_SIZE = 1024 * 2000,
+	FE_MEMORY_DEFAULT_STACK_ALLOCATION_SIZE = 2024 * 2000,
 
-	FE_MEMORY_BASE_ALIGNEMENT = _Alignof (MaxAlignT),
+	FE_MEMORY_BASE_ALIGNEMENT = FE_ALIGN_OF(MaxAlignT),
 	FE_MEMORY_DEFAULT_ALIGNEMENT = 0,
 
 
@@ -27,10 +27,6 @@ enum FE_MEMORY_ALLOCATION_INFO
 FE_FORCEINLINE_FUN UintptrT FE_DECL FE_MemoryAlignAddress(UintptrT address, SizeT alignment);
 FE_FORCEINLINE_FUN UintptrT FE_DECL FE_MemoryAlignForwardAdjustment(UintptrT address, SizeT alignment);
 FE_FORCEINLINE_FUN UintptrT FE_DECL FE_MemoryAlignForwardAdjustmentWithHeader(UintptrT address, SizeT alignment, SizeT headerSize);
-
-#include "Feur/Core/Memory/StackAllocator.h"
-#include "Feur/Core/Memory/PoolAllocator.h"
-#include "Feur/Core/Memory/FreeListAllocator.h"
 
 FE_FORCEINLINE_FUN void FE_DECL FE_MemoryGeneralInit(SizeT size);
 FE_FORCEINLINE_FUN void FE_DECL FE_MemoryGeneralShutdown();

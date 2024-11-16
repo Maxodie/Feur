@@ -1,6 +1,7 @@
 #include "fepch.h"
 #include "Platform/Vulkan/RenderPipeline/VulkanRenderPipeline.h"
 #include "Platform/Vulkan/Setup/VulkanSetup.h"
+#include "Platform/Vulkan/VulkanBuffers.h"
 
 #include "Platform/Vulkan/RenderPipeline/VulkanShader.h"
 
@@ -43,18 +44,17 @@ void VulkanCreateGraphicsPipeline(FE_VulkanInfo* vkInfo)
 
 	};
 
-	/*---------------------- Vertex Input ----------------------*/
+	/*---------------------- Vertex Input / BInding ----------------------*/
 
-	// vertex bindings
+	VulkanCreateDescriptorSetLayout(vkInfo);
+
 	VkVertexInputBindingDescription bindingDescription = {
 		.binding = 0,
 		.stride = sizeof(FE_Vertex3D),
 		.inputRate = VK_VERTEX_INPUT_RATE_VERTEX
 	};
 
-	/*FE_List(VkVertexInputAttributeDescription) attributeDescription = { 0 };
-	FE_ListInit(attributeDescription);
-	FE_ListResize(attributeDescription, 2);*/
+	// vertex Input
 	VkVertexInputAttributeDescription attributeDescription[2] = {
 		(VkVertexInputAttributeDescription) {
 			.binding = 0,
@@ -68,21 +68,15 @@ void VulkanCreateGraphicsPipeline(FE_VulkanInfo* vkInfo)
 			.format = VK_FORMAT_R32G32B32A32_SFLOAT,
 			.offset = offsetof(FE_Vertex3D, color)
 		}
-	
+
 	};
 
-	VkPipelineVertexInputStateCreateInfo  vertexInputInfo = {
+	VkPipelineVertexInputStateCreateInfo vertexInputInfo = {
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
 		.vertexBindingDescriptionCount = 1,
 		.pVertexBindingDescriptions = &bindingDescription, // Optionnal
 		.vertexAttributeDescriptionCount = sizeof(attributeDescription) / sizeof(VkVertexInputAttributeDescription),
 		.pVertexAttributeDescriptions = attributeDescription
-
-		//FIXME: remove once we have our vertex buffers
-		//.vertexBindingDescriptionCount = 0,
-		//.pVertexBindingDescriptions = VK_NULL_HANDLE, // Optionnal
-		//.vertexAttributeDescriptionCount = 0,
-		//.pVertexAttributeDescriptions = VK_NULL_HANDLE
 	};
 	
 	/*---------------------- Input Assembly ----------------------*/
@@ -106,9 +100,11 @@ void VulkanCreateGraphicsPipeline(FE_VulkanInfo* vkInfo)
 		.depthClampEnable = VK_FALSE,
 		.rasterizerDiscardEnable = VK_FALSE,
 		.polygonMode = VK_POLYGON_MODE_FILL,
+		//.polygonMode = VK_POLYGON_MODE_LINE,
 		.lineWidth = 1.0f,
 		.cullMode = VK_CULL_MODE_BACK_BIT,
-		.frontFace = VK_FRONT_FACE_CLOCKWISE,
+		.frontFace = VK_FRONT_FACE_CLOCKWISE, //VK_FRONT_FACE_COUNTER_CLOCKWISE
+		//.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE,
 		.depthBiasEnable = VK_FALSE,
 		.depthBiasConstantFactor = 0.0f, // Optionnal
 		.depthBiasClamp = 0.0f, // Optionnal
@@ -155,8 +151,8 @@ void VulkanCreateGraphicsPipeline(FE_VulkanInfo* vkInfo)
 
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo = {
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
-		.setLayoutCount = 0,            // Optionnal
-		.pSetLayouts = NULL,         // Optionnal
+		.setLayoutCount = 1,
+		.pSetLayouts = &vkInfo->descriptor.setLayout,
 		.pushConstantRangeCount = 0,    // Optionnal
 		.pPushConstantRanges = NULL // Optionnal
 	};
@@ -204,15 +200,117 @@ void VulkanCreateGraphicsPipeline(FE_VulkanInfo* vkInfo)
 	vkDestroyShaderModule(vkInfo->logicalDevice, vertexShader, NULL);
 }
 
-void VulkanCleanupGraphicsPipeline(FE_VulkanInfo* vkInfo)
+void VulkanDestoryGraphicsPipeline(FE_VulkanInfo* vkInfo)
 {
 	vkDestroyPipeline(vkInfo->logicalDevice, vkInfo->graphicsPipeline.handle, NULL);
 	vkDestroyPipelineLayout(vkInfo->logicalDevice, vkInfo->graphicsPipeline.layout, NULL);
-	
+	VulkanDestroyDescriptionSetLayout(vkInfo);
+
 	VulkanDestroyShaderCompiler(vkInfo);
 }
 
 void VulkanGraphicsPipelineBind(VkCommandBuffer cmdBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline)
 {
 	vkCmdBindPipeline(cmdBuffer, pipelineBindPoint, pipeline);
+}
+
+void VulkanCreateDescriptorSetLayout(FE_VulkanInfo* vkInfo)
+{
+	VkDescriptorSetLayoutBinding uboLayoutBinding = {
+		.binding = 0,
+		.descriptorCount = 1,
+		.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+		.pImmutableSamplers = VK_NULL_HANDLE,
+		.stageFlags = VK_SHADER_STAGE_VERTEX_BIT,
+	};
+
+	VkDescriptorSetLayoutCreateInfo layoutInfo = {
+		.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
+		.bindingCount = 1,
+		.pBindings = &uboLayoutBinding,
+	};
+
+	VkResult result = vkCreateDescriptorSetLayout(vkInfo->logicalDevice, &layoutInfo, NULL, &vkInfo->descriptor.setLayout);
+	FE_CORE_ASSERT(result == VK_SUCCESS, "failed to create vulkan DescriptorSetLayout : %d", result);
+}
+
+void VulkanDestroyDescriptionSetLayout(FE_VulkanInfo* vkInfo)
+{
+	vkDestroyDescriptorSetLayout(vkInfo->logicalDevice, vkInfo->descriptor.setLayout, NULL);
+}
+
+void VulkanCreateDescriptorPool(FE_VulkanInfo* vkInfo)
+{
+	VkDescriptorPoolSize poolSize = {
+		.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+		.descriptorCount = vkInfo->swapChain.maxFramesInFlight,
+	};
+
+	VkDescriptorPoolCreateInfo poolInfo = {
+		.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
+		.poolSizeCount = 1,
+		.pPoolSizes = &poolSize,
+		.maxSets = vkInfo->swapChain.maxFramesInFlight,
+		.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT,
+	};
+
+	// TODO : change this for vmaCreatePool()
+	VkResult result = vkCreateDescriptorPool(vkInfo->logicalDevice, &poolInfo, NULL, &vkInfo->descriptor.pool);
+	FE_CORE_ASSERT(result == VK_SUCCESS, "failed to create vulkan descriptor pool : %d", result);
+}
+
+void VulkanDestroyDescriptorPool(FE_VulkanInfo* vkInfo)
+{
+	vkDestroyDescriptorPool(vkInfo->logicalDevice, vkInfo->descriptor.pool, NULL);
+}
+
+void VulkanCreateDescriptorSets(FE_VulkanInfo* vkInfo)
+{
+	VkDescriptorSetLayout* layouts = FE_MemoryGeneralAlloc(vkInfo->swapChain.maxFramesInFlight * sizeof(VkDescriptorSetLayout));
+	for (SizeT i = 0; i < vkInfo->swapChain.maxFramesInFlight; i++)
+	{
+		layouts[i] = vkInfo->descriptor.setLayout;
+	}
+
+	VkDescriptorSetAllocateInfo allocInfo = {
+		.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
+		.pool = vkInfo->descriptor.pool,
+		.descriptorSetCount = vkInfo->swapChain.maxFramesInFlight,
+		.pSetLayouts = layouts,
+	};
+
+	vkInfo->descriptor.sets = FE_MemoryGeneralAlloc(vkInfo->swapChain.maxFramesInFlight * sizeof(VkDescriptorSet));
+
+	VkResult result = vkAllocateDescriptorSets(vkInfo->logicalDevice, &allocInfo, vkInfo->descriptor.sets);
+	FE_CORE_ASSERT(result == VK_SUCCESS, "failed to  allocate descriptor sets : %d", result);
+
+	for (size_t i = 0; i < vkInfo->swapChain.maxFramesInFlight; i++) {
+		VkDescriptorBufferInfo bufferInfo = {
+			.buffer = vkInfo->uniformData.uniformBuffers[i].buffer,
+			.offset = 0,
+			.range = sizeof(FE_UniformBufferObject),
+		};
+
+		VkWriteDescriptorSet descriptorWrite = {
+			.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+			.dstSet = vkInfo->descriptor.sets[i],
+			.dstBinding = 0,
+			.dstArrayElement = 0,
+			.descriptorCount = 1,
+			.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+			.pBufferInfo = &bufferInfo,
+			.pImageInfo = NULL, //optional
+			.pTexelBufferView = NULL, //optional
+		};
+
+		vkUpdateDescriptorSets(vkInfo->logicalDevice, 1, &descriptorWrite, 0, NULL);
+	}
+
+	FE_MemoryGeneralFree(layouts);
+}
+
+void VulkanDestroyDescriptorSets(FE_VulkanInfo* vkInfo)
+{
+	//vkFreeDescriptorSets(vkInfo->logicalDevice, vkInfo->descriptor.pool, vkInfo->swapChain.maxFramesInFlight, vkInfo->descriptor.sets);
+	FE_MemoryGeneralFree(vkInfo->descriptor.sets);
 }

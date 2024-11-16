@@ -1,10 +1,11 @@
 #pragma once
 
-typedef enum { FE_RENDERER_API_TYPE_OPENGL, FE_RENDERER_API_TYPE_VULKAN } Renderer_API_Type;
+
+typedef enum Renderer_API_Type { FE_RENDERER_API_TYPE_OPENGL, FE_RENDERER_API_TYPE_VULKAN } Renderer_API_Type;
 
 typedef struct RendererAPIData
 {
-	ILDA_vector4f defaultClearColor;
+	FE_Color defaultClearColor;
 	void* nativeInfoAPI;
 } RendererAPIData;
 
@@ -13,12 +14,17 @@ typedef struct RendererAPI
 	Bool (*Init)(RendererAPIData* api);
 
 	void (*FramePrepare)();
-	Bool(*FrameCommandListBegin)();
-	void (*BeginRendering)(ILDA_vector4f* clearColor);
+	Bool (*FrameCommandListBegin)();
+	void (*BeginRendering)(FE_Color* clearColor);
 	void (*SetViewport)(Uint32 x, Uint32 y, Uint32 width, Uint32 height, Uint32 minDepth, Uint32 maxDepth);
 	void (*SetScissor)(Uint32 width, Uint32 height);
 	void (*BindPipeline)();
-	void (*DrawIndex)();
+
+	void (*BeginScene)();//put cam here
+	void (*EndScene)();
+	void (*DrawIndex)(Uint32 indexCount);
+
+
 	void (*EndRendering)();
 	Bool (*FrameCommandListEnd)();
 	Bool (*FrameSubmit)();
@@ -27,8 +33,9 @@ typedef struct RendererAPI
 
 	void (*Shutdown)();
 
-	void (*OnWindowResized)(Uint32 x, Uint32 y, Uint32 width, Uint32 height);
+	void (*OnWindowResized)(Uint32 x, Uint32 y, Uint32 width, Uint32 height, Uint32 drawIndexCount);
 
+	FE_BufferAPI bufferAPI;
 	Renderer_API_Type API_Type;
 } RendererAPI;
 

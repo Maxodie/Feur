@@ -3744,7 +3744,7 @@ typedef struct VkDescriptorPoolCreateInfo {
 typedef struct VkDescriptorSetAllocateInfo {
     VkStructureType                 sType;
     const void*                     pNext;
-    VkDescriptorPool                descriptorPool;
+    VkDescriptorPool                pool;
     uint32_t                        descriptorSetCount;
     const VkDescriptorSetLayout*    pSetLayouts;
 } VkDescriptorSetAllocateInfo;
@@ -4031,12 +4031,12 @@ typedef void (VKAPI_PTR *PFN_vkDestroyPipelineLayout)(VkDevice device, VkPipelin
 typedef VkResult (VKAPI_PTR *PFN_vkCreateSampler)(VkDevice device, const VkSamplerCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSampler* pSampler);
 typedef void (VKAPI_PTR *PFN_vkDestroySampler)(VkDevice device, VkSampler sampler, const VkAllocationCallbacks* pAllocator);
 typedef VkResult (VKAPI_PTR *PFN_vkCreateDescriptorSetLayout)(VkDevice device, const VkDescriptorSetLayoutCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorSetLayout* pSetLayout);
-typedef void (VKAPI_PTR *PFN_vkDestroyDescriptorSetLayout)(VkDevice device, VkDescriptorSetLayout descriptorSetLayout, const VkAllocationCallbacks* pAllocator);
+typedef void (VKAPI_PTR *PFN_vkDestroyDescriptorSetLayout)(VkDevice device, VkDescriptorSetLayout setLayout, const VkAllocationCallbacks* pAllocator);
 typedef VkResult (VKAPI_PTR *PFN_vkCreateDescriptorPool)(VkDevice device, const VkDescriptorPoolCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorPool* pDescriptorPool);
-typedef void (VKAPI_PTR *PFN_vkDestroyDescriptorPool)(VkDevice device, VkDescriptorPool descriptorPool, const VkAllocationCallbacks* pAllocator);
-typedef VkResult (VKAPI_PTR *PFN_vkResetDescriptorPool)(VkDevice device, VkDescriptorPool descriptorPool, VkDescriptorPoolResetFlags flags);
+typedef void (VKAPI_PTR *PFN_vkDestroyDescriptorPool)(VkDevice device, VkDescriptorPool pool, const VkAllocationCallbacks* pAllocator);
+typedef VkResult (VKAPI_PTR *PFN_vkResetDescriptorPool)(VkDevice device, VkDescriptorPool pool, VkDescriptorPoolResetFlags flags);
 typedef VkResult (VKAPI_PTR *PFN_vkAllocateDescriptorSets)(VkDevice device, const VkDescriptorSetAllocateInfo* pAllocateInfo, VkDescriptorSet* pDescriptorSets);
-typedef VkResult (VKAPI_PTR *PFN_vkFreeDescriptorSets)(VkDevice device, VkDescriptorPool descriptorPool, uint32_t descriptorSetCount, const VkDescriptorSet* pDescriptorSets);
+typedef VkResult (VKAPI_PTR *PFN_vkFreeDescriptorSets)(VkDevice device, VkDescriptorPool pool, uint32_t descriptorSetCount, const VkDescriptorSet* pDescriptorSets);
 typedef void (VKAPI_PTR *PFN_vkUpdateDescriptorSets)(VkDevice device, uint32_t descriptorWriteCount, const VkWriteDescriptorSet* pDescriptorWrites, uint32_t descriptorCopyCount, const VkCopyDescriptorSet* pDescriptorCopies);
 typedef VkResult (VKAPI_PTR *PFN_vkCreateFramebuffer)(VkDevice device, const VkFramebufferCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkFramebuffer* pFramebuffer);
 typedef void (VKAPI_PTR *PFN_vkDestroyFramebuffer)(VkDevice device, VkFramebuffer framebuffer, const VkAllocationCallbacks* pAllocator);
@@ -4497,7 +4497,7 @@ VKAPI_ATTR VkResult VKAPI_CALL vkCreateDescriptorSetLayout(
 
 VKAPI_ATTR void VKAPI_CALL vkDestroyDescriptorSetLayout(
     VkDevice                                    device,
-    VkDescriptorSetLayout                       descriptorSetLayout,
+    VkDescriptorSetLayout                       setLayout,
     const VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateDescriptorPool(
@@ -4508,12 +4508,12 @@ VKAPI_ATTR VkResult VKAPI_CALL vkCreateDescriptorPool(
 
 VKAPI_ATTR void VKAPI_CALL vkDestroyDescriptorPool(
     VkDevice                                    device,
-    VkDescriptorPool                            descriptorPool,
+    VkDescriptorPool                            pool,
     const VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkResetDescriptorPool(
     VkDevice                                    device,
-    VkDescriptorPool                            descriptorPool,
+    VkDescriptorPool                            pool,
     VkDescriptorPoolResetFlags                  flags);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkAllocateDescriptorSets(
@@ -4523,7 +4523,7 @@ VKAPI_ATTR VkResult VKAPI_CALL vkAllocateDescriptorSets(
 
 VKAPI_ATTR VkResult VKAPI_CALL vkFreeDescriptorSets(
     VkDevice                                    device,
-    VkDescriptorPool                            descriptorPool,
+    VkDescriptorPool                            pool,
     uint32_t                                    descriptorSetCount,
     const VkDescriptorSet*                      pDescriptorSets);
 
@@ -5461,7 +5461,7 @@ typedef struct VkDescriptorUpdateTemplateCreateInfo {
     uint32_t                                  descriptorUpdateEntryCount;
     const VkDescriptorUpdateTemplateEntry*    pDescriptorUpdateEntries;
     VkDescriptorUpdateTemplateType            templateType;
-    VkDescriptorSetLayout                     descriptorSetLayout;
+    VkDescriptorSetLayout                     setLayout;
     VkPipelineBindPoint                       pipelineBindPoint;
     VkPipelineLayout                          layout;
     uint32_t                                  set;
@@ -17685,7 +17685,7 @@ typedef struct VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE {
 typedef struct VkDescriptorSetBindingReferenceVALVE {
     VkStructureType          sType;
     const void*              pNext;
-    VkDescriptorSetLayout    descriptorSetLayout;
+    VkDescriptorSetLayout    setLayout;
     uint32_t                 binding;
 } VkDescriptorSetBindingReferenceVALVE;
 

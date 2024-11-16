@@ -19,7 +19,10 @@ void FE_DECL RunApp_impl();
 
 void FE_DECL StartApp();
 Double FE_DECL GetDeltaTime();
+
+void FE_DECL AppPrepareRender();
 void FE_DECL AppUpdate(Double deltaTime);
+
 void FE_DECL ConsumeDeltaTime(Double deltaTime);
 
 void FE_DECL AddLayerApp(Layer* newLayer);
@@ -27,7 +30,6 @@ void FE_DECL InsertLayerApp(Layer* newLayer, Uint32 position);
 void FE_DECL PopLayerApp();
 void FE_DECL LoadWindow();
 void FE_DECL PullWindowEvent();
-void FE_DECL Render();
 void FE_DECL AppOnEvent(FE_Event event);
 Bool FE_DECL OnWindowResizing(FE_EventData* windowResizeEvent);
 Bool FE_DECL OnWindowClose(FE_EventData* windowResizeEvent);

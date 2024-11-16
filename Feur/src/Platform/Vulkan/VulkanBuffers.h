@@ -4,9 +4,16 @@
 
 void InitVulkan_VertexArrayBuffer();
 
-struct FE_VulkanAllocatedBuffer VulkanCreateBuffer(struct FE_VulkanInfo* vkInfo, SizeT allocSize, VkBufferUsageFlags usage);
+static void VulkanCreateBuffer(struct FE_VulkanInfo* vkInfo, SizeT allocSize, VkBufferUsageFlags usage, struct FE_VulkanAllocatedBuffer* outAllocatedBuffer);
 void VulkanDestroyBuffer(struct FE_VulkanInfo* vkInfo, const struct FE_VulkanAllocatedBuffer* buffer);
 
-void VulkanBindMeshBuffer(struct FE_VulkanInfo* vkInfo, VkCommandBuffer cmdBuffer, struct FE_VulkanAllocatedBuffer* verticesBuffer, struct FE_VulkanAllocatedBuffer* indicesBuffer, const FE_Mesh* mesh);
+void VulkanCreateVertexBuffer(struct FE_VulkanInfo* vkInfo, Uint32 vertexCount);
+void VulkanAddVertexIntoBuffer(struct FE_VulkanInfo* vkInfo, FE_Vertex3D* vertices, Uint32 vertexCount, Uint64 verticesOffset);
+void VulkanCreateIndexBuffer(struct FE_VulkanInfo* vkInfo, Uint32 indexCount);
+void VulkanAddIndexIntoBuffer(struct FE_VulkanInfo* vkInfo, Uint32* newIndices, Uint32 indexCount, Uint64 indicesOffset);
+void VulkanCreateUniformBuffer(struct FE_VulkanInfo* vkInfo);
+
+void VulkanUpdateUniformBuffer(struct FE_VulkanInfo* vkInfo);
+void VulkanBindBuffers(struct FE_VulkanInfo* vkInfo, VkCommandBuffer cmdBuffer);
 
 void VulkanCopyBuffer(struct FE_VulkanInfo* vkInfo, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);

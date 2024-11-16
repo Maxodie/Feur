@@ -18,11 +18,6 @@
 
 static FE_VulkanInfo* vkInfo;
 
-FE_Mesh mesh;
-FE_VulkanAllocatedBuffer verticesBuffer;
-FE_VulkanAllocatedBuffer indicesBuffer;
-FE_VulkanAllocatedBuffer stagingBuffer;
-
 Bool VulkanInit_impl(RendererAPIData* apiData)
 {
 	vkInfo = FE_MemoryGeneralAlloc(sizeof(FE_VulkanInfo));
@@ -60,75 +55,50 @@ Bool VulkanInit_impl(RendererAPIData* apiData)
 	/*
 	test 
 	*/
-	FE_List(Uint32) indices = { 0 };
-	FE_ListInit(indices);
-	Uint32 indicesData[6] = { 0,1,2,2,3,0 };
-	FE_ListPushArray(indices, indicesData, 6);
+	//FE_List(Uint32) indices = { 0 };
+	//FE_ListInit(indices);
+	//Uint32 indicesData[6] = { 0,1,2,2,3,0 };//à l'envers ?????
+	//FE_ListPushArray(indices, indicesData, 6);
 
-	FE_Vertex3D defaultVertices[4] = 
-	{
-		(FE_Vertex3D) 
-		{
-			.color = { .x = 0, .y = 1, .z = 1, .w = 1 },
-			.position = { .x = -0.5f, .y = -0.5f, .z = 0},
-		},
-		(FE_Vertex3D)
-		{
-			.color = {.x = 1, .y = 0, .z = 1, .w = 1 },
-			.position = {.x = 0.5f, .y = -0.5f, .z = 0},
-		},
-		(FE_Vertex3D)
-		{
-			.color = {.x = 1, .y = 1, .z = 0, .w = 1 },
-			.position = {.x = 0.5f, .y = 0.5f, .z = 0},
-		},
-		(FE_Vertex3D)
-		{
-			.color = {.x = .1f, .y = .1f, .z = .1f, .w = 1 },
-			.position = {.x = -0.5f, .y = 0.5f, .z = 1},
-		},
-	};
+	//FE_Vertex3D defaultVertices[4] = 
+	//{
+	//	(FE_Vertex3D) 
+	//	{
+	//		.color = {.r = 0, .g = 1, .b = 1, .a = 1 },
+	//		.position = { .x = -0.5f, .y = -0.5f, .z = 0},
+	//	},
+	//	(FE_Vertex3D)
+	//	{
+	//		.color = {.r = 0.5f, .g = 0.5f, .b = 1, .a = 1 },
+	//		.position = {.x = 0.5f, .y = -0.5f, .z = 0},
+	//	},
+	//	(FE_Vertex3D)
+	//	{
+	//		.color = {.r = 1, .g = 0, .b = 0.5f, .a = 1 },
+	//		.position = {.x = 0.5f, .y = 0.5f, .z = 0},
+	//	},
+	//	(FE_Vertex3D)
+	//	{
+	//		.color = {.r = 0.5f, .g = 0.5f, .b = .5f, .a = 0.2f },
+	//		.position = {.x = -0.5f, .y = 0.5f, .z = 0},
+	//	},
+	//};
 
-	FE_List(FE_Vertex3D) vertices = { 0 };
-	FE_ListInit(vertices);
-	FE_ListPushArray(vertices, defaultVertices, 4);
+	//FE_List(FE_Vertex3D) vertices = { 0 };
+	//FE_ListInit(vertices);
+	//FE_ListPushArray(vertices, defaultVertices, 4);
 
-	mesh = (FE_Mesh){
-		.indices.data = indices.data,
-		.indices.impl = indices.impl,
-		.vertices.data = vertices.data,
-		.vertices.impl = vertices.impl
-	};
+	//mesh = (FE_Mesh){
+	//	.indices = FE_ListGet(indices),
+	//	.vertices = FE_ListGet(vertices),
+	//};
 
-	verticesBuffer = VulkanCreateBuffer(
-		vkInfo, mesh.vertices.impl.count * sizeof(FE_Vertex3D), VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT
-	);
+	//VulkanCreateIndexBuffer(&mesh.indices.impl);
+	//VulkanCreateVertexBuffer(&mesh.vertices.impl);
+	VulkanCreateUniformBuffer(vkInfo);
+	VulkanCreateDescriptorPool(vkInfo);
+	VulkanCreateDescriptorSets(vkInfo);
 
-	indicesBuffer = VulkanCreateBuffer(
-		vkInfo, mesh.indices.impl.count * sizeof(Uint32), VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT
-	);
-
-	stagingBuffer = VulkanCreateBuffer(
-		vkInfo, mesh.vertices.impl.count * sizeof(FE_Vertex3D), VK_BUFFER_USAGE_TRANSFER_SRC_BIT
-	);
-
-	//==============================vertices buffer======================================
-	VkResult result = vmaCopyMemoryToAllocation(vkInfo->allocator, mesh.vertices.data, stagingBuffer.allocation, 0, mesh.vertices.impl.count * sizeof(FE_Vertex3D));
-	FE_CORE_ASSERT(result == VK_SUCCESS, "failed to copy memory into vulkan allocator : %d", result);
-	VulkanCopyBuffer(vkInfo, stagingBuffer.buffer, verticesBuffer.buffer, mesh.vertices.impl.count * sizeof(FE_Vertex3D));
-
-	VulkanDestroyBuffer(vkInfo, &stagingBuffer);
-
-	//===============================indices buffer=======================================
-	stagingBuffer = VulkanCreateBuffer(
-		vkInfo, mesh.indices.impl.count * sizeof(Uint32),
-		VK_BUFFER_USAGE_TRANSFER_SRC_BIT);
-
-	result = vmaCopyMemoryToAllocation(vkInfo->allocator, mesh.indices.data, stagingBuffer.allocation, 0, mesh.indices.impl.count * sizeof(Uint32));
-	FE_CORE_ASSERT(result == VK_SUCCESS, "failed to copy memory into vulkan allocator : %d", result);
-	VulkanCopyBuffer(vkInfo, stagingBuffer.buffer, indicesBuffer.buffer, mesh.indices.impl.count * sizeof(Uint32));
-
-	VulkanDestroyBuffer(vkInfo, &stagingBuffer);
 	/*
 	end test
 	*/
@@ -170,7 +140,7 @@ Bool VulkanFrameCommandListBegin_impl()
 	return VulkanCommandBufferBegin(vkInfo->cmdBuffers[vkInfo->currentFrame], FALSE);
 }
 
-void VulkanBeginRendering_impl(ILDA_vector4f* clearColor)
+void VulkanBeginRendering_impl(FE_Color* clearColor)
 {
 	//if (!CanVulkanContinueRendering()) return;
 
@@ -198,16 +168,12 @@ void VulkanBeginRendering_impl(ILDA_vector4f* clearColor)
 		(Uint32)vkInfo->swapChain.images.impl.count, vkInfo->imageBarriers
 	);
 
-	VkClearValue clearValue = { .color = {
-			.float32[0] = clearColor->x,
-			.float32[1] = clearColor->y,
-			.float32[2] = clearColor->z,
-			.float32[3] = clearColor->w,
-		},
-
-		.depthStencil = {
-			.depth = 0,
-			.stencil = 0,
+	VkClearValue colorClearValue = { 
+		.color = {
+			.float32[0] = clearColor->r,
+			.float32[1] = clearColor->g,
+			.float32[2] = clearColor->b,
+			.float32[3] = clearColor->a,
 		},
 	};
 
@@ -221,7 +187,7 @@ void VulkanBeginRendering_impl(ILDA_vector4f* clearColor)
 		.resolveImageLayout = VK_IMAGE_LAYOUT_UNDEFINED,
 		.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
 		.storeOp = VK_ATTACHMENT_STORE_OP_STORE,
-		.clearValue = clearValue,
+		.clearValue = colorClearValue,
 	};
 
 	VkRenderingInfo renderingInfo = {
@@ -235,7 +201,7 @@ void VulkanBeginRendering_impl(ILDA_vector4f* clearColor)
 		.layerCount = 1,
 		.viewMask = 0,
 		.colorAttachmentCount = 1,
-		.pColorAttachments = &colorAttachmentInfo
+		.pColorAttachments = &colorAttachmentInfo,
 	};
 
 	vkInfo->vkCmdBeginRenderingKHR(vkInfo->cmdBuffers[vkInfo->currentFrame], &renderingInfo);
@@ -278,12 +244,41 @@ void VulkanBindPipeline_impl()
 	VulkanGraphicsPipelineBind(vkInfo->cmdBuffers[vkInfo->currentFrame], VK_PIPELINE_BIND_POINT_GRAPHICS, vkInfo->graphicsPipeline.handle);
 }
 
-void VulkanDrawIndex_impl()
+void VulkanBeginScene_impl()
+{
+	VulkanUpdateUniformBuffer(vkInfo);
+}
+
+void VulkanEndScene_impl()
+{
+}
+
+void VulkanDrawIndex_impl(Uint32 indexCount)
 {
 	//if (!CanVulkanContinueRendering()) return;
+	VulkanBindBuffers(vkInfo, vkInfo->cmdBuffers[vkInfo->currentFrame]);
 
-	VulkanBindMeshBuffer(vkInfo, vkInfo->cmdBuffers[vkInfo->currentFrame], &verticesBuffer, &indicesBuffer, &mesh);
-	vkCmdDrawIndexed(vkInfo->cmdBuffers[vkInfo->currentFrame], (Uint32)mesh.indices.impl.count, 1, 0, 0, 0);
+	/*VkDrawIndirectCommand  drawIndirectCmd = {
+		.vertexCount = 0,
+		.firstInstance = 0,
+		.indexCount = indexCount,
+		.instanceCount = 1,
+		.vertexOffset = 0,
+	};
+
+	if (vkInfo->physicalDevice.features.multiDrawIndirect)
+	{
+		vkCmdDrawIndirect(vkInfo->cmdBuffers[vkInfo->currentFrame], indexCount, 1, 0, 0, 0);
+	}
+	else
+	{
+		for (Uint32 i = 0; i < ; i++)
+		{
+
+		}
+	}*/
+	// TODO : indirect rendering (draw on gpu)
+	vkCmdDrawIndexed(vkInfo->cmdBuffers[vkInfo->currentFrame], indexCount, 1, 0, 0, 0);
 }
 
 void VulkanEndRendering_impl()
@@ -389,15 +384,29 @@ void VulkanWaitIdle_impl()
 void VulkanShutdown_impl()
 {
 	//temp
-	VulkanDestroyBuffer(vkInfo, &verticesBuffer);
-	VulkanDestroyBuffer(vkInfo, &indicesBuffer);
+	
+
+	VulkanDestroyBuffer(vkInfo, &vkInfo->vertexBuffer);
+	VulkanDestroyBuffer(vkInfo, &vkInfo->indexBuffer);
+
+	for (SizeT i = 0; i < vkInfo->swapChain.maxFramesInFlight; i++)
+	{
+		vmaUnmapMemory(vkInfo->allocator, vkInfo->uniformData.uniformBuffers[i].allocation);
+		VulkanDestroyBuffer(vkInfo, &vkInfo->uniformData.uniformBuffers[i]);
+	}
+
+	FE_MemoryGeneralFree(vkInfo->uniformData.uniformBuffers);
+	FE_MemoryGeneralFree(vkInfo->uniformData.uniformBuffersMapped);
+
+	VulkanDestroyDescriptorSets(vkInfo);
+	VulkanDestroyDescriptorPool(vkInfo); 
 	//temp
 
 	VulkanDestroyAllocator(vkInfo);
 	VulkanDestroySemaphoresAndFences(vkInfo);
 	VulkanDestroyCommandBuffers(vkInfo);
 	VulkanDestroyCommandPool(vkInfo);
-	VulkanCleanupGraphicsPipeline(vkInfo);
+	VulkanDestoryGraphicsPipeline(vkInfo);
 
 	VulkanDestroyImageView(vkInfo);
 	VulkanShutdownImageViewsDefaultData(vkInfo);
@@ -424,7 +433,7 @@ void VulkanShutdown_impl()
 	FE_MemoryGeneralFree(vkInfo);
 }
 
-void VulkanOnWindowResized_impl(Uint32 x, Uint32 y, Uint32 width, Uint32 height)
+void VulkanOnWindowResized_impl(Uint32 x, Uint32 y, Uint32 width, Uint32 height, Uint32 drawIndexCount)
 {
 	VulkanResizeSwapChain(vkInfo, width, height);
 
@@ -436,7 +445,10 @@ void VulkanOnWindowResized_impl(Uint32 x, Uint32 y, Uint32 width, Uint32 height)
 	VulkanSetScissor_impl(width, height);
 	VulkanBindPipeline_impl();
 
-	VulkanDrawIndex_impl();
+	VulkanBeginScene_impl();
+	VulkanEndScene_impl();
+	VulkanDrawIndex_impl((Uint32)vkInfo->indexBuffer.info.size / vkInfo->indexBuffer.info.memoryType); //horible and will not be enough if the buffer has too much info but meh..
+
 	VulkanEndRendering_impl();
 	VulkanFrameCommandListEnd_impl();
 	VulkanFrameSubmit_impl();
@@ -447,4 +459,26 @@ void VulkanOnWindowResized_impl(Uint32 x, Uint32 y, Uint32 width, Uint32 height)
 Bool CanVulkanContinueRendering()
 {
 	return TRUE;
+}
+
+
+/*======================== BUFFERS ==============================*/
+void VulkanCreateVertexBuffer_impl(Uint32 vertexCount)
+{
+	VulkanCreateVertexBuffer(vkInfo, vertexCount);
+}
+
+void VulkanAddVertexIntoBuffer_impl(FE_Vertex3D* vertices, Uint32 vertexCount, Uint64 verticesOffset)
+{
+	VulkanAddVertexIntoBuffer(vkInfo, vertices, vertexCount, verticesOffset);
+}
+
+void VulkanCreateIndexBuffer_impl(Uint32 indexCount)
+{
+	VulkanCreateIndexBuffer(vkInfo, indexCount);
+}
+
+void VulkanAddIndexIntoBuffer_impl(Uint32* newIndices, Uint32 indexCount, Uint64 indicesOffset)
+{
+	VulkanAddIndexIntoBuffer(vkInfo, newIndices, indexCount, indicesOffset);
 }

@@ -8,15 +8,15 @@
 #include "ILDA_matrix/ILDA_matrix.h"
 #include "ILDA_trigo/ILDA_trigo.h"
 
-void UpdateSandboxLayerBase();
-void OnRender(Layer* layer);
+void UpdateSandboxLayerBase(Double dt);
+void OnNuklearRender(Layer* layer);
 void UpdateLayerBaseEventSandbox(FE_Event* event);
 void OnAttachSandboxLayerBase(Layer* layer);
 
 //const char* LoadFile(const char* filePath);
 void emptyf() {}
 
-Layer layer = { .OnUpdate = emptyf,.OnAttach = OnAttachSandboxLayerBase,.OnRender = OnRender, .OnUpdateLayerEvent = UpdateLayerBaseEventSandbox, .OnDetach = emptyf };
+Layer layer = { .OnUpdate = UpdateSandboxLayerBase,.OnAttach = OnAttachSandboxLayerBase,.OnNuklearRender = OnNuklearRender, .OnUpdateLayerEvent = UpdateLayerBaseEventSandbox, .OnDetach = emptyf };
 
 void tempMatrixPrint(const ILDA_matrix4x4* matrix)
 {
@@ -84,11 +84,36 @@ void OnAttachSandboxLayerBase(Layer* layer)
 	FE_LOG_DEBUG("Sandbox base layer attached");
 }
 
-void UpdateSandboxLayerBase()
+ILDA_vector3f pos = { .x = 0.0f, .y = 0.0f, .z = 0.f };
+ILDA_vector2f size = { .x = 1.0f, .y = 1.5f };
+FE_Color color = { .r = .5f, .g = 0.1f, .b = 1.0f, .a = 0.2f};
+
+ILDA_vector3f pos2 = { .x = 0.5f, .y = 0.0f, .z = 0.f };
+ILDA_vector2f size2 = { .x = 1.1f, .y = 0.1f };
+FE_Color color2 = { .r = .2f, .g = 1.f, .b = 0.0f, .a = 0.2f };
+
+ILDA_vector3f pos3 = { .x = -1.f, .y = 0.0f, .z = 0.f };
+ILDA_vector2f size3 = { .x = 1.1f, .y = 1.2f };
+FE_Color color3 = { .r = 10.5f, .g = 10.1f, .b = 10.8f, .a = 1.f };
+
+void UpdateSandboxLayerBase(Double dt)
 {
+	
+
+	FE_Renderer2DBeginScene();
+
+	if (FE_IsInputPressed(FE_KEYCODE_H))
+	{
+		FE_Renderer2DDrawQuad(&pos, &size, &color);
+		pos2.x -= dt * 10;
+	}
+	//FE_Renderer2DDrawQuad(&pos, &size, &color);
+	FE_Renderer2DDrawQuad(&pos2, &size2, &color2);
+
+	FE_Renderer2DEndScene();
 }
 
-void OnRender(Layer* layer)
+void OnNuklearRender(Layer* layer)
 {
 	
 }

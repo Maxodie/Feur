@@ -9,6 +9,6 @@ typedef struct Input_API
 } Input_API;
 
 
-void FE_DECL InitInputAPI();
+void FE_DECL FE_InitInputAPI();
 
-Bool FE_DECL IsInputPressed(FE_KeyCode key_code);
+Bool FE_DECL FE_IsInputPressed(FE_KeyCode key_code);

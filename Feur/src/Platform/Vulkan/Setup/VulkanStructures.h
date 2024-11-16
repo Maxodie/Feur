@@ -1,16 +1,23 @@
 #pragma once
 
-// push constants for our mesh object draws
-typedef struct FE_VulkanGPUDrawPushConstants {
-	ILDA_matrix4x4 worldMatrix;
-	VkDeviceAddress vertexBuffer;
-} FE_VulkanGPUDrawPushConstants;
-
 typedef struct FE_VulkanAllocatedBuffer {
 	VkBuffer buffer;
 	VmaAllocation allocation;
 	VmaAllocationInfo info;
 } FE_VulkanAllocatedBuffer;
+
+typedef struct FE_VulkanDescriptor
+{
+	VkDescriptorSetLayout setLayout;
+	VkDescriptorPool pool;
+	VkDescriptorSet* sets;//static array
+} FE_VulkanDescriptor;
+
+typedef struct FE_VulkanUniformData
+{
+	FE_VulkanAllocatedBuffer* uniformBuffers;//static array
+	void** uniformBuffersMapped;//static array
+} FE_VulkanUniformData;
 
 typedef struct FE_VulkanfeSwapChainSupportDetails 
 {
@@ -95,6 +102,7 @@ typedef struct FE_VulkanInfo
 	VkFence* inFlightFences;//static array
 
 	FE_VulkanPipeline graphicsPipeline;
+	FE_VulkanDescriptor descriptor;
 
 	//shaderc
 	shaderc_compiler_t shaderCompiler;
@@ -103,8 +111,13 @@ typedef struct FE_VulkanInfo
 	VkCommandBuffer* cmdBuffers;//static array
 	VkImageMemoryBarrier* imageBarriers;//static array
 
+	FE_VulkanAllocatedBuffer vertexBuffer;
+	FE_VulkanAllocatedBuffer indexBuffer;
+	FE_VulkanUniformData uniformData;
+
 	RendererAPIData* apiData;
 
 	VmaAllocator allocator;
+
 
 } FE_VulkanInfo;

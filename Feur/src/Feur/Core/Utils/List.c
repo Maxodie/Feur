@@ -17,6 +17,7 @@ Bool FE_DECL FE_ListInit_impl(FE_List_impl* list, Byte** data)
 	list->capacity = 0;
 	*data = NULL;
 	list->isInitialized = TRUE;
+	list->head = NULL;
 
 	return TRUE;
 }
@@ -188,6 +189,7 @@ Bool FE_DECL FE_ListPushArray_impl(FE_List_impl* list, Byte** data, const void* 
 		{
 			list->capacity += sizeToPush;
 			(*data) = FE_MemoryGeneralAlloc(dataSize * list->capacity);
+			list->head = *data;
 #ifdef FE_DEBUG
 			allocatedListCount++;
 #endif
@@ -228,9 +230,15 @@ Bool FE_DECL FE_ListReserve_impl(FE_List_impl* list, Byte** data, SizeT amount, 
 	if(*data == NULL) allocatedListCount++;
 #endif
 
-	(*data) = (*data) == NULL ?
-		FE_MemoryGeneralAlloc(dataSize * list->capacity) :
-		FE_MemoryGeneralRealloc((*data), dataSize * list->capacity);
+	if ((*data) == NULL)
+	{
+		(*data) = FE_MemoryGeneralAlloc(dataSize * list->capacity);
+		list->head = *data;
+	}
+	else
+	{
+		(*data) = FE_MemoryGeneralRealloc((*data), dataSize * list->capacity);
+	}
 
 	if ((*data) == NULL)
 	{

@@ -7,6 +7,8 @@
 //Math
 #include "ILDA_utils/ILDA_utils.h"
 #include "ILDA_vector/ILDA_vector.h"
+#include "ILDA_matrix/ILDA_matrix.h"
+#include "ILDA_trigo/ILDA_trigo.h"
 
 //Core
 #include "Feur/Core/Core.h"
@@ -21,8 +23,14 @@
 //Window
 #include "Feur/Core/Window/Window.h"
 
+//Utils
+#include "Feur/Core/Utils/List.h"
+
 //Renderer
+#include "Feur/Renderer/Mesh.h"
+#include "Feur/Renderer/Buffers.h"
 #include "Feur/Renderer/RendererAPI.h"
+#include "Feur/Renderer/Renderer2D.h"
 
 //Inputs
 #include "Feur/Core/Input/KeyCode.h"
@@ -30,9 +38,6 @@
 
 //Event
 #include "Feur/Event/Event.h"
-
-//Utils
-#include "Feur/Core/Utils/List.h"
 
 //Layer
 #include "Feur/Core/Layer.h"

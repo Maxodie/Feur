@@ -8,7 +8,7 @@
 #include "ILDA_matrix/ILDA_matrix.h"
 #include "ILDA_trigo/ILDA_trigo.h"
 
-void UpdateSandboxLayerBase();
+void UpdateSandboxLayerBase(Double dt);
 void OnRender(Layer* layer);
 void UpdateLayerBaseEventSandbox(FE_Event* event);
 void OnAttachSandboxLayerBase(Layer* layer);
@@ -17,7 +17,7 @@ GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path)
 const char* LoadFile(const char* filePath);
 void emptyf() {}
 
-Layer layer = { .OnUpdate = emptyf,.OnAttach = OnAttachSandboxLayerBase,.OnRender = OnRender, .OnUpdateLayerEvent = UpdateLayerBaseEventSandbox, .OnDetach = emptyf };
+Layer layer = { .OnUpdate = UpdateSandboxLayerBase,.OnAttach = OnAttachSandboxLayerBase,.OnRender = OnRender, .OnUpdateLayerEvent = UpdateLayerBaseEventSandbox, .OnDetach = emptyf };
 
 GLuint VertexArrayID;
 static const GLfloat g_vertex_buffer_data[] = {
@@ -118,7 +118,7 @@ void OnRender(Layer* layer)
 	glDisableVertexAttribArray(0);
 }
 
-void UpdateSandboxLayerBase()
+void UpdateSandboxLayerBase(Double dt)
 {
 
 }

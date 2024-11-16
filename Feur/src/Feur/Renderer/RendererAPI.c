@@ -1,17 +1,14 @@
 #include "fepch.h"
 #include "Feur/Renderer/RendererAPI.h"
-#include "Feur/Renderer/Buffers.h"
 
 #include "Platform/OpenGL/OpenGLRendererAPIimpl.h"
-#include "Platform/OpenGL/OpenGLBuffers.h"
 #include "Platform/Vulkan/VulkanRendererAPIimpl.h"
-#include "Platform/Vulkan/VulkanBuffers.h"
 
 static RendererAPI rendererAPI;
 
 void InitRendererAPISelection(RendererAPIData* apiData)
 {
-	apiData->defaultClearColor = (ILDA_vector4f){ .x = 120, .y = 200, .z = 40, .w = 255 };
+	apiData->defaultClearColor = (FE_Color){ .r = 0.01f, .g = 0.01f, .b = 0.01f, .a = 1 };
 
 #ifdef FE_RENDER_SELECTED_API_OPENGL
 	rendererAPI.API_Type = FE_RENDERER_API_TYPE_OPENGL;
@@ -40,7 +37,12 @@ void InitRendererAPISelection(RendererAPIData* apiData)
 		rendererAPI.SetViewport = VulkanSetViewport_impl;
 		rendererAPI.SetScissor = VulkanSetScissor_impl;
 		rendererAPI.BindPipeline = VulkanBindPipeline_impl;
+
+		rendererAPI.BeginScene = VulkanBeginScene_impl;
+		rendererAPI.EndScene = VulkanEndScene_impl;
 		rendererAPI.DrawIndex = VulkanDrawIndex_impl;
+
+
 		rendererAPI.EndRendering = VulkanEndRendering_impl;
 		rendererAPI.FrameCommandListEnd = VulkanFrameCommandListEnd_impl;
 		rendererAPI.FrameSubmit = VulkanFrameSubmit_impl;
@@ -50,6 +52,12 @@ void InitRendererAPISelection(RendererAPIData* apiData)
 		rendererAPI.Shutdown = VulkanShutdown_impl;
 
 		rendererAPI.OnWindowResized = VulkanOnWindowResized_impl;
+
+		//buffers
+		rendererAPI.bufferAPI.CreateVertexBuffer = VulkanCreateVertexBuffer_impl;
+		rendererAPI.bufferAPI.AddVertexIntoBuffer = VulkanAddVertexIntoBuffer_impl;
+		rendererAPI.bufferAPI.CreateIndexBuffer = VulkanCreateIndexBuffer_impl;
+		rendererAPI.bufferAPI.AddIndexIntoBuffer = VulkanAddIndexIntoBuffer_impl;
 
 		//GetRenderer_VertexArray_Buffer()->InitVaoBuffer = InitVulkan_VertexArrayBuffer;
 		break;

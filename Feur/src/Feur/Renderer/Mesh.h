@@ -1,15 +1,28 @@
 #pragma once
 
+typedef struct FE_Color
+{
+	Float32 r;
+	Float32 g;
+	Float32 b;
+	Float32 a;
+} FE_Color;
+
 typedef struct FE_Vertex3D
 {
-	ILDA_vector3f position;
+	ILDA_vector4f position;
 	ILDA_vector3f normal;
-	ILDA_vector4f color;
+	FE_Color color;
 
-	Float32 uvX;
-	Float32 uvY;
+	ILDA_vector2f texCoord;
 
 } FE_Vertex3D;
+
+typedef struct FE_UniformBufferObject {
+	FE_ALIGN_AS(16) ILDA_matrix4x4 model;
+	FE_ALIGN_AS(16) ILDA_matrix4x4 view;
+	FE_ALIGN_AS(16) ILDA_matrix4x4 proj;
+} FE_UniformBufferObject;
 
 typedef struct FE_Mesh
 {

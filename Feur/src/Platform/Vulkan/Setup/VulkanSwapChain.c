@@ -138,8 +138,8 @@ Bool VulkanSwapChainSupportByQuery(FE_VulkanInfo* vkInfo)
     }
 
     //select the best parameters
-    VkSurfaceFormatKHR surfaceFormat = VulkanChooseSwapSurfaceFormat(&vkInfo->swapChain.details.formats);
-    VkPresentModeKHR presentMode = VulkanChooseSwapPresentMode(&vkInfo->swapChain.details.presentModes);
+    VkSurfaceFormatKHR surfaceFormat = VulkanChooseSwapSurfaceFormat(&vkInfo->swapChain.details.formats.impl);
+    VkPresentModeKHR presentMode = VulkanChooseSwapPresentMode(&vkInfo->swapChain.details.presentModes.impl);
     VkExtent2D extent = VulkanChooseSwapExtent(&vkInfo->swapChain.details.capabilities);
 
     vkInfo->swapChain.imageFormat = surfaceFormat.format;
@@ -152,26 +152,26 @@ Bool VulkanSwapChainSupportByQuery(FE_VulkanInfo* vkInfo)
 
 VkSurfaceFormatKHR VulkanChooseSwapSurfaceFormat(FE_ListParameterPtr(VkSurfaceFormatKHR) pAvailableFormats)
 {
-    const FE_List(VkSurfaceFormatKHR)* availableFormats = pAvailableFormats;
-    for (SizeT i = 0; i < availableFormats->impl.count; i++)
+    const FE_List(VkSurfaceFormatKHR) availableFormats = FE_ListFromParameterPtr(pAvailableFormats);
+    for (SizeT i = 0; i < availableFormats.impl.count; i++)
     {
-        if (availableFormats->data[i].format == VK_FORMAT_B8G8R8A8_SRGB && availableFormats->data[i].colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
+        if (availableFormats.data[i].format == VK_FORMAT_B8G8R8A8_SRGB && availableFormats.data[i].colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
         {
-            return availableFormats->data[i];
+            return availableFormats.data[i];
         }
     }
 
-    return availableFormats->data[0];
+    return availableFormats.data[0];
 }
 
 VkPresentModeKHR VulkanChooseSwapPresentMode(FE_ListParameterPtr(VkPresentModeKHR) pAvailablePresentModes)
 {
-    const FE_List(VkPresentModeKHR)* availablePresentModes = pAvailablePresentModes;
-    for (SizeT i = 0; i < availablePresentModes->impl.count; i++)
+    const FE_List(VkPresentModeKHR) availablePresentModes = FE_ListFromParameterPtr(pAvailablePresentModes);
+    for (SizeT i = 0; i < availablePresentModes.impl.count; i++)
     {
-        if (availablePresentModes->data[i] == VK_PRESENT_MODE_MAILBOX_KHR)
+        if (availablePresentModes.data[i] == VK_PRESENT_MODE_MAILBOX_KHR)
         {
-            return availablePresentModes->data[i];
+            return availablePresentModes.data[i];
         }
     }
 

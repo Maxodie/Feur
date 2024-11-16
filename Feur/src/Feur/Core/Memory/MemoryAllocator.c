@@ -1,5 +1,8 @@
 #include "fepch.h"
 #include "Feur/Core/Memory/MemoryAllocator.h"
+#include "Feur/Core/Memory/StackAllocator.h"
+#include "Feur/Core/Memory/PoolAllocator.h"
+#include "Feur/Core/Memory/FreeListAllocator.h"
 
 struct FE_MemoryGeneralAllocator
 {

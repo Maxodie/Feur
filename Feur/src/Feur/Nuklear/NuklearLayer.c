@@ -31,7 +31,7 @@ void FE_DECL NuklearGUILayerEvent(FE_Event* event)
 #endif
 }
 
-void FE_DECL NuklearGUILayerUpdate()
+void FE_DECL NuklearGUILayerUpdate(Double dt)
 {
 
 }
@@ -65,7 +65,7 @@ Layer FE_DECL CreateNewNuklearGUILayer(char* layerName)
 	Layer nuklearLayer = {
 	   .layerName = layerName, .OnAttach = NuklearGUILayerOnAttach,
 		   .OnDetach = NuklearGUILayerOnDetach, .OnUpdate = NuklearGUILayerUpdate, .OnUpdateLayerEvent = NuklearGUILayerEvent,
-		   .OnRender = NuklearGUILayerRender, .handledInfo = NULL
+		   .OnNuklearRender = NuklearGUILayerRender, .handledInfo = NULL
 	};
 
 	 return nuklearLayer;

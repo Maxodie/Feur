@@ -4,8 +4,8 @@ typedef struct Layer
 {
 	char* layerName;
 	void (*OnUpdateLayerEvent)(FE_Event*);
-	void (*OnUpdate)();
-	void (*OnRender)(struct Layer* layer);
+	void (*OnUpdate)(Double deltaTime);
+	void (*OnNuklearRender)(struct Layer* layer);
 
 	void (*OnAttach)(struct Layer* layer);
 	void (*OnDetach)();
