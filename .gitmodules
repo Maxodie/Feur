@@ -1,6 +1,3 @@
-[submodule "Feur/vendor/Mathilda"]
-	path = Feur/vendor/Mathilda
-	url = https://github.com/Maxodie/Mathilda/
 [submodule "Feur/vendor/glfw/GLFW"]
 	path = Feur/vendor/glfw/GLFW
 	url = https://github.com/glfw/glfw
@@ -10,3 +7,6 @@
 [submodule "Feur/vendor/VulkanSDK/VulkanMemoryAllocator"]
 	path = Feur/vendor/VulkanSDK/VulkanMemoryAllocator
 	url = https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
+[submodule "Feur/vendor/Mathilda/Mathilda"]
+	path = Feur/vendor/Mathilda/Mathilda
+	url = https://github.com/Maxodie/Mathilda
