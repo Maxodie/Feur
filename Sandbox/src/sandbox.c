@@ -30,10 +30,18 @@ void tempMatrixPrint(const ILDA_matrix4x4* matrix)
 	}
 }
 
+FE_Camera cam = { 0 };
+ILDA_vector3f camMovement = { .z = -1 };
+ILDA_vector3f camRotateAxis = { .z = 1 };
+
 void StartSandbox()
 {
 	AddLayerApp(&layer); 
 	
+	ILDA_vector3f pos = { .z = 1 };
+	ILDA_vector3f worldUp = { .y = 1 };
+	FE_CameraInit(&cam, &pos, &worldUp, GetApp()->windowData.w / (Float32)GetApp()->windowData.h, 45.f, 0.0f, 1.0f);
+
 //	==========================    FE_list test 
 	/*FE_List(Uint32) test = { 0 };
 	FE_ListInit(test);
@@ -96,18 +104,44 @@ ILDA_vector3f pos3 = { .x = -1.f, .y = 0.0f, .z = 0.f };
 ILDA_vector2f size3 = { .x = 1.1f, .y = 1.2f };
 FE_Color color3 = { .r = 10.5f, .g = 10.1f, .b = 10.8f, .a = 1.f };
 
+
+
 void UpdateSandboxLayerBase(Double dt)
 {
-	
+	FE_Renderer2DBeginScene(&cam);
 
-	FE_Renderer2DBeginScene();
+	if (FE_IsInputPressed(FE_KEYCODE_W))
+	{
+		FE_Renderer2DDrawQuad(&pos, &size, &color); 
+		ILDA_vector3f move = camMovement;
+		ILDA_vector3f_mul(&move, dt);
+		FE_CameraMove(&cam, &move);
+	}
 
-	if (FE_IsInputPressed(FE_KEYCODE_H))
+	if (FE_IsInputPressed(FE_KEYCODE_S))
 	{
 		FE_Renderer2DDrawQuad(&pos, &size, &color);
-		pos2.x -= dt * 10;
+		ILDA_vector3f move = camMovement;
+		ILDA_vector3f_mul(&move, -dt);
+		FE_CameraMove(&cam, &move);
 	}
-	//FE_Renderer2DDrawQuad(&pos, &size, &color);
+
+	if (FE_IsInputPressed(FE_KEYCODE_A))
+	{
+		FE_Renderer2DDrawQuad(&pos, &size, &color);
+		//pos2.x -= (float)dt * 10;
+		//FE_CameraMove(&cam, &camMovement);
+		FE_CameraRotate(&cam, &camRotateAxis, 2.f);
+	}
+	if (FE_IsInputPressed(FE_KEYCODE_D))
+	{
+		FE_Renderer2DDrawQuad(&pos, &size, &color);
+		//pos2.x -= (float)dt * 10;
+		//FE_CameraMove(&cam, &camMovement);
+		FE_CameraRotate(&cam, &camRotateAxis, -2.f);
+	}
+
+	FE_Renderer2DDrawQuad(&pos3, &size3, &color3);
 	FE_Renderer2DDrawQuad(&pos2, &size2, &color2);
 
 	FE_Renderer2DEndScene();

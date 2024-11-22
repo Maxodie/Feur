@@ -16,7 +16,7 @@ IncludeDir = {}
 IncludeDir["Glad"] = "Feur/vendor/Glad/include"
 IncludeDir["GLFW"] = "Feur/vendor/glfw/GLFW/include"
 IncludeDir["nuklear"] = "Feur/vendor/nuklear"
-IncludeDir["Mathilda"] = "Feur/vendor/Mathilda/Mathilda/include"
+IncludeDir["Mathilda"] = "Feur/vendor/Mathilda/Mathilda/Mathilda/include"
 IncludeDir["Vulkan"] = "Feur/vendor/VulkanSDK/1.3.290.0/Include"
 IncludeDir["VulkanMemoryAllocator"] = "Feur/vendor/VulkanSDK/VulkanMemoryAllocator/include"
 
@@ -34,7 +34,7 @@ group "Dependencies"
 		include "Feur/vendor/nuklear/nuklearPremake.lua"
 
 	group "Math"
-		include "Feur/vendor/Mathilda/include_premake5.lua"
+		include "Feur/vendor/Mathilda/Mathilda_premake5.lua"
 
 group "Feur"
 
@@ -62,13 +62,12 @@ project "Feur"
 		"ILDA_HAVE_INLINE",
 		"_CRT_SECURE_NO_WARNINGS",
         --"FE_RENDER_SELECTED_API_OPENGL",
-		"FE_RENDER_SELECTED_API_VULKAN"
-	}
+		"FE_RENDER_SELECTED_API_VULKAN",
+    }
 
 	includedirs
 	{
 		"%{prj.name}/src",
-		"%{prj.name}/vendor/spdlog/include",
 		--"%{IncludeDir.SDL2}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.Vulkan}",
@@ -86,7 +85,8 @@ project "Feur"
 		"GLFW",
 		"Mathilda",
         "Vulkan",
-        "VulkanMemoryAllocator"
+        "VulkanMemoryAllocator",
+        "Nuklear"
 	}
 
 	filter "system:windows"

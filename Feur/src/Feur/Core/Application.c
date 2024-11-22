@@ -55,13 +55,13 @@ void FE_DECL StartApp()
 	g_fe_App.targetFps = 1000 / 165;
 }
 
-Double GetDeltaTime()
+Double FE_DECL GetDeltaTime()
 {
 	g_fe_App.startTime = clock();
 	return ((Double)(g_fe_App.startTime - g_fe_App.endTime)) / CLOCKS_PER_SEC;
 }
 
-void ConsumeDeltaTime(Double deltaTime)
+void FE_DECL ConsumeDeltaTime(Double deltaTime)
 {
 	g_fe_App.endTime = clock();
 	Uint32 elapsedTimeMs = (Uint32)(g_fe_App.endTime - g_fe_App.startTime);
@@ -99,6 +99,11 @@ void FE_DECL AppUpdate(Double deltaTime)
 		g_fe_App.layerStack.stackedlayers.data[i]->OnUpdate(deltaTime);
 	}
 
+	for (SizeT i = 0; i < FE_LayerStackGetCount(&g_fe_App.layerStack); i++)
+	{
+		g_fe_App.layerStack.stackedlayers.data[i]->OnNuklearRender(g_fe_App.layerStack.stackedlayers.data[i]);
+	}
+
 	RenderCommandEndRendering();
 	RenderCommandFrameCommandListEnd();
 	RenderCommandFrameSubmit();
@@ -107,12 +112,6 @@ void FE_DECL AppUpdate(Double deltaTime)
 
 	FE_Renderer2DReset();
 
-	Layer* layer;
-	for (SizeT i = 0; i < FE_LayerStackGetCount(&g_fe_App.layerStack); i++)
-	{
-		layer = g_fe_App.layerStack.stackedlayers.data[i];
-		layer->OnNuklearRender(layer);
-	}
 
 	GetWindowAPI()->Update(&g_fe_App.windowData);
 }
@@ -121,7 +120,6 @@ void FE_DECL AppUpdate(Double deltaTime)
 void FE_DECL AddLayerApp(Layer* newLayer)
 {
 	FE_LayerStackPush(&g_fe_App.layerStack, newLayer);
-	newLayer->OnAttach(newLayer);
 }
 
 void FE_DECL InsertLayerApp(Layer* newLayer, Uint32 position)

@@ -41,7 +41,7 @@ struct Renderer2DData
 	.quadIndexOffset = 0,
 };
 
-void FE_Renderer2DInit()
+void FE_DECL FE_Renderer2DInit()
 {
 	renderer2DData.quadVertexPtrBase = FE_MemoryGeneralAlloc(renderer2DData.maxVertices);
 	renderer2DData.quadVertexPtr = renderer2DData.quadVertexPtrBase;
@@ -53,23 +53,23 @@ void FE_Renderer2DInit()
 	GetRendererAPI()->bufferAPI.CreateIndexBuffer(renderer2DData.maxIndices);
 }
 
-void FE_Renderer2DShutdown()
+void FE_DECL FE_Renderer2DShutdown()
 {
 	FE_MemoryGeneralFree(renderer2DData.quadVertexPtrBase);
 	FE_MemoryGeneralFree(renderer2DData.quadIndexPtrBase);
 }
 
-void FE_Renderer2DBeginScene()
+void FE_DECL FE_Renderer2DBeginScene(const FE_Camera* cam)
 {
-	RenderCommandBeginScene();
+	RenderCommandBeginScene(cam);
 }
 
-void FE_Renderer2DEndScene()
+void FE_DECL FE_Renderer2DEndScene()
 {
 	FE_Renderer2DDraw();
 }
 
-void FE_Renderer2DDraw()
+void FE_DECL FE_Renderer2DDraw()
 {
 	Uint32 dataSize = (Uint32)(renderer2DData.quadVertexPtr - renderer2DData.quadVertexPtrBase);
 	if (dataSize > 0)
@@ -85,7 +85,7 @@ void FE_Renderer2DDraw()
 	}
 }
 
-void FE_Renderer2DReset()
+void FE_DECL FE_Renderer2DReset()
 {
 	renderer2DData.quadVertexPtr = renderer2DData.quadVertexPtrBase;
 	renderer2DData.quadIndexPtr = renderer2DData.quadIndexPtrBase;
@@ -93,17 +93,17 @@ void FE_Renderer2DReset()
 	renderer2DData.quadIndexOffset = 0;
 }
 
-void FE_Renderer2DCreateTemporaryBuffer()
+void FE_DECL FE_Renderer2DCreateTemporaryBuffer()
 {
 
 }
 
-Uint32 FE_Renderer2DGetIndexCount()
+Uint32 FE_DECL FE_Renderer2DGetIndexCount()
 {
 	return renderer2DData.quadIndexCount;
 }
 
-void FE_Renderer2DDrawQuad(const ILDA_vector3f* position, const ILDA_vector2f* size, const FE_Color* color)
+void FE_DECL FE_Renderer2DDrawQuad(const ILDA_vector3f* position, const ILDA_vector2f* size, const FE_Color* color)
 {
 	// TODO : check index buffer size and reset if needed
 

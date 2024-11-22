@@ -54,6 +54,7 @@
 
 #include "Feur/Core/LayerStack.h"
 
+#include "Feur/Renderer/Camera.h"
 #include "Feur/Renderer/Mesh.h"
 #include "Feur/Renderer/Buffers.h"
 #include "Feur/Renderer/RendererAPI.h"

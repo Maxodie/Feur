@@ -1,6 +1,6 @@
 #pragma once
 
-Bool RenderCommandInit(RendererAPIData* api);
+Bool FE_DECL RenderCommandInit(RendererAPIData* api);
 
 void FE_DECL RenderCommandFramePrepare();
 void FE_DECL RenderCommandFrameCommandListBegin();
@@ -10,7 +10,7 @@ void FE_DECL RenderCommandSetScissor(Uint32 width, Uint32 height);
 void FE_DECL RenderCommandBindPipeline();
 
 
-void FE_DECL RenderCommandBeginScene();
+void FE_DECL RenderCommandBeginScene(const FE_Camera * cam);
 void FE_DECL RenderCommandEndScene();
 void FE_DECL RenderCommandDrawIndex(Uint32 indexCount);
 
@@ -21,6 +21,6 @@ void FE_DECL RenderCommandFrameSubmit();
 void FE_DECL RenderCommandFramePresent();
 void FE_DECL RenderCommandWaitIdle();
 
-void RenderCommandShutDown();
+void FE_DECL RenderCommandShutDown();
 
 void FE_DECL RenderCommandOnWindowResized(Uint32 w, Uint32 h, Uint32 width, Uint32 height, Uint32 drawIndexCount);

@@ -98,6 +98,7 @@ typedef struct FE_VulkanInfo
 	Uint32 imageIndex;
 
 	VkSemaphore* imageAvailableSemaphores;//static array
+	VkSemaphore imageGUIAvailableSemaphores;//static array
 	VkSemaphore* queueCompleteSemaphores;//static array
 	VkFence* inFlightFences;//static array
 

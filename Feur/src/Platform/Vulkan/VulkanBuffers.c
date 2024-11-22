@@ -107,23 +107,12 @@ void VulkanAddDrawIndexedIndirectCommandsBuffer(FE_VulkanInfo* vkInfo, Uint32 in
 	VulkanDestroyBuffer(vkInfo, &stagingBuffer);
 }
 
-void VulkanUpdateUniformBuffer(FE_VulkanInfo* vkInfo)
+void VulkanUpdateUniformBuffer(FE_VulkanInfo* vkInfo, const FE_Camera* cam)
 {
-	ILDA_vector3f axis = { .x = 0, .y = 0.0, .z = 0.0 };
-	ILDA_matrix4x4 rotation = ILDA_rotation(ILDA_radians(0.f), &axis);
-
-
-	ILDA_vector3f pos = { .x = -0.0f, .y =0, .z = -2.0f }, target = { 0 }, worldUp = { .y = 1.0f };
-	ILDA_matrix4x4 view = ILDA_matrix_look_at_r(&pos, &target, &worldUp);
-
-	ILDA_matrix4x4 perspective = ILDA_matrix_perspective_r(ILDA_radians(45), vkInfo->swapChain.extent.width / (float)vkInfo->swapChain.extent.height, 0.1f, 10.0f);
-
-	rotation.data[3][3] = 1;
-	perspective.data[1][1] *= -1;
 	FE_UniformBufferObject ubo = {
-		.model = rotation,
-		.view = view,
-		.proj = perspective,
+		.model = cam->rotation,
+		.view = cam->view,
+		.proj = cam->perspective,
 	};
 
 	memcpy(vkInfo->uniformData.uniformBuffersMapped[vkInfo->currentFrame], &ubo, sizeof(ubo));

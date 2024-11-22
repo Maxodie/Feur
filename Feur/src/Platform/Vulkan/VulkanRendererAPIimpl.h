@@ -9,7 +9,7 @@ void VulkanSetViewport_impl(Uint32 x, Uint32 y, Uint32 width, Uint32 height, Uin
 void VulkanSetScissor_impl(Uint32 width, Uint32 height);
 void VulkanBindPipeline_impl();
 
-void VulkanBeginScene_impl();
+void VulkanBeginScene_impl(const FE_Camera* cam);
 void VulkanEndScene_impl();
 void VulkanDrawIndex_impl(Uint32 indexCount);
 

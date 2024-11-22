@@ -6,7 +6,7 @@
 
 static RendererAPI rendererAPI;
 
-void InitRendererAPISelection(RendererAPIData* apiData)
+void FE_DECL InitRendererAPISelection(RendererAPIData* apiData)
 {
 	apiData->defaultClearColor = (FE_Color){ .r = 0.01f, .g = 0.01f, .b = 0.01f, .a = 1 };
 
@@ -68,7 +68,7 @@ void InitRendererAPISelection(RendererAPIData* apiData)
 	}
 }
 
-const RendererAPI* GetRendererAPI()
+const RendererAPI* FE_DECL GetRendererAPI()
 {
 	return &rendererAPI;
 }

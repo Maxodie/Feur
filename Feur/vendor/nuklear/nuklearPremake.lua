@@ -3,13 +3,21 @@ project "Nuklear"
     kind "StaticLib"
     language "C"
 
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    staticruntime "on"
+
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
     files
     {
         "Nuklear/src/**.h",
-        "Nuklear/src/**.c"
+        "Nuklear/src/**.c",
+        "NuklearImplementationCompile.c"
+    }
+
+    includedirs
+    {
+        "Nuklear"
     }
 
     defines

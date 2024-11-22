@@ -18,9 +18,9 @@ void OpenGLOnWindowResize_impl(Uint32 x, Uint32 y, Uint32 width, Uint32 height, 
 	glViewport(x, y, width, height);
 }
 
-void OpenGLBeginRendering_impl(ILDA_vector4f * clearColor)
+void OpenGLBeginRendering_impl(FE_Color * clearColor)
 {
-	glClearColor(clearColor->x, clearColor->y, clearColor->z, clearColor->w);
+	glClearColor(clearColor->r, clearColor->g, clearColor->b, clearColor->a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 

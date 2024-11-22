@@ -16,7 +16,7 @@ void VulkanCreateDrawIndexedIndirectCommandsBuffer(struct FE_VulkanInfo* vkInfo)
 void VulkanAddDrawIndexedIndirectCommandsBuffer(struct FE_VulkanInfo* vkInfo, Uint32 indexCount);
 
 
-void VulkanUpdateUniformBuffer(struct FE_VulkanInfo* vkInfo);
+void VulkanUpdateUniformBuffer(struct FE_VulkanInfo* vkInfo, const FE_Camera * cam);
 void VulkanBindBuffers(struct FE_VulkanInfo* vkInfo, VkCommandBuffer cmdBuffer);
 
 void VulkanCopyBuffer(struct FE_VulkanInfo* vkInfo, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);

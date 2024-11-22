@@ -1,6 +1,8 @@
 #include "fepch.h"
 #include "Feur/Nuklear/NuklearLayer.h"
+#include <Nuklear/nuklear.h>
 #include "Platform/Nuklear/OpenGLNuklearLayer.h"
+#include "Platform/Nuklear/VulkanNuklearLayer.h"
 
 typedef struct NuklearGUILayerInterface
 {
@@ -22,13 +24,18 @@ void FE_DECL NuklearGUILayerInit()
 		nuklearGUILayerInterface.OnEvent = OpenGL_GLFW_NuklearGUILayerEvent_impl;
 		nuklearGUILayerInterface.OnRender = OpenGL_GLFW_NuklearGUILayerRender_impl;
 	}
+	else if (GetWindowAPI()->API_Type == FE_WINDOW_API_GLFW && GetRendererAPI()->API_Type == FE_RENDERER_API_TYPE_VULKAN)
+	{
+		nuklearGUILayerInterface.OnAttach = Vulkan_GLFW_NuklearGUILayerOnAttach_impl;
+		nuklearGUILayerInterface.OnDetach = Vulkan_GLFW_NuklearGUILayerOnDetach_impl;
+		nuklearGUILayerInterface.OnEvent = Vulkan_GLFW_NuklearGUILayerEvent_impl;
+		nuklearGUILayerInterface.OnRender = Vulkan_GLFW_NuklearGUILayerRender_impl;
+	}
 }
 
 void FE_DECL NuklearGUILayerEvent(FE_Event* event)
 {
-#ifdef FE_RENDER_SELECTED_API_OPENGL
 	nuklearGUILayerInterface.OnEvent(event);
-#endif
 }
 
 void FE_DECL NuklearGUILayerUpdate(Double dt)
@@ -38,24 +45,18 @@ void FE_DECL NuklearGUILayerUpdate(Double dt)
 
 void FE_DECL NuklearGUILayerRender(Layer* layer)
 {
-#ifdef FE_RENDER_SELECTED_API_OPENGL
 	nuklearGUILayerInterface.OnRender(layer);
-#endif
 }
 
 
 void FE_DECL NuklearGUILayerOnAttach(Layer* layer)
 {
-#ifdef FE_RENDER_SELECTED_API_OPENGL
 	nuklearGUILayerInterface.OnAttach(layer);
-#endif
 }
 
 void FE_DECL NuklearGUILayerOnDetach()
 {
-#ifdef FE_RENDER_SELECTED_API_OPENGL
 	nuklearGUILayerInterface.OnDetach();
-#endif
 }
 
 Layer FE_DECL CreateNewNuklearGUILayer(char* layerName)

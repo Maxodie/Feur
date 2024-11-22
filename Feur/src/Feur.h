@@ -27,6 +27,7 @@
 #include "Feur/Core/Utils/List.h"
 
 //Renderer
+#include "Feur/Renderer/Camera.h"
 #include "Feur/Renderer/Mesh.h"
 #include "Feur/Renderer/Buffers.h"
 #include "Feur/Renderer/RendererAPI.h"

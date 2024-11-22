@@ -52,49 +52,6 @@ Bool VulkanInit_impl(RendererAPIData* apiData)
 
 	VulkanCreateAllocator(vkInfo);
 
-	/*
-	test 
-	*/
-	//FE_List(Uint32) indices = { 0 };
-	//FE_ListInit(indices);
-	//Uint32 indicesData[6] = { 0,1,2,2,3,0 };//à l'envers ?????
-	//FE_ListPushArray(indices, indicesData, 6);
-
-	//FE_Vertex3D defaultVertices[4] = 
-	//{
-	//	(FE_Vertex3D) 
-	//	{
-	//		.color = {.r = 0, .g = 1, .b = 1, .a = 1 },
-	//		.position = { .x = -0.5f, .y = -0.5f, .z = 0},
-	//	},
-	//	(FE_Vertex3D)
-	//	{
-	//		.color = {.r = 0.5f, .g = 0.5f, .b = 1, .a = 1 },
-	//		.position = {.x = 0.5f, .y = -0.5f, .z = 0},
-	//	},
-	//	(FE_Vertex3D)
-	//	{
-	//		.color = {.r = 1, .g = 0, .b = 0.5f, .a = 1 },
-	//		.position = {.x = 0.5f, .y = 0.5f, .z = 0},
-	//	},
-	//	(FE_Vertex3D)
-	//	{
-	//		.color = {.r = 0.5f, .g = 0.5f, .b = .5f, .a = 0.2f },
-	//		.position = {.x = -0.5f, .y = 0.5f, .z = 0},
-	//	},
-	//};
-
-	//FE_List(FE_Vertex3D) vertices = { 0 };
-	//FE_ListInit(vertices);
-	//FE_ListPushArray(vertices, defaultVertices, 4);
-
-	//mesh = (FE_Mesh){
-	//	.indices = FE_ListGet(indices),
-	//	.vertices = FE_ListGet(vertices),
-	//};
-
-	//VulkanCreateIndexBuffer(&mesh.indices.impl);
-	//VulkanCreateVertexBuffer(&mesh.vertices.impl);
 	VulkanCreateUniformBuffer(vkInfo);
 	VulkanCreateDescriptorPool(vkInfo);
 	VulkanCreateDescriptorSets(vkInfo);
@@ -245,9 +202,12 @@ void VulkanBindPipeline_impl()
 	VulkanGraphicsPipelineBind(vkInfo->cmdBuffers[vkInfo->currentFrame], VK_PIPELINE_BIND_POINT_GRAPHICS, vkInfo->graphicsPipeline.handle);
 }
 
-void VulkanBeginScene_impl()
+void VulkanBeginScene_impl(const FE_Camera* cam)
 {
-	VulkanUpdateUniformBuffer(vkInfo);
+	if (cam != NULL)
+	{
+		VulkanUpdateUniformBuffer(vkInfo, cam);
+	}
 }
 
 void VulkanEndScene_impl()
@@ -317,19 +277,19 @@ Bool VulkanFrameSubmit_impl()
 {
 	//if (!CanVulkanContinueRendering()) return FALSE;
 
+	VkSemaphore waitSemaphores[] = { vkInfo->imageAvailableSemaphores[vkInfo->currentFrame], vkInfo->imageGUIAvailableSemaphores };
+	VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+
 	VkSubmitInfo submitInfo = {
 		.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
-		.waitSemaphoreCount = 1,
-		.pWaitSemaphores = &vkInfo->imageAvailableSemaphores[vkInfo->currentFrame],
+		.waitSemaphoreCount = 2,
+		.pWaitSemaphores = waitSemaphores,
 		.commandBufferCount = 1,
 		.pCommandBuffers = &vkInfo->cmdBuffers[vkInfo->currentFrame],
 		.signalSemaphoreCount = 1,
-		.pSignalSemaphores = &vkInfo->queueCompleteSemaphores[vkInfo->currentFrame]
+		.pSignalSemaphores = &vkInfo->queueCompleteSemaphores[vkInfo->currentFrame],
+		.pWaitDstStageMask = waitStages
 	};
-
-	VkPipelineStageFlags waitStages[1] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
-
-	submitInfo.pWaitDstStageMask = waitStages;
 
 	VkResult result = vkQueueSubmit(vkInfo->graphicsQueue, 1, &submitInfo, vkInfo->inFlightFences[vkInfo->currentFrame]);
 	if (result != VK_SUCCESS)
@@ -343,10 +303,11 @@ Bool VulkanFrameSubmit_impl()
 
 Bool VulkanFramePresent_impl()
 {
+	VkSemaphore completeSemaphores[] = { vkInfo->queueCompleteSemaphores[vkInfo->currentFrame] };
 	VkPresentInfoKHR presentInfo = {
 		.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
 		.waitSemaphoreCount = 1,
-		.pWaitSemaphores = &vkInfo->queueCompleteSemaphores[vkInfo->currentFrame],
+		.pWaitSemaphores = completeSemaphores,
 		.swapchainCount = 1,
 		.pSwapchains = &vkInfo->swapChain.handle,
 		.pImageIndices = &vkInfo->imageIndex,
@@ -378,7 +339,6 @@ void VulkanWaitIdle_impl()
 void VulkanShutdown_impl()
 {
 	//temp
-	
 	VulkanDestroyBuffer(vkInfo, &vkInfo->drawIndexedIndirectCmdBuffer);
 	VulkanDestroyBuffer(vkInfo, &vkInfo->vertexBuffer);
 	VulkanDestroyBuffer(vkInfo, &vkInfo->indexBuffer);
@@ -439,7 +399,7 @@ void VulkanOnWindowResized_impl(Uint32 x, Uint32 y, Uint32 width, Uint32 height,
 	VulkanSetScissor_impl(width, height);
 	VulkanBindPipeline_impl();
 
-	VulkanBeginScene_impl();
+	VulkanBeginScene_impl(NULL);
 	VulkanEndScene_impl();
 	VulkanDrawIndex_impl((Uint32)vkInfo->indexBuffer.info.size / vkInfo->indexBuffer.info.memoryType); //horible and will not be enough if the buffer has too much info but meh..
 
