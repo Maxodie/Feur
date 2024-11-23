@@ -98,7 +98,6 @@ typedef struct FE_VulkanInfo
 	Uint32 imageIndex;
 
 	VkSemaphore* imageAvailableSemaphores;//static array
-	VkSemaphore imageGUIAvailableSemaphores;//static array
 	VkSemaphore* queueCompleteSemaphores;//static array
 	VkFence* inFlightFences;//static array
 
@@ -121,6 +120,4 @@ typedef struct FE_VulkanInfo
 	RendererAPIData* apiData;
 
 	VmaAllocator allocator;
-
-
 } FE_VulkanInfo;

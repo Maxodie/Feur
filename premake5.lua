@@ -158,6 +158,7 @@ project "Sandbox"
 	{
 		"Feur/src",
 		"%{IncludeDir.Mathilda}",
+		"%{IncludeDir.nuklear}",
 		--temp test includes
   --      "%{IncludeDir.Vulkan}",
 		"%{IncludeDir.Glad}"

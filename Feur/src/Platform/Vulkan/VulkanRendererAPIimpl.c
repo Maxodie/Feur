@@ -277,15 +277,16 @@ Bool VulkanFrameSubmit_impl()
 {
 	//if (!CanVulkanContinueRendering()) return FALSE;
 
-	VkSemaphore waitSemaphores[] = { vkInfo->imageAvailableSemaphores[vkInfo->currentFrame], vkInfo->imageGUIAvailableSemaphores };
-	VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+	VkSemaphore waitSemaphores[] = { vkInfo->imageAvailableSemaphores[vkInfo->currentFrame] };
+	VkCommandBuffer cmdBuffers[] = { vkInfo->cmdBuffers[vkInfo->currentFrame] };
+	VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 
 	VkSubmitInfo submitInfo = {
 		.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
-		.waitSemaphoreCount = 2,
+		.waitSemaphoreCount = 1,
 		.pWaitSemaphores = waitSemaphores,
 		.commandBufferCount = 1,
-		.pCommandBuffers = &vkInfo->cmdBuffers[vkInfo->currentFrame],
+		.pCommandBuffers = cmdBuffers,
 		.signalSemaphoreCount = 1,
 		.pSignalSemaphores = &vkInfo->queueCompleteSemaphores[vkInfo->currentFrame],
 		.pWaitDstStageMask = waitStages

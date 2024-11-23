@@ -144,12 +144,12 @@ void VulkanDestroySemaphoresAndFences(FE_VulkanInfo* vkInfo)
 
 	for (Uint32 i = 0; i < vkInfo->swapChain.maxFramesInFlight; i++)
 	{
-		vkDestroySemaphore(vkInfo->logicalDevice, vkInfo->imageAvailableSemaphores[i], NULL);
-		vkDestroySemaphore(vkInfo->logicalDevice, vkInfo->queueCompleteSemaphores[i], NULL);
 		vkDestroyFence(vkInfo->logicalDevice, vkInfo->inFlightFences[i], NULL);
+		vkDestroySemaphore(vkInfo->logicalDevice, vkInfo->queueCompleteSemaphores[i], NULL);
+		vkDestroySemaphore(vkInfo->logicalDevice, vkInfo->imageAvailableSemaphores[i], NULL);
 	}
 
-	FE_MemoryGeneralFree(vkInfo->imageAvailableSemaphores);
-	FE_MemoryGeneralFree(vkInfo->queueCompleteSemaphores);
 	FE_MemoryGeneralFree(vkInfo->inFlightFences);
+	FE_MemoryGeneralFree(vkInfo->queueCompleteSemaphores);
+	FE_MemoryGeneralFree(vkInfo->imageAvailableSemaphores);
 }

@@ -1,15 +1,11 @@
 #ifdef _FEUR_TEST_VULKAN_SANDBOX_
 #include "Feur.h"
 
-#include "glad/glad.h"
+#include <Nuklear/nuklear.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "ILDA_matrix/ILDA_matrix.h"
-#include "ILDA_trigo/ILDA_trigo.h"
 
 void UpdateSandboxLayerBase(Double dt);
-void OnNuklearRender(Layer* layer);
+void OnNuklearRender(NuklearGUIInterface* interface, Layer* layer);
 void UpdateLayerBaseEventSandbox(FE_Event* event);
 void OnAttachSandboxLayerBase(Layer* layer);
 
@@ -114,7 +110,7 @@ void UpdateSandboxLayerBase(Double dt)
 	{
 		FE_Renderer2DDrawQuad(&pos, &size, &color); 
 		ILDA_vector3f move = camMovement;
-		ILDA_vector3f_mul(&move, dt);
+		ILDA_vector3f_mul(&move, (Float32)dt);
 		FE_CameraMove(&cam, &move);
 	}
 
@@ -122,7 +118,7 @@ void UpdateSandboxLayerBase(Double dt)
 	{
 		FE_Renderer2DDrawQuad(&pos, &size, &color);
 		ILDA_vector3f move = camMovement;
-		ILDA_vector3f_mul(&move, -dt);
+		ILDA_vector3f_mul(&move, (Float32) - dt);
 		FE_CameraMove(&cam, &move);
 	}
 
@@ -147,9 +143,40 @@ void UpdateSandboxLayerBase(Double dt)
 	FE_Renderer2DEndScene();
 }
 
-void OnNuklearRender(Layer* layer)
+void OnNuklearRender(NuklearGUIInterface* interface, Layer* layer)
 {
-	
+	struct nk_context* context = (struct nk_context*)interface->handle;
+	if (nk_begin(context, "Nuklear Window", nk_rect(0, 0, 500, 500), NK_WINDOW_TITLE | NK_WINDOW_SCALABLE | NK_WINDOW_MOVABLE))
+	{
+		struct nk_vec2 rect = nk_window_get_content_region_min(context);
+		struct nk_vec2 size = nk_window_get_content_region_size(context);
+
+		struct nk_vec2 tabPos = nk_window_get_content_region_max(context);
+		struct nk_vec2 winSize = { .x = (Float32)GetApp()->windowData.w, .y = (Float32)GetApp()->windowData.h };
+
+		struct nk_colorf background = { .r = color2.r, .g = color2.g, .b = color2.b, .a = color2.a };
+		nk_layout_row_static(context, 30, 80, 1);
+		if (nk_button_label(context, "button"))
+			fprintf(stdout, "button pressed\n");
+
+		nk_layout_row_dynamic(context, 20, 1);
+		nk_label(context, "background:", NK_TEXT_LEFT);
+		nk_layout_row_dynamic(context, 25, 1);
+		if (nk_combo_begin_color(context, nk_rgb_cf(background),
+			nk_vec2(nk_widget_width(context), 400))) {
+			nk_layout_row_dynamic(context, 120, 1);
+			background = nk_color_picker(context, background, NK_RGBA);
+			color2.r = background.r;
+			color2.g = background.g;
+			color2.b = background.b;
+			color2.a = background.a;
+			nk_layout_row_dynamic(context, 25, 1);
+			nk_combo_end(context);
+		}
+
+		FE_CORE_LOG_DEBUG("x : %f; y : %f", rect.x, rect.y);
+	}
+	nk_end(context);
 }
 
 
@@ -158,14 +185,6 @@ void OnNuklearRender(Layer* layer)
 void UpdateLayerBaseEventSandbox(FE_Event* event)
 {
 }
-
-
-
-GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path) {
-
-	return GL_TRUE;
-}
-
 //const char* LoadFile(const char* filePath)
 //{
 //	/*char* buffer = 0;

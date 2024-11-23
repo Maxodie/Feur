@@ -20,13 +20,25 @@
 #include <Nuklear/nuklear.h>
 #include "NuklearGlfwGl4.h"
 
-void FE_DECL OpenGL_GLFW_NuklearGUILayerEvent_impl(FE_Event* event)
+void FE_DECL OpenGL_GLFW_NuklearGUIInit_impl(NuklearGUIInterface* interface)
+{
+	GLFWwindow* window = (GLFWwindow*)GetApp()->windowData.nativeWindow;
+
+	interface->handle = nk_glfw3_gl4_init(window, NK_GLFW3_INSTALL_CALLBACKS, MAX_VERTEX_BUFFER, MAX_ELEMENT_BUFFER);
+
+	//set up font
+	struct nk_font_atlas* atlas;
+	nk_glfw3_gl4_font_stash_begin(&atlas);
+	nk_glfw3_gl4_font_stash_end();
+}
+
+void FE_DECL OpenGL_GLFW_NuklearGUIEvent_impl(FE_Event* event)
 {
 }
 
-void FE_DECL OpenGL_GLFW_NuklearGUILayerRender_impl(Layer* layer)
+void FE_DECL OpenGL_GLFW_NuklearGUIEndRender_impl(NuklearGUIInterface* interface)
 {
-	struct nk_context* context = (struct nk_context*)layer->handledInfo;
+	struct nk_context* context = (struct nk_context*)interface->handle;
 	nk_glfw3_gl4_new_frame();
 	if (nk_begin(context, "Nuklear Window", nk_rect(0, 0, 500, 500), NK_WINDOW_TITLE | NK_WINDOW_SCALABLE | NK_WINDOW_MOVABLE))
 	{
@@ -76,19 +88,8 @@ void FE_DECL OpenGL_GLFW_NuklearGUILayerRender_impl(Layer* layer)
 	nk_glfw3_gl4_render(NK_ANTI_ALIASING_ON);
 }
 
-void FE_DECL OpenGL_GLFW_NuklearGUILayerOnAttach_impl(Layer* layer)
-{
-	GLFWwindow* window = (GLFWwindow*)GetApp()->windowData.nativeWindow;
 
-	layer->handledInfo = nk_glfw3_gl4_init(window, NK_GLFW3_INSTALL_CALLBACKS, MAX_VERTEX_BUFFER, MAX_ELEMENT_BUFFER);
-
-	//set up font
-	struct nk_font_atlas* atlas;
-	nk_glfw3_gl4_font_stash_begin(&atlas);
-	nk_glfw3_gl4_font_stash_end();
-}
-
-void FE_DECL OpenGL_GLFW_NuklearGUILayerOnDetach_impl()
+void FE_DECL OpenGL_GLFW_NuklearGUIShutdown_impl()
 {
 	nk_glfw3_gl4_shutdown();
 }

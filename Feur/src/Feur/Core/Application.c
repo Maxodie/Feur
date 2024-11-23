@@ -9,8 +9,6 @@ static FE_App g_fe_App;
 
 static Bool g_IsAppRunning = TRUE;
 
-Layer nuklearGUILayer;
-
 void FE_DECL StartApp_impl()
 {
 	StartApp();
@@ -37,6 +35,7 @@ void FE_DECL RunApp_impl()
 void FE_DECL StartApp()
 {
 	FE_MemoryGeneralInit(FE_MEMORY_DEFAULT_STACK_ALLOCATION_SIZE);
+	g_fe_App.targetFps = 1000 / 165;
 	InitRendererAPISelection(&g_fe_App.rendererAPIData);
 	LoadWindow();
 	FE_InitInputAPI();
@@ -49,10 +48,9 @@ void FE_DECL StartApp()
 
 	FE_Renderer2DInit();
 
-	nuklearGUILayer = CreateNewNuklearGUILayer("NuklearLayer");
-	AddLayerApp(&nuklearGUILayer);
+	NuklearGUIInterfaceInit(&g_fe_App.guiInterface);
+	g_fe_App.guiInterface.Init(&g_fe_App.guiInterface);
 
-	g_fe_App.targetFps = 1000 / 165;
 }
 
 Double FE_DECL GetDeltaTime()
@@ -99,10 +97,14 @@ void FE_DECL AppUpdate(Double deltaTime)
 		g_fe_App.layerStack.stackedlayers.data[i]->OnUpdate(deltaTime);
 	}
 
+	g_fe_App.guiInterface.OnBeginRender(&g_fe_App.guiInterface);
+
 	for (SizeT i = 0; i < FE_LayerStackGetCount(&g_fe_App.layerStack); i++)
 	{
-		g_fe_App.layerStack.stackedlayers.data[i]->OnNuklearRender(g_fe_App.layerStack.stackedlayers.data[i]);
+		g_fe_App.layerStack.stackedlayers.data[i]->OnNuklearRender(&g_fe_App.guiInterface, g_fe_App.layerStack.stackedlayers.data[i]);
 	}
+
+	g_fe_App.guiInterface.OnEndRender(&g_fe_App.guiInterface);
 
 	RenderCommandEndRendering();
 	RenderCommandFrameCommandListEnd();
@@ -170,6 +172,8 @@ Bool FE_DECL OnWindowResizing(FE_EventData* eventData)
 
 	eventData->windowData->isMinimized = FALSE;
 	RendererOnWindowResize(eventData->windowData->w, eventData->windowData->h);//not frame limited so it can use a lot of GPU performence now
+	g_fe_App.guiInterface.OnWindowResize(eventData->windowData->w, eventData->windowData->h);
+
 	return TRUE;
 }
 
@@ -186,6 +190,8 @@ void FE_DECL PullWindowEvent()
 
 void FE_DECL ShutdownApp()
 {
+	g_fe_App.guiInterface.Shutdown();
+
 	FE_LayerStackClear(&g_fe_App.layerStack);
 
 	FE_Renderer2DShutdown();

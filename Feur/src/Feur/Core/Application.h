@@ -12,6 +12,7 @@ typedef struct FE_App
 	ClockT startTime;
 	ClockT endTime;
 	Uint32 targetFps;
+	NuklearGUIInterface guiInterface;
 } FE_App;
 
 void FE_DECL StartApp_impl();

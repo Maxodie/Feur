@@ -43,6 +43,7 @@
 //Layer
 #include "Feur/Core/Layer.h"
 #include "Feur/Core/LayerStack.h"
+#include "Feur/Nuklear/NuklearLayer.h"
 
 //Application
 #include "Feur/Core/Application.h"

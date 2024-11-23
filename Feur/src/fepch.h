@@ -53,6 +53,7 @@
 #include "Feur/Core/Layer.h"
 
 #include "Feur/Core/LayerStack.h"
+#include "Feur/Nuklear/NuklearLayer.h"
 
 #include "Feur/Renderer/Camera.h"
 #include "Feur/Renderer/Mesh.h"

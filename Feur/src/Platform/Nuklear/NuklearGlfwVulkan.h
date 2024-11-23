@@ -267,10 +267,8 @@ NK_API void nk_glfw3_vk_shutdown(void);
 NK_API void nk_glfw3_vk_font_stash_begin(struct nk_font_atlas** atlas);
 NK_API void nk_glfw3_vk_font_stash_end(VkQueue graphics_queue);
 NK_API void nk_glfw3_vk_new_frame();
-NK_API VkSemaphore nk_glfw3_vk_render(VkQueue graphics_queue,
-    uint32_t buffer_index,
-    VkSemaphore wait_semaphore,
-    enum nk_anti_aliasing AA);
+NK_API void nk_glfw3_vk_render(
+    VkCommandBuffer cmdBuffer, enum nk_anti_aliasing AA);
 NK_API void nk_glfw3_resize(uint32_t framebuffer_width,
     uint32_t framebuffer_height);
 NK_API void nk_glfw3_vk_device_destroy(void);
@@ -336,6 +334,7 @@ struct nk_glfw_device {
     VkPhysicalDevice physical_device;
     VkImageView* image_views;
     uint32_t image_views_len;
+    VkImageMemoryBarrier* image_barriers;
     VkFormat color_format;
     VkCommandBuffer* command_buffers;
     uint32_t command_buffers_len;
@@ -717,7 +716,7 @@ nk_glfw3_create_shader(struct nk_glfw_device* dev, unsigned char* spv_shader,
 NK_INTERN void nk_glfw3_create_pipeline(struct nk_glfw_device* dev) {
     VkPipelineInputAssemblyStateCreateInfo input_assembly_state;
     VkPipelineRasterizationStateCreateInfo rasterization_state;
-    VkPipelineColorBlendAttachmentState attachment_state = /*{
+    VkPipelineColorBlendAttachmentState attachment_state = {
         VK_TRUE,
         VK_BLEND_FACTOR_SRC_ALPHA,
         VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
@@ -726,18 +725,18 @@ NK_INTERN void nk_glfw3_create_pipeline(struct nk_glfw_device* dev) {
         VK_BLEND_FACTOR_ONE,
         VK_BLEND_OP_ADD,
         VK_COLOR_COMPONENT_MASK_RGBA,
-    };*/
-
-    {
-        .colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT,
-        .blendEnable = VK_FALSE,
-        .srcColorBlendFactor = VK_BLEND_FACTOR_ONE, // Optionnal
-        .dstColorBlendFactor = VK_BLEND_FACTOR_ZERO, // Optionnal
-        .colorBlendOp = VK_BLEND_OP_ADD, // Optionnal
-        .srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE, // Optionnal
-        .dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO, // Optionnal
-        .alphaBlendOp = VK_BLEND_OP_ADD // Optionnal
     };
+
+    //{
+    //    .colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT,
+    //    .blendEnable = VK_FALSE,
+    //    .srcColorBlendFactor = VK_BLEND_FACTOR_ONE, // Optionnal
+    //    .dstColorBlendFactor = VK_BLEND_FACTOR_ZERO, // Optionnal
+    //    .colorBlendOp = VK_BLEND_OP_ADD, // Optionnal
+    //    .srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE, // Optionnal
+    //    .dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO, // Optionnal
+    //    .alphaBlendOp = VK_BLEND_OP_ADD // Optionnal
+    //};
 
     VkPipelineColorBlendStateCreateInfo color_blend_state;
     VkPipelineMultisampleStateCreateInfo multisample_state;
@@ -778,9 +777,9 @@ NK_INTERN void nk_glfw3_create_pipeline(struct nk_glfw_device* dev) {
     memset(&color_blend_state, 0, sizeof(VkPipelineColorBlendStateCreateInfo));
     color_blend_state.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
     color_blend_state.logicOpEnable = VK_FALSE,
-    color_blend_state.attachmentCount = 1;
+        color_blend_state.attachmentCount = 1;
     color_blend_state.logicOp = VK_LOGIC_OP_COPY, // Optionnal
-    color_blend_state.pAttachments = &attachment_state;
+        color_blend_state.pAttachments = &attachment_state;
 
     memset(&multisample_state, 0, sizeof(VkPipelineMultisampleStateCreateInfo));
     multisample_state.sType =
@@ -880,7 +879,7 @@ NK_INTERN void nk_glfw3_create_render_resources(struct nk_glfw_device* dev,
 }
 
 NK_API void nk_glfw3_vk_device_create(
-    VkInstance instance, 
+    VkInstance instance,
     VkDevice logical_device, VkPhysicalDevice physical_device,
     uint32_t graphics_queue_family_index, VkImageView* image_views,
     uint32_t image_views_len, VkFormat color_format,
@@ -898,6 +897,8 @@ NK_API void nk_glfw3_vk_device_create(
 
     dev->vkCmdBeginRenderingKHR = (PFN_vkCmdBeginRenderingKHR)vkGetInstanceProcAddr(instance, "vkCmdBeginRenderingKHR");
     dev->vkCmdEndRenderingKHR = (PFN_vkCmdEndRenderingKHR)vkGetInstanceProcAddr(instance, "vkCmdEndRendering");
+
+    dev->image_barriers = malloc(sizeof(VkMemoryBarrier) * image_views_len);
 
     nk_glfw3_create_sampler(dev);
     nk_glfw3_create_command_pool(dev, graphics_queue_family_index);
@@ -1173,6 +1174,8 @@ NK_API void nk_glfw3_vk_device_destroy(void) {
     vkDestroyImage(dev->logical_device, dev->font_image, NULL);
     vkDestroyImageView(dev->logical_device, dev->font_image_view, NULL);
 
+    free(dev->image_barriers);
+
     free(dev->command_buffers);
     nk_buffer_free(&dev->cmds);
 }
@@ -1342,9 +1345,7 @@ NK_INTERN void update_texture_descriptor_set(
 }
 
 NK_API
-VkSemaphore nk_glfw3_vk_render(VkQueue graphics_queue, uint32_t buffer_index,
-    VkSemaphore wait_semaphore,
-    enum nk_anti_aliasing AA) {
+void nk_glfw3_vk_render(VkCommandBuffer cmdBuffer, enum nk_anti_aliasing AA) {
     struct nk_glfw_device* dev = &glfw.vulkan;
     struct nk_buffer vbuf, ebuf;
 
@@ -1353,73 +1354,47 @@ VkSemaphore nk_glfw3_vk_render(VkQueue graphics_queue, uint32_t buffer_index,
          0.0f, -1.0f, 1.0f, 0.0f, 1.0f},
     };
 
-    VkCommandBufferBeginInfo begin_info;
-    VkClearValue clear_value = { {{0.0f, 0.0f, 0.0f, 0.0f}} };
-    VkCommandBuffer command_buffer;
-    VkViewport viewport;
-    VkResult result;
+    //VkCommandBufferBeginInfo begin_info;
+    //VkClearValue clear_value = { {{0.0f, 0.0f, 0.0f, 0.0f}} };
+    //VkCommandBuffer command_buffer;
+    //VkViewport viewport = { 0 };
+    //VkResult result;
 
     VkDeviceSize doffset = 0;
     VkImageView current_texture = NULL;
     uint32_t index_offset = 0;
     VkRect2D scissor = { 0 };
-    uint32_t wait_semaphore_count;
-    VkSemaphore* wait_semaphores;
+   /* uint32_t wait_semaphore_count;
+    VkSemaphore* wait_semaphores;*/
     VkPipelineStageFlags wait_stage =
         VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    VkSubmitInfo submit_info;
+    //VkSubmitInfo submit_info;
 
     projection.m[0] /= glfw.width;
     projection.m[5] /= glfw.height;
 
     memcpy(dev->mapped_uniform, &projection, sizeof(projection));
 
-    memset(&begin_info, 0, sizeof(VkCommandBufferBeginInfo));
-    begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+   /* memset(&begin_info, 0, sizeof(VkCommandBufferBeginInfo));
+    begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;*/
 
-    command_buffer = dev->command_buffers[buffer_index];
+    //command_buffer = dev->command_buffers[buffer_index];
 
-    result = vkBeginCommandBuffer(command_buffer, &begin_info);
-    assert(result == VK_SUCCESS);
-
-    memset(&viewport, 0, sizeof(VkViewport));
+    /*result = vkBeginCommandBuffer(command_buffer, &begin_info);
+   assert(result == VK_SUCCESS);
+ */
+    /*memset(&viewport, 0, sizeof(VkViewport));
     viewport.width = (float)glfw.width;
     viewport.height = (float)glfw.height;
     viewport.maxDepth = 1.0f;
-    vkCmdSetViewport(command_buffer, 0, 1, &viewport);
+    vkCmdSetViewport(cmdBuffer, 0, 1, &viewport);*/
 
-    VkRenderingAttachmentInfo color_attachment_info = {
-        .sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO,
-        .pNext = VK_NULL_HANDLE,
-        .imageView = dev->image_views[buffer_index],
-        .imageLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-        .resolveMode = VK_RESOLVE_MODE_NONE,
-        .resolveImageView = VK_NULL_HANDLE,
-        .resolveImageLayout = VK_IMAGE_LAYOUT_UNDEFINED,
-        .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
-        .storeOp = VK_ATTACHMENT_STORE_OP_STORE,
-        .clearValue = clear_value,
-    };
-
-    VkRenderingInfo render_info = {
-        .sType = VK_STRUCTURE_TYPE_RENDERING_INFO,
-        .flags = 0,
-        .pNext = VK_NULL_HANDLE,
-        .renderArea = (VkRect2D) {.extent.width = glfw.width, .extent.height = glfw.height},
-        .layerCount = 1,
-        .viewMask = 0,
-        .colorAttachmentCount = 1,
-        .pColorAttachments = &color_attachment_info,
-    };
-
-    dev->vkCmdBeginRenderingKHR(command_buffer, &render_info);
-    
-
-    vkCmdBindPipeline(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
+    vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
         dev->pipeline);
-    vkCmdBindDescriptorSets(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
+    vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
         dev->pipeline_layout, 0, 1,
         &dev->uniform_descriptor_set, 0, NULL);
+
     {
         /* convert from command queue into draw list and draw to screen */
         const struct nk_draw_command* cmd;
@@ -1458,9 +1433,9 @@ VkSemaphore nk_glfw3_vk_render(VkQueue graphics_queue, uint32_t buffer_index,
 
         /* iterate over and execute each draw command */
 
-        vkCmdBindVertexBuffers(command_buffer, 0, 1, &dev->vertex_buffer,
+        vkCmdBindVertexBuffers(cmdBuffer, 0, 1, &dev->vertex_buffer,
             &doffset);
-        vkCmdBindIndexBuffer(command_buffer, dev->index_buffer, 0,
+        vkCmdBindIndexBuffer(cmdBuffer, dev->index_buffer, 0,
             VK_INDEX_TYPE_UINT16);
 
         nk_draw_foreach(cmd, &glfw.ctx, &dev->cmds) {
@@ -1485,7 +1460,7 @@ VkSemaphore nk_glfw3_vk_render(VkQueue graphics_queue, uint32_t buffer_index,
                     dev->texture_descriptor_sets_len++;
                 }
                 vkCmdBindDescriptorSets(
-                    command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
+                    cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
                     dev->pipeline_layout, 1, 1,
                     &dev->texture_descriptor_sets[i].descriptor_set, 0, NULL);
             }
@@ -1497,29 +1472,31 @@ VkSemaphore nk_glfw3_vk_render(VkQueue graphics_queue, uint32_t buffer_index,
             scissor.offset.y = (int32_t)(NK_MAX(cmd->clip_rect.y, 0.f));
             scissor.extent.width = (uint32_t)(cmd->clip_rect.w);
             scissor.extent.height = (uint32_t)(cmd->clip_rect.h);
-            vkCmdSetScissor(command_buffer, 0, 1, &scissor);
-            vkCmdDrawIndexed(command_buffer, cmd->elem_count, 1, index_offset,
+            vkCmdSetScissor(cmdBuffer, 0, 1, &scissor);
+            vkCmdDrawIndexed(cmdBuffer, cmd->elem_count, 1, index_offset,
                 0, 0);
             index_offset += cmd->elem_count;
         }
         nk_clear(&glfw.ctx);
     }
 
-    dev->vkCmdEndRenderingKHR(command_buffer);
+    //dev->vkCmdEndRenderingKHR(command_buffer);
 
-    result = vkEndCommandBuffer(command_buffer);
+    /*result = vkEndCommandBuffer(command_buffer);
     assert(result == VK_SUCCESS);
 
-    if (wait_semaphore) {
+    return command_buffer;*/
+   /* if (wait_semaphore) {
         wait_semaphore_count = 1;
         wait_semaphores = &wait_semaphore;
     }
     else {
         wait_semaphore_count = 0;
         wait_semaphores = NULL;
-    }
+    }*/
 
-    memset(&submit_info, 0, sizeof(VkSubmitInfo));
+
+    /*memset(&submit_info, 0, sizeof(VkSubmitInfo));
     submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
     submit_info.commandBufferCount = 1;
     submit_info.pCommandBuffers = &command_buffer;
@@ -1532,7 +1509,7 @@ VkSemaphore nk_glfw3_vk_render(VkQueue graphics_queue, uint32_t buffer_index,
     result = vkQueueSubmit(graphics_queue, 1, &submit_info, NULL);
     assert(result == VK_SUCCESS);
 
-    return dev->render_completed;
+    return dev->render_completed;*/
 }
 
 NK_API void nk_glfw3_vk_char_callback(GLFWwindow* win, unsigned int codepoint) {

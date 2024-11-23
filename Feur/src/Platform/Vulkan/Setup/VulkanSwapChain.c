@@ -81,9 +81,15 @@ void VulkanSwapChainImagesQuery(FE_VulkanInfo* vkInfo)
     //cache and retrieving the swap chain data
     vkGetSwapchainImagesKHR(vkInfo->logicalDevice, vkInfo->swapChain.handle, &(Uint32)vkInfo->swapChain.images.impl.count, vkInfo->swapChain.images.data);
 
-    //setup frames in flight
-    vkInfo->swapChain.maxFramesInFlight = (Uint32)vkInfo->swapChain.images.impl.count - 1;
     vkInfo->currentFrame = 0;
+    
+    //setup frames in flight
+
+    //Double buffering
+    vkInfo->swapChain.maxFramesInFlight = vkInfo->swapChain.images.impl.count < 2 ? (Uint32)vkInfo->swapChain.images.impl.count : 2;
+
+    //Triple buffering
+    //vkInfo->swapChain.maxFramesInFlight = vkInfo->swapChain.images.impl.count < 3 ? (Uint32)vkInfo->swapChain.images.impl.count : 3;
 }
 
 void VulkanInitSwapChainSupportData(FE_VulkanInfo* vkInfo)
@@ -166,14 +172,14 @@ VkSurfaceFormatKHR VulkanChooseSwapSurfaceFormat(FE_ListParameterPtr(VkSurfaceFo
 
 VkPresentModeKHR VulkanChooseSwapPresentMode(FE_ListParameterPtr(VkPresentModeKHR) pAvailablePresentModes)
 {
-    const FE_List(VkPresentModeKHR) availablePresentModes = FE_ListFromParameterPtr(pAvailablePresentModes);
+    /*const FE_List(VkPresentModeKHR) availablePresentModes = FE_ListFromParameterPtr(pAvailablePresentModes);
     for (SizeT i = 0; i < availablePresentModes.impl.count; i++)
     {
         if (availablePresentModes.data[i] == VK_PRESENT_MODE_MAILBOX_KHR)
         {
             return availablePresentModes.data[i];
         }
-    }
+    }*/
 
     return VK_PRESENT_MODE_FIFO_KHR;
 }

@@ -1,11 +1,17 @@
 #pragma once
 
-void FE_DECL NuklearGUILayerInit();
+typedef struct NuklearGUIInterface
+{
+	void (*Init)(struct NuklearGUIInterface* interface);
+	void (*OnEvent)(FE_Event*);
+	void (*OnBeginRender)(struct NuklearGUIInterface* interface);
+	void (*OnEndRender)(struct NuklearGUIInterface* interface);
+	void (*Shutdown)();
 
-void FE_DECL NuklearGUILayerEvent(FE_Event* event);
-void FE_DECL NuklearGUILayerUpdate();
-void FE_DECL NuklearGUILayerRender(Layer* layer);
-void FE_DECL NuklearGUILayerOnAttach(Layer* layer);
-void FE_DECL NuklearGUILayerOnDetach();
+	void (*OnWindowResize)(Uint32 width, Uint32 height);
 
-Layer FE_DECL CreateNewNuklearGUILayer(char* layerName);
+	void* handle;
+
+} NuklearGUIInterface;
+
+void FE_DECL NuklearGUIInterfaceInit(NuklearGUIInterface* interface);
