@@ -8,11 +8,11 @@ void UpdateSandboxLayerBase(Double dt);
 void OnNuklearRender(NuklearGUIInterface* interface, Layer* layer);
 void UpdateLayerBaseEventSandbox(FE_Event* event);
 void OnAttachSandboxLayerBase(Layer* layer);
+void EndLayer();
 
 //const char* LoadFile(const char* filePath);
-void emptyf() {}
 
-Layer layer = { .OnUpdate = UpdateSandboxLayerBase,.OnAttach = OnAttachSandboxLayerBase,.OnNuklearRender = OnNuklearRender, .OnUpdateLayerEvent = UpdateLayerBaseEventSandbox, .OnDetach = emptyf };
+Layer layer = { .OnUpdate = UpdateSandboxLayerBase,.OnAttach = OnAttachSandboxLayerBase,.OnNuklearRender = OnNuklearRender, .OnUpdateLayerEvent = UpdateLayerBaseEventSandbox, .OnDetach = EndLayer };
 
 void tempMatrixPrint(const ILDA_matrix4x4* matrix)
 {
@@ -26,17 +26,45 @@ void tempMatrixPrint(const ILDA_matrix4x4* matrix)
 	}
 }
 
-FE_Camera3D cam = { 0 };
+FE_EntityID camEntity = -1;
+FE_EntityComponentTypeID cam3DComp = -1;
+FE_EntityRegistry ecsRegistry = { 0 };
+FE_CompCamera3D* cam = NULL;
 ILDA_vector3f camMovement = { .z = -1 };
 ILDA_vector3f camRotateAxis = { .z = 1 };
+
+FE_EntityComponentTypeID camTransform3DCompID = -1;
+
+FE_EntityID squar0 = -1;
+FE_CompTransform3D* compTransform0 = NULL;
+
+FE_EntityID squar1 = -1;
+FE_CompTransform3D* compTransform1 = NULL;
 
 void StartSandbox()
 {
 	AddLayerApp(&layer); 
+
+	FE_EntityCreateRegistry(&ecsRegistry);
+	camEntity = FE_EntityCreate(&ecsRegistry);
+	cam3DComp = FE_EntityCreateComponentType(&ecsRegistry, sizeof(FE_CompCamera3D));
+	cam = FE_EntityAttachComp(&ecsRegistry, camEntity, cam3DComp);
 	
 	ILDA_vector3f pos = { .z = 1 };
 	ILDA_vector3f worldUp = { .y = 1 };
-	FE_CameraInit(&cam, &pos, &worldUp, GetApp()->windowData.w / (Float32)GetApp()->windowData.h, 45.f, 0.0f, 1.0f);
+	FE_CameraInit(&cam->camera, &pos, &worldUp, GetApp()->windowData.w / (Float32)GetApp()->windowData.h, 45.f, 0.0f, 1.0f);
+
+	camTransform3DCompID = FE_EntityCreateComponentType(&ecsRegistry, sizeof(FE_CompTransform3D));
+
+	squar0 = FE_EntityCreate(&ecsRegistry);
+	compTransform0 = FE_EntityAttachComp(&ecsRegistry, squar0, camTransform3DCompID);
+	compTransform0->position.x = 0.5f;
+	compTransform0->scale = (ILDA_vector3f){ .x = 1.1f, .y = 0.1f, .z = 1.0f };
+
+	squar1 = FE_EntityCreate(&ecsRegistry);
+	compTransform1 = FE_EntityAttachComp(&ecsRegistry, squar1, camTransform3DCompID);
+	compTransform1->position.x = -1.f;
+	compTransform1->scale = (ILDA_vector3f){ .x = 1.1f, .y = 1.2f, .z = 1.0f};
 
 //	==========================    FE_list test 
 	/*FE_List(Uint32) test = { 0 };
@@ -92,26 +120,26 @@ ILDA_vector3f pos = { .x = 0.0f, .y = 0.0f, .z = 0.f };
 ILDA_vector2f size = { .x = 1.0f, .y = 1.5f };
 FE_Color color = { .r = .5f, .g = 0.1f, .b = 1.0f, .a = 0.2f};
 
-ILDA_vector3f pos2 = { .x = 0.5f, .y = 0.0f, .z = 0.f };
-ILDA_vector2f size2 = { .x = 1.1f, .y = 0.1f };
+//ILDA_vector3f pos2 = { .x = 0.5f, .y = 0.0f, .z = 0.f }; pos2 = compTransform0
+//ILDA_vector2f size2 = { .x = 1.1f, .y = 0.1f }; size2 = compTransform0
 FE_Color color2 = { .r = .2f, .g = 1.f, .b = 0.0f, .a = 0.2f };
 
-ILDA_vector3f pos3 = { .x = -1.f, .y = 0.0f, .z = 0.f };
-ILDA_vector2f size3 = { .x = 1.1f, .y = 1.2f };
+//ILDA_vector3f pos3 = { .x = -1.f, .y = 0.0f, .z = 0.f }; pos3 = compTransform1
+//ILDA_vector2f size3 = { .x = 1.1f, .y = 1.2f }; size3 = compTransform0
 FE_Color color3 = { .r = 10.5f, .g = 10.1f, .b = 10.8f, .a = 1.f };
 
 
 
 void UpdateSandboxLayerBase(Double dt)
 {
-	FE_Renderer2DBeginScene(&cam);
+	FE_Renderer2DBeginScene(&cam->camera);
 
 	if (FE_IsInputPressed(FE_KEYCODE_W))
 	{
 		FE_Renderer2DDrawQuad(&pos, &size, &color); 
 		ILDA_vector3f move = camMovement;
 		ILDA_vector3f_mul(&move, (Float32)dt);
-		FE_CameraMove(&cam, &move);
+		FE_CameraMove(&cam->camera, &move);
 	}
 
 	if (FE_IsInputPressed(FE_KEYCODE_S))
@@ -119,7 +147,7 @@ void UpdateSandboxLayerBase(Double dt)
 		FE_Renderer2DDrawQuad(&pos, &size, &color);
 		ILDA_vector3f move = camMovement;
 		ILDA_vector3f_mul(&move, (Float32) - dt);
-		FE_CameraMove(&cam, &move);
+		FE_CameraMove(&cam->camera, &move);
 	}
 
 	if (FE_IsInputPressed(FE_KEYCODE_A))
@@ -127,18 +155,26 @@ void UpdateSandboxLayerBase(Double dt)
 		FE_Renderer2DDrawQuad(&pos, &size, &color);
 		//pos2.x -= (float)dt * 10;
 		//FE_CameraMove(&cam, &camMovement);
-		FE_CameraRotate(&cam, &camRotateAxis, 2.f);
+		FE_CameraRotate(&cam->camera, &camRotateAxis, 2.f);
 	}
 	if (FE_IsInputPressed(FE_KEYCODE_D))
 	{
 		FE_Renderer2DDrawQuad(&pos, &size, &color);
 		//pos2.x -= (float)dt * 10;
 		//FE_CameraMove(&cam, &camMovement);
-		FE_CameraRotate(&cam, &camRotateAxis, -2.f);
+		FE_CameraRotate(&cam->camera, &camRotateAxis, -2.f);
 	}
 
-	FE_Renderer2DDrawQuad(&pos3, &size3, &color3);
-	FE_Renderer2DDrawQuad(&pos2, &size2, &color2);
+	FE_EntityComponentList* tr3DcompList = FE_EntityComponentListQueryFromID(&ecsRegistry, camTransform3DCompID);
+	FE_CompTransform3D* transform3Ds = tr3DcompList->dataList.data;
+	FE_EntityID* entityIds = ecsRegistry.compEntityUuids.data[camTransform3DCompID].data;
+	for (SizeT i = 0; i < tr3DcompList->dataList.impl.count; i++)
+	{
+		FE_CompTransform3D* tr = FE_EntityComponentQueryFromID(&ecsRegistry, entityIds[i], camTransform3DCompID);// exemple on how to get any component type of this entity
+		tr->position.x += 0.1f * dt;
+
+		FE_Renderer2DDrawQuad(&transform3Ds[i].position, &transform3Ds[i].scale, &color2);
+	}
 
 	FE_Renderer2DEndScene();
 }
@@ -214,5 +250,10 @@ void UpdateLayerBaseEventSandbox(FE_Event* event)
 //	fclose(fptr);
 //	return buffer;*/
 //}
+
+void EndLayer() 
+{
+	FE_EntityDestroyRegistry(&ecsRegistry);
+}
 
 #endif
