@@ -13,6 +13,12 @@ typedef struct FE_App
 	ClockT endTime;
 	Uint32 targetFps;
 	NuklearGUIInterface guiInterface;
+
+	//ecs test
+	FE_EntityRegistry ecsRegistry;
+	FE_EntityID camEntity;
+	FE_EntityComponentTypeID cam3DComp;
+	//ecs test
 } FE_App;
 
 void FE_DECL StartApp_impl();

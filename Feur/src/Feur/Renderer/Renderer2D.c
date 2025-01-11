@@ -59,7 +59,7 @@ void FE_DECL FE_Renderer2DShutdown()
 	FE_MemoryGeneralFree(renderer2DData.quadIndexPtrBase);
 }
 
-void FE_DECL FE_Renderer2DBeginScene(const FE_Camera* cam)
+void FE_DECL FE_Renderer2DBeginScene(const FE_Camera3D* cam)
 {
 	RenderCommandBeginScene(cam);
 }

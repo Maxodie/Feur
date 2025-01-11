@@ -25,6 +25,11 @@
 
 //Utils
 #include "Feur/Core/Utils/List.h"
+#include "Feur/Core/Utils/ByteFlag.h"
+#include "Feur/Core/Utils/FeString.h"
+#include "Feur/Core/Utils/FeurSort.h"
+#include "Feur/Core/Utils/FileSystem.h"
+#include "Feur/Core/Utils/Optional.h"
 
 //Renderer
 #include "Feur/Renderer/Camera.h"
@@ -44,6 +49,9 @@
 #include "Feur/Core/Layer.h"
 #include "Feur/Core/LayerStack.h"
 #include "Feur/Nuklear/NuklearLayer.h"
+
+//ECS
+#include "Feur/Core/Utils/ECS.h"
 
 //Application
 #include "Feur/Core/Application.h"

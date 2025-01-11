@@ -39,6 +39,13 @@ FE_ListInsert_impl(&(fe_list).impl, (Byte**)&(fe_list).data, (const void*)&value
 
 //with 'fe_list' an FE_List(type); 'value' type of 'type'
 #define FE_ListPush(fe_list, value)  FE_CORE_ASSERT(FE_ListPushArray_impl(&(fe_list).impl, (Byte**)&(fe_list).data, (const void*)&value, 1, sizeof(*(fe_list).data)), "failed to push fe_list")
+
+//with 'fe_list' an FE_List(type); 'size' SizeT of the item size
+#define FE_ListPushSize(fe_list, size)  { \
+        Byte temp = 0; \
+        FE_CORE_ASSERT(FE_ListPushArray_impl(&(fe_list).impl, (Byte**)&(fe_list).data, &temp, 1, size), "failed to push fe_list") \
+}
+
 //#define FE_ListPush(fe_list, value) FE_ListPush_impl(&fe_list.impl, (Byte**)&fe_list.data, (const void*)&value, sizeof(*fe_list.data))
 //with 'fe_list' an FE_List(type); 'type' same type of *fe_list.data; 'value' type of 'type';
 #define FE_ListPushValue(fe_list, type, value) { \
@@ -58,6 +65,10 @@ FE_CORE_ASSERT(FE_ListPushArray_impl(&(fe_list).impl, (Byte**)&(fe_list).data, (
 //with 'fe_listA' an FE_List(type); 'fe_listB' an FE_List(type);
 #define FE_ListEqual(fe_listA, fe_listB) FE_ListEqual_impl(&(fe_listA).impl, &(fe_listB).impl, (Byte**)&(fe_listA).data, (Byte**)&(fe_listB).data, sizeof(*(fe_list).data))
 
+//with 'fe_list' an FE_List(type);
+#define FE_ListPrint(fe_list) FE_ListPrint_impl(&(fe_list).impl, (Byte**)&(fe_list).data, sizeof(*(fe_list).data))
+
+
 Bool FE_DECL FE_ListInit_impl(FE_List_impl* list, Byte** data);
 Bool FE_DECL FE_ListPop_impl(FE_List_impl* list, Byte** data);
 Bool FE_DECL FE_ListRemove_impl(FE_List_impl* list, Byte** data, const void* value, SizeT dataSize);
@@ -76,4 +87,5 @@ Bool FE_DECL FE_ListRemoveDuplicate_impl(FE_List_impl* list, Byte** data, SizeT 
 
 Bool FE_DECL FE_ListEqual_impl(FE_List_impl* listA, FE_List_impl* listB, Byte** dataA, Byte** dataB, SizeT dataSize);
 
-FE_DECL FE_ListPrintReport();
+void FE_DECL FE_ListPrint_impl(const FE_List_impl* list, const Byte* data, SizeT dataSize);
+void FE_DECL FE_ListPrintReport();

@@ -31,7 +31,7 @@ typedef clock_t ClockT;
 #define FALSE 0
 #define TRUE 1
 
-#define BIT(x) (1 << x)
+#define BIT(x) (1 << (x))
 
 #if defined(_MSC_VER)
 #	define FE_CORE_DEBUG_BREAK __debugbreak()

@@ -26,7 +26,7 @@ void tempMatrixPrint(const ILDA_matrix4x4* matrix)
 	}
 }
 
-FE_Camera cam = { 0 };
+FE_Camera3D cam = { 0 };
 ILDA_vector3f camMovement = { .z = -1 };
 ILDA_vector3f camRotateAxis = { .z = 1 };
 
@@ -174,7 +174,7 @@ void OnNuklearRender(NuklearGUIInterface* interface, Layer* layer)
 			nk_combo_end(context);
 		}
 
-		FE_CORE_LOG_DEBUG("x : %f; y : %f", rect.x, rect.y);
+		//FE_CORE_LOG_DEBUG("x : %f; y : %f", rect.x, rect.y);
 	}
 	nk_end(context);
 }

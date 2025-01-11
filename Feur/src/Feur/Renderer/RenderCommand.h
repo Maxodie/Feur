@@ -10,7 +10,7 @@ void FE_DECL RenderCommandSetScissor(Uint32 width, Uint32 height);
 void FE_DECL RenderCommandBindPipeline();
 
 
-void FE_DECL RenderCommandBeginScene(const FE_Camera * cam);
+void FE_DECL RenderCommandBeginScene(const FE_Camera3D * cam);
 void FE_DECL RenderCommandEndScene();
 void FE_DECL RenderCommandDrawIndex(Uint32 indexCount);
 

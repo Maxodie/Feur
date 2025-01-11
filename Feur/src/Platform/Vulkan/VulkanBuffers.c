@@ -107,7 +107,7 @@ void VulkanAddDrawIndexedIndirectCommandsBuffer(FE_VulkanInfo* vkInfo, Uint32 in
 	VulkanDestroyBuffer(vkInfo, &stagingBuffer);
 }
 
-void VulkanUpdateUniformBuffer(FE_VulkanInfo* vkInfo, const FE_Camera* cam)
+void VulkanUpdateUniformBuffer(FE_VulkanInfo* vkInfo, const FE_Camera3D* cam)
 {
 	FE_UniformBufferObject ubo = {
 		.model = cam->rotation,

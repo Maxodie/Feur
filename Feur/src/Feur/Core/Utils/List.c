@@ -183,7 +183,7 @@ Bool FE_DECL FE_ListPushArray_impl(FE_List_impl* list, Byte** data, const void* 
 
 	Byte* temp = *data;
 
-	if (list->capacity <= sizeToPush)
+	if (list->capacity <= list->count - 1 + sizeToPush)
 	{
 		if (*data == NULL)
 		{
@@ -274,15 +274,15 @@ Bool FE_DECL FE_ListClear_impl(FE_List_impl* list, Byte** data)
 		return FALSE;
 	}
 
-#ifdef FE_DEBUG
-	freedListCount++;
-#endif
-
 	list->capacity = 0;
 	list->count = 0;
 	if (*data != NULL)
 	{
 		FE_MemoryGeneralFree(*data);
+
+#ifdef FE_DEBUG
+	freedListCount++;
+#endif
 	}
 	return TRUE;
 }
@@ -343,10 +343,26 @@ Bool FE_ListEqual_impl(FE_List_impl* listA, FE_List_impl* listB, Byte** dataA, B
 	return TRUE;
 }
 
-FE_ListPrintReport()
+void FE_DECL FE_ListPrint_impl(const FE_List_impl* list, const Byte* data, SizeT dataSize)
+{
+	for (SizeT i = 0; i < list->count; i++)
+	{
+		FE_CORE_LOG_DEBUG("%d", data[dataSize * i]);
+	}
+}
+
+void FE_ListPrintReport()
 {
 #ifdef FE_DEBUG
 	FE_CORE_LOG_SUCCESS("list report | alloc : %lld        free : %lld", allocatedListCount, freedListCount);
-	FE_CORE_LOG_SUCCESS(allocatedListCount == freedListCount ? "no memory leak in FE_List detected ! " : "memory leak detected");
+
+	if (allocatedListCount == freedListCount)
+	{
+		FE_CORE_LOG_SUCCESS("no memory leak in FE_List detected ! ");
+	}
+	else
+	{
+		FE_CORE_LOG_WARNING("memory leak detected");
+	}
 #endif
 }

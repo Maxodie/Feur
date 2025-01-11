@@ -27,7 +27,7 @@
 #include <string.h>
 #include <math.h>
 #include <limits.h>
-#include <time.h>
+//#include <time.h>
 
 #include "ILDA_utils/ILDA_utils.h"
 #include "ILDA_vector/ILDA_vector.h"
@@ -42,6 +42,7 @@
 #include "Feur/Core/Memory/MemoryAllocator.h"
 
 #include "Feur/Core/Utils/List.h"
+#include "Feur/Core/Utils/ByteFlag.h"
 #include "Feur/Core/Utils/Optional.h"
 #include "Feur/Core/Utils/FeurSort.h"
 #include "Feur/Core/Utils/FeString.h"
@@ -62,5 +63,7 @@
 #include "Feur/Renderer/GraphicsContext.h"
 #include "Feur/Renderer/Renderer.h"
 #include "Feur/Renderer/Renderer2D.h"
+
+#include "Feur/Core/Utils/ECS.h"
 
 #include "Feur/Core/Application.h"

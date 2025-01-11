@@ -20,7 +20,7 @@ typedef struct RendererAPI
 	void (*SetScissor)(Uint32 width, Uint32 height);
 	void (*BindPipeline)();
 
-	void (*BeginScene)(const FE_Camera* cam);//put cam here
+	void (*BeginScene)(const FE_Camera3D* cam);//put cam here
 	void (*EndScene)();
 	void (*DrawIndex)(Uint32 indexCount);
 

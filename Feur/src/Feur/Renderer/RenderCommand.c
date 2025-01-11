@@ -37,7 +37,7 @@ void FE_DECL RenderCommandBeginRendering(FE_Color* clearColor)
 	GetRendererAPI()->BeginRendering(clearColor);
 }
 
-void FE_DECL RenderCommandBeginScene(const FE_Camera* cam)
+void FE_DECL RenderCommandBeginScene(const FE_Camera3D* cam)
 {
 	GetRendererAPI()->BeginScene(cam);
 }

@@ -202,7 +202,7 @@ void VulkanBindPipeline_impl()
 	VulkanGraphicsPipelineBind(vkInfo->cmdBuffers[vkInfo->currentFrame], VK_PIPELINE_BIND_POINT_GRAPHICS, vkInfo->graphicsPipeline.handle);
 }
 
-void VulkanBeginScene_impl(const FE_Camera* cam)
+void VulkanBeginScene_impl(const FE_Camera3D* cam)
 {
 	if (cam != NULL)
 	{

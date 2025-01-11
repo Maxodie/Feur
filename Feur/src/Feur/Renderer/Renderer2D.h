@@ -3,7 +3,7 @@
 void FE_DECL FE_Renderer2DInit();
 void FE_DECL FE_Renderer2DShutdown();
 
-void FE_DECL FE_Renderer2DBeginScene(const FE_Camera* cam);
+void FE_DECL FE_Renderer2DBeginScene(const FE_Camera3D* cam);
 void FE_DECL FE_Renderer2DEndScene();
 
 void FE_DECL FE_Renderer2DDraw();
