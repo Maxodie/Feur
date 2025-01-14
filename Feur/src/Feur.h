@@ -51,7 +51,8 @@
 #include "Feur/Nuklear/NuklearLayer.h"
 
 //ECS
-#include "Feur/Core/Utils/ECS.h"
+#include "Feur/Core/Utils/ECS/ECS.h"
+#include "Feur/Core/Utils/ECS/ECSSystems.h"
 
 //Application
 #include "Feur/Core/Application.h"

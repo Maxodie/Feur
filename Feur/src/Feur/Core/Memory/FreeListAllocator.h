@@ -11,7 +11,7 @@ typedef struct FE_MemoryFreeListAllocator
 	FreeBlock* freeBlocks;
 } FE_MemoryFreeListAllocator;
 
-typedef struct FE_AllocationHeader
+typedef struct FreeListAllocationHeader
 { 
 	SizeT size;
 	UintptrT adjustment;

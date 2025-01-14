@@ -117,7 +117,7 @@ typedef struct FE_VulkanInfo
 	FE_VulkanAllocatedBuffer indexBuffer;
 	FE_VulkanUniformData uniformData;
 
-	RendererAPIData* apiData;
+	RendererData* apiData;
 
 	VmaAllocator allocator;
 } FE_VulkanInfo;

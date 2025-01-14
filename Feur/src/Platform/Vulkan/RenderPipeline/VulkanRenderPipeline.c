@@ -283,7 +283,7 @@ void VulkanCreateDescriptorSets(FE_VulkanInfo* vkInfo)
 
 	VkResult result = vkAllocateDescriptorSets(vkInfo->logicalDevice, &allocInfo, vkInfo->descriptor.sets);
 	FE_CORE_ASSERT(result == VK_SUCCESS, "failed to  allocate descriptor sets : %d", result);
-
+	
 	for (size_t i = 0; i < vkInfo->swapChain.maxFramesInFlight; i++) {
 		VkDescriptorBufferInfo bufferInfo = {
 			.buffer = vkInfo->uniformData.uniformBuffers[i].buffer,

@@ -35,14 +35,14 @@ void FE_DECL Vulkan_GLFW_NuklearGUIBeginRender_impl(NuklearGUIInterface* interfa
 
 void FE_DECL Vulkan_GLFW_NuklearGUIEndRender_impl(NuklearGUIInterface* interface)
 {
-	FE_VulkanInfo* vkInfo = GetApp()->rendererAPIData.nativeInfoAPI;
+	FE_VulkanInfo* vkInfo = GetApp()->rendererData.nativeInfoAPI;
 	nk_glfw3_vk_render(vkInfo->cmdBuffers[vkInfo->currentFrame], NK_ANTI_ALIASING_ON);
 }
 
 void FE_DECL Vulkan_GLFW_NuklearGUIInit_impl(NuklearGUIInterface* interface)
 {
 	GLFWwindow* window = GetApp()->windowData.nativeWindow;
-	FE_VulkanInfo* vkInfo = GetApp()->rendererAPIData.nativeInfoAPI;
+	FE_VulkanInfo* vkInfo = GetApp()->rendererData.nativeInfoAPI;
 	interface->handle = nk_glfw3_vk_init(window, vkInfo->instance, vkInfo->logicalDevice, vkInfo->physicalDevice.GPU, vkInfo->queueFamilyIndices.graphicsFamily.value,
 		vkInfo->swapChain.imageViews.data, (Uint32)vkInfo->swapChain.imageViews.impl.count, vkInfo->swapChain.imageFormat, NK_GLFW3_INSTALL_CALLBACKS, MAX_VERTEX_BUFFER, MAX_ELEMENT_BUFFER);
 

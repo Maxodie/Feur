@@ -1,5 +1,10 @@
 #pragma once
 
+typedef struct FE_CompMesh
+{
+	FE_Mesh mesh;
+} FE_CompMesh;
+
 typedef struct FE_CompTransform3D
 {
 	ILDA_vector3f position;
@@ -25,7 +30,8 @@ typedef struct FE_Entity
 typedef struct FE_EntityComponentList
 {
 	const SizeT compSize;
-	FE_List(void) dataList;
+	SizeT count;
+	void* dataList;
 } FE_EntityComponentList;
 
 typedef struct FE_EntityRegistry

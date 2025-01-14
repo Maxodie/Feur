@@ -1,6 +1,6 @@
 #pragma once
 
-Bool FE_DECL RenderCommandInit(RendererAPIData* api);
+Bool FE_DECL RenderCommandInit(RendererData* api);
 
 void FE_DECL RenderCommandFramePrepare();
 void FE_DECL RenderCommandFrameCommandListBegin();

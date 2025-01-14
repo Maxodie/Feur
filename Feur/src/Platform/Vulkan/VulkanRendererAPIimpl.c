@@ -18,7 +18,7 @@
 
 static FE_VulkanInfo* vkInfo;
 
-Bool VulkanInit_impl(RendererAPIData* apiData)
+Bool VulkanInit_impl(RendererData* apiData)
 {
 	vkInfo = FE_MemoryGeneralAlloc(sizeof(FE_VulkanInfo));
 	vkInfo->apiData = apiData;
@@ -339,10 +339,10 @@ void VulkanWaitIdle_impl()
 
 void VulkanShutdown_impl()
 {
+	vkWaitForFences(vkInfo->logicalDevice, 1, &vkInfo->inFlightFences[vkInfo->currentFrame], VK_TRUE, UINT64_MAX);
+	vkDeviceWaitIdle(vkInfo->logicalDevice);
 	//temp
 	VulkanDestroyBuffer(vkInfo, &vkInfo->drawIndexedIndirectCmdBuffer);
-	VulkanDestroyBuffer(vkInfo, &vkInfo->vertexBuffer);
-	VulkanDestroyBuffer(vkInfo, &vkInfo->indexBuffer);
 
 	for (SizeT i = 0; i < vkInfo->swapChain.maxFramesInFlight; i++)
 	{
@@ -436,4 +436,14 @@ void VulkanCreateIndexBuffer_impl(Uint32 indexCount)
 void VulkanAddIndexIntoBuffer_impl(Uint32* newIndices, Uint32 indexCount, Uint64 indicesOffset)
 {
 	VulkanAddIndexIntoBuffer(vkInfo, newIndices, indexCount, indicesOffset);
+}
+
+void VulkanDestroyVertexBuffer_impl()
+{
+	VulkanDestroyBuffer(vkInfo, &vkInfo->vertexBuffer);
+}
+
+void VulkanDestroyIndexBuffer_impl()
+{
+	VulkanDestroyBuffer(vkInfo, &vkInfo->indexBuffer);
 }

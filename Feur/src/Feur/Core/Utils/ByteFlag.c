@@ -65,8 +65,9 @@ void FE_FlagRemove(FE_ByteFlag* flag, Uint64 flagToRemove)
 
 void FE_FlagPrint(FE_ByteFlag* flag)
 {
-	char* result = FE_MemoryGeneralAlloc(flag->impl.count);
+	char* result = FE_MemoryGeneralAlloc(flag->impl.count * 8 * 2);
 	SizeT bitCount = 0;
+
 	for (SizeT i = 0; i < (flag->impl.count * 8) * 2 - 1; i++)
 	{
 		if (i % 2 == 0)
@@ -79,6 +80,8 @@ void FE_FlagPrint(FE_ByteFlag* flag)
 			result[i] = '-';
 		}
 	}
+
+	result[(flag->impl.count * 8) * 2 - 1] = '\0';
 
 	FE_CORE_LOG_DEBUG("%s", result);
 	FE_MemoryGeneralFree(result);

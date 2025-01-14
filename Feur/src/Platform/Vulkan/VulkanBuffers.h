@@ -2,8 +2,6 @@
 #include <vulkan/vulkan.h>
 #include <vk_mem_alloc.h>
 
-void InitVulkan_VertexArrayBuffer();
-
 static void VulkanCreateBuffer(struct FE_VulkanInfo* vkInfo, SizeT allocSize, VkBufferUsageFlags usage, struct FE_VulkanAllocatedBuffer* outAllocatedBuffer);
 void VulkanDestroyBuffer(struct FE_VulkanInfo* vkInfo, const struct FE_VulkanAllocatedBuffer* buffer);
 

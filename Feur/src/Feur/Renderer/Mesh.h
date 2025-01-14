@@ -29,3 +29,5 @@ typedef struct FE_Mesh
 	FE_List(Uint32) indices;
 	FE_List(FE_Vertex3D) vertices;
 } FE_Mesh;
+
+void FE_MeshDraw(const FE_Mesh* mesh);

@@ -8,10 +8,12 @@ void FE_DECL FE_Renderer2DEndScene();
 
 void FE_DECL FE_Renderer2DDraw();
 void FE_DECL FE_Renderer2DReset();
-void FE_DECL FE_Renderer2DCreateTemporaryBuffer();
+void FE_DECL FE_Renderer2DResizeBuffer(SizeT bufferCountToAdd);
 
 //getters
 Uint32 FE_DECL FE_Renderer2DGetIndexCount();
+SizeT FE_DECL FE_Renderer2DGetVertexCount();
+SizeT FE_DECL FE_Renderer2DGetVertexBufferCount();
 
 //Draw quad
 void FE_DECL FE_Renderer2DDrawQuad(const ILDA_vector3f* position, const ILDA_vector2f * size, const FE_Color* color);

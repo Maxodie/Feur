@@ -2,7 +2,7 @@
 #include "RenderCommand.h"
 
 
-Bool FE_DECL RenderCommandInit(RendererAPIData* api)
+Bool FE_DECL RenderCommandInit(RendererData* api)
 {
 	return GetRendererAPI()->Init(api);
 }

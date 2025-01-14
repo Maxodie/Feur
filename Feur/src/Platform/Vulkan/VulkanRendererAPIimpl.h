@@ -1,6 +1,6 @@
 #pragma once
 
-Bool VulkanInit_impl(RendererAPIData* apiData);
+Bool VulkanInit_impl(RendererData* apiData);
 
 void VulkanFramePrepare_impl();
 Bool VulkanFrameCommandListBegin_impl();
@@ -29,3 +29,5 @@ void VulkanCreateVertexBuffer_impl(Uint32 vertexCount);//add this in a buffer ab
 void VulkanAddVertexIntoBuffer_impl(FE_Vertex3D* vertices, Uint32 vertexCount, Uint64 verticesOffset);
 void VulkanCreateIndexBuffer_impl(Uint32 indexCount);
 void VulkanAddIndexIntoBuffer_impl(Uint32* newIndices, Uint32 indexCount, Uint64 indicesOffset);
+void VulkanDestroyVertexBuffer_impl();
+void VulkanDestroyIndexBuffer_impl();

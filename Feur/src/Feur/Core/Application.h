@@ -6,7 +6,7 @@ struct FE_EventData;
 typedef struct FE_App
 {
 	WindowData windowData;
-	RendererAPIData rendererAPIData;
+	RendererData rendererData;
 	LayerStack layerStack;
 
 	ClockT startTime;
@@ -14,11 +14,10 @@ typedef struct FE_App
 	Uint32 targetFps;
 	NuklearGUIInterface guiInterface;
 
-	//ecs test
 	FE_EntityRegistry ecsRegistry;
-	FE_EntityID camEntity;
 	FE_EntityComponentTypeID cam3DComp;
-	//ecs test
+	FE_EntityComponentTypeID meshComp;
+	FE_ECSSystemContext ecsContext;
 } FE_App;
 
 void FE_DECL StartApp_impl();

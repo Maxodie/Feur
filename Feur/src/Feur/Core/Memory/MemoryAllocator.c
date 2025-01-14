@@ -59,6 +59,7 @@ FE_FORCEINLINE_FUN void* FE_DECL FE_MemoryGeneralAlloc(SizeT size)
     FE_MemoryGeneralAllocator.allocCount++;
 #endif
     return FE_MemoryFreeListAllocatorAlloc(&FE_MemoryGeneralAllocator.freeListAllocator, size, FE_MEMORY_BASE_ALIGNEMENT);
+    //return malloc(size);
 }
 
 FE_FORCEINLINE_FUN void FE_DECL FE_MemoryGeneralFree(void* ptr)
@@ -66,12 +67,15 @@ FE_FORCEINLINE_FUN void FE_DECL FE_MemoryGeneralFree(void* ptr)
 #ifdef FE_DEBUG
     FE_MemoryGeneralAllocator.freeCount++;
 #endif
+
     FE_MemoryFreeListAllocatorFree(&FE_MemoryGeneralAllocator.freeListAllocator, ptr);
+    //free(ptr);
 }
 
 FE_FORCEINLINE_FUN void* FE_DECL FE_MemoryGeneralRealloc(void* ptr, SizeT size)
 {
     return FE_MemoryFreeListAllocatorRealloc(&FE_MemoryGeneralAllocator.freeListAllocator, ptr, size, FE_MEMORY_BASE_ALIGNEMENT);
+    //return realloc(ptr, size);
 }
 
 FE_FORCEINLINE_FUN UintptrT FE_DECL FE_MemoryAlignAddress(UintptrT address, SizeT alignment)

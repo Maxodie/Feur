@@ -35,8 +35,6 @@ void* FE_DECL FE_MemoryFreeListAllocatorAlloc(FE_MemoryFreeListAllocator* alloca
             continue;
         }
 
-        FE_STATIC_ASSERT(sizeof(FreeListAllocationHeader) >= sizeof(FreeBlock), "sizeof(AllocationHeader) < sizeof(FreeBlock)");
-
         //If allocations in the remaining memory will be impossible 
         if (currentFreeBlock->size - total_size <= sizeof(FreeListAllocationHeader))
         {
@@ -78,7 +76,8 @@ void* FE_DECL FE_MemoryFreeListAllocatorAlloc(FE_MemoryFreeListAllocator* alloca
 
 void FE_DECL FE_MemoryFreeListAllocatorFree(FE_MemoryFreeListAllocator* allocator, void* ptr)
 {
-    FE_CORE_ASSERT(ptr != NULL, "Given pointer is NULL");
+    if (ptr == NULL) return;
+
     FreeListAllocationHeader* header = (FreeListAllocationHeader*)((UintptrT)ptr - sizeof(FreeListAllocationHeader));
     UintptrT block_start = (UintptrT)ptr - header->adjustment;
     SizeT block_size = header->size;
@@ -93,7 +92,8 @@ void FE_DECL FE_MemoryFreeListAllocatorFree(FE_MemoryFreeListAllocator* allocato
         currentFreeBlock = currentFreeBlock->next;
     }
 
-    FE_CORE_ASSERT((FreeBlock*)block_start != NULL && ((FreeBlock*)block_start)->size > 0, "the pointer %p shouldn't have been freed", ptr);
+    //FE_CORE_ASSERT((FreeBlock*)block_start <, "the pointer %p shouldn't have been freed", ptr);
+    FE_CORE_ASSERT(((FreeBlock*)block_start)->size > 0, "the pointer %p shouldn't have been freed", ptr);
 
     if (prevFreeBlock == NULL)
     {

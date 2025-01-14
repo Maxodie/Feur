@@ -120,15 +120,16 @@ ILDA_vector3f pos = { .x = 0.0f, .y = 0.0f, .z = 0.f };
 ILDA_vector2f size = { .x = 1.0f, .y = 1.5f };
 FE_Color color = { .r = .5f, .g = 0.1f, .b = 1.0f, .a = 0.2f};
 
-//ILDA_vector3f pos2 = { .x = 0.5f, .y = 0.0f, .z = 0.f }; pos2 = compTransform0
-//ILDA_vector2f size2 = { .x = 1.1f, .y = 0.1f }; size2 = compTransform0
+ILDA_vector3f pos2 = { .x = 0.5f, .y = 0.0f, .z = 0.f };
+ILDA_vector2f size2 = { .x = 1.1f, .y = 0.1f };
 FE_Color color2 = { .r = .2f, .g = 1.f, .b = 0.0f, .a = 0.2f };
 
-//ILDA_vector3f pos3 = { .x = -1.f, .y = 0.0f, .z = 0.f }; pos3 = compTransform1
-//ILDA_vector2f size3 = { .x = 1.1f, .y = 1.2f }; size3 = compTransform0
+ILDA_vector3f pos3 = { .x = -1.f, .y = 0.0f, .z = 0.f };
+ILDA_vector2f size3 = { .x = 1.1f, .y = 1.2f };
 FE_Color color3 = { .r = 10.5f, .g = 10.1f, .b = 10.8f, .a = 1.f };
 
-
+SizeT totalVertexCount = 0;
+SizeT totalIndexCount = 0;
 
 void UpdateSandboxLayerBase(Double dt)
 {
@@ -165,20 +166,49 @@ void UpdateSandboxLayerBase(Double dt)
 		FE_CameraRotate(&cam->camera, &camRotateAxis, -2.f);
 	}
 
-	FE_EntityComponentList* tr3DcompList = FE_EntityComponentListQueryFromID(&ecsRegistry, camTransform3DCompID);
-	FE_CompTransform3D* transform3Ds = tr3DcompList->dataList.data;
-	FE_EntityID* entityIds = ecsRegistry.compEntityUuids.data[camTransform3DCompID].data;
-	for (SizeT i = 0; i < tr3DcompList->dataList.impl.count; i++)
-	{
-		FE_CompTransform3D* tr = FE_EntityComponentQueryFromID(&ecsRegistry, entityIds[i], camTransform3DCompID);// exemple on how to get any component type of this entity
-		tr->position.x += 0.1f * dt;
 
-		FE_Renderer2DDrawQuad(&transform3Ds[i].position, &transform3Ds[i].scale, &color2);
-	}
+	FE_Renderer2DDrawQuad(&pos, &size, &color);
+	FE_Renderer2DDrawQuad(&pos3, &size2, &color2);
+	FE_Renderer2DDrawQuad(&pos2, &size3, &color3);
 
+
+	ILDA_vector3f pos4 = { .x = -1.f, .y = 0.5f, .z = 0.5f };
+	FE_Renderer2DDrawQuad(&pos4, &size2, &color);
+	pos4.x = 2.f;
+	FE_Renderer2DDrawQuad(&pos4, &size2, &color);
+
+	pos4.x = 1.f;
+	pos4.y = 1.f;
+	FE_Renderer2DDrawQuad(&pos4, &size2, &color);
+
+	pos4.x = 1.f;
+	pos4.y = -1.f;
+	FE_Renderer2DDrawQuad(&pos4, &size2, &color);
+
+	//FE_EntityComponentList* tr3DcompList = FE_EntityComponentListQueryFromID(&ecsRegistry, camTransform3DCompID);
+	//FE_CompTransform3D* transform3Ds = tr3DcompList->dataList.data;
+	//FE_EntityID* entityIds = ecsRegistry.compEntityUuids.data[camTransform3DCompID].data;
+	//for (SizeT i = 0; i < tr3DcompList->dataList.impl.count; i++)
+	//{
+	//	if (entityIds[i] == -1)
+	//	{
+	//		continue;
+	//	}
+
+	//	FE_CompTransform3D* tr = FE_EntityComponentQueryFromID(&ecsRegistry, entityIds[i], camTransform3DCompID);// exemple on how to get any component type of this entity
+	//	tr->position.x += 0.1f * dt;
+
+	//	FE_Renderer2DDrawQuad(&transform3Ds[i].position, &transform3Ds[i].scale, &color2);
+	//}
+
+	totalVertexCount = FE_Renderer2DGetVertexCount();
+	totalIndexCount = FE_Renderer2DGetIndexCount();
 	FE_Renderer2DEndScene();
 }
 
+	char* t = NULL;
+	char* t1 = NULL;
+	char* t2 = NULL;
 void OnNuklearRender(NuklearGUIInterface* interface, Layer* layer)
 {
 	struct nk_context* context = (struct nk_context*)interface->handle;
@@ -186,18 +216,40 @@ void OnNuklearRender(NuklearGUIInterface* interface, Layer* layer)
 	{
 		struct nk_vec2 rect = nk_window_get_content_region_min(context);
 		struct nk_vec2 size = nk_window_get_content_region_size(context);
+		nk_layout_row_dynamic(context, 20, 1);
 
-		struct nk_vec2 tabPos = nk_window_get_content_region_max(context);
-		struct nk_vec2 winSize = { .x = (Float32)GetApp()->windowData.w, .y = (Float32)GetApp()->windowData.h };
+		if (t) {
+			FE_StringFormatFree(t);
+		}
+		if (t1) {
+			FE_StringFormatFree(t1);
+		}
+		if (t2) {
+		FE_StringFormatFree(t2);
+		}
 
-		struct nk_colorf background = { .r = color2.r, .g = color2.g, .b = color2.b, .a = color2.a };
-		nk_layout_row_static(context, 30, 80, 1);
+		t = FE_StringFormatAlloc("vertex count : %lld", totalVertexCount);
+		if (t) {
+			nk_label(context, t, NK_TEXT_LEFT);
+		}
+
+		t1 = FE_StringFormatAlloc("index count : %lld", FE_Renderer2DGetIndexCount());
+		if (t1) {
+			nk_label(context, t1, NK_TEXT_LEFT);
+		}
+
+		t2 = FE_StringFormatAlloc("total vertex buffer count : %lld", FE_Renderer2DGetVertexBufferCount());
+		if (t2) {
+			nk_label(context, t2, NK_TEXT_LEFT);
+		}
+
 		if (nk_button_label(context, "button"))
 			fprintf(stdout, "button pressed\n");
 
 		nk_layout_row_dynamic(context, 20, 1);
 		nk_label(context, "background:", NK_TEXT_LEFT);
 		nk_layout_row_dynamic(context, 25, 1);
+		struct nk_colorf background = { .r = color2.r, .g = color2.g, .b = color2.b, .a = color2.a };
 		if (nk_combo_begin_color(context, nk_rgb_cf(background),
 			nk_vec2(nk_widget_width(context), 400))) {
 			nk_layout_row_dynamic(context, 120, 1);
@@ -209,10 +261,10 @@ void OnNuklearRender(NuklearGUIInterface* interface, Layer* layer)
 			nk_layout_row_dynamic(context, 25, 1);
 			nk_combo_end(context);
 		}
-
-		//FE_CORE_LOG_DEBUG("x : %f; y : %f", rect.x, rect.y);
 	}
 	nk_end(context);
+
+
 }
 
 
@@ -253,6 +305,15 @@ void UpdateLayerBaseEventSandbox(FE_Event* event)
 
 void EndLayer() 
 {
+	if (t) {
+		FE_StringFormatFree(t);
+	}
+	if (t1) {
+		FE_StringFormatFree(t1);
+	}
+	if (t2) {
+		FE_StringFormatFree(t2);
+	}
 	FE_EntityDestroyRegistry(&ecsRegistry);
 }
 

@@ -1,5 +1,5 @@
 #include "fepch.h"
-#include "Feur/Core/Utils/ECS.h"
+#include "Feur/Core/Utils/ECS/ECS.h"
 
 void FE_EntityCreateRegistry(FE_EntityRegistry* registry)
 {
@@ -23,7 +23,7 @@ void FE_EntityDestroyRegistry(FE_EntityRegistry* registry)
 	count = registry->dataList.impl.count;
 	for (SizeT i = 0; i < count; i++)
 	{
-		FE_ListClear(registry->dataList.data[i].dataList);
+		FE_MemoryGeneralFree(registry->dataList.data[i].dataList);
 		FE_ListClear(registry->compEntityUuids.data[i]);
 	}
 
@@ -59,7 +59,6 @@ FE_EntityID FE_EntityCreate(FE_EntityRegistry* registry)
 void FE_EntityDestroy(FE_EntityRegistry* registry, FE_EntityID uuid)
 {
 	FE_Entity* entity = FE_EntityQueryFromID(registry, uuid);
-	FE_CORE_ASSERT(entity != NULL, "The FE_Entity is invalid");
 
 	FE_EntityComponentID singleCompID = -1;
 	FE_EntityComponentTypeID* compTypeUuids = registry->compUuids.data;
@@ -97,7 +96,6 @@ FE_EntityComponentTypeID FE_EntityCreateComponentType(FE_EntityRegistry* registr
 
 	FE_EntityComponentList compList = { .compSize = compSize };
 	FE_List(FE_EntityID) entityUuids = { 0 };
-	FE_ListInit(compList.dataList);
 	FE_ListInit(entityUuids);
 
 	FE_ListPush(registry->compEntityUuids, entityUuids);
@@ -115,7 +113,7 @@ void FE_EntityDestroyComponentType(FE_EntityRegistry* registry, FE_EntityCompone
 		FE_FlagRemove(&entities[i].byteFlag, componentUuid);
 	}
 
-	FE_ListClear(registry->dataList.data[componentUuid].dataList);
+	FE_MemoryGeneralFree(registry->dataList.data[componentUuid].dataList);
 	FE_ListClear(registry->compEntityUuids.data[componentUuid]);
 	registry->compUuids.data[componentUuid] = -1;
 }
@@ -123,7 +121,6 @@ void FE_EntityDestroyComponentType(FE_EntityRegistry* registry, FE_EntityCompone
 void* FE_EntityAttachComp(FE_EntityRegistry* registry, FE_EntityID entityUuid, FE_EntityComponentTypeID componentUuid)
 {
 	FE_Entity* entity = FE_EntityQueryFromID(registry, entityUuid);
-	FE_CORE_ASSERT(entity != NULL, "The FE_Entity is invalid");
 
 	if (FE_FlagExist(&entity->byteFlag, componentUuid))
 	{
@@ -131,8 +128,6 @@ void* FE_EntityAttachComp(FE_EntityRegistry* registry, FE_EntityID entityUuid, F
 	}
 
 	FE_EntityComponentList* compList = FE_EntityComponentListQueryFromID(registry, componentUuid);
-	FE_CORE_ASSERT(compList != NULL, "The FE_EntityComponentID is invalid");
-
 
 	FE_EntityID* compEntities = registry->compEntityUuids.data[componentUuid].data;
 	SizeT compEntitiesCount = registry->compEntityUuids.data[componentUuid].impl.count;
@@ -144,15 +139,24 @@ void* FE_EntityAttachComp(FE_EntityRegistry* registry, FE_EntityID entityUuid, F
 		{
 			uuid = i;
 			compEntities[i] = uuid;
-			void* existingComp = (void*)((UintptrT)compList->dataList.data + ((UintptrT)compList->compSize * i));
+			void* existingComp = (void*)((UintptrT)compList->dataList + ((UintptrT)compList->compSize * i));
 			memset(existingComp, 0, compList->compSize);
 			FE_FlagSet(&entity->byteFlag, componentUuid);
 			return existingComp;
 		}
 	}
 
-	FE_ListPushSize(compList->dataList, compList->compSize);
-	void* newComp = (void*)((UintptrT)compList->dataList.data + (compList->compSize * (compList->dataList.impl.count - 1)));
+	if (compList->dataList == NULL)
+	{
+		compList->dataList = FE_MemoryGeneralAlloc(compList->compSize);
+		compList->count++;
+	}
+	else
+	{
+		compList->dataList = FE_MemoryGeneralRealloc(compList->dataList, (compList->count++ + 1) * compList->compSize);
+	}
+
+	void* newComp = (void*)((UintptrT)compList->dataList + (compList->compSize * (compList->count - 1)));
 
 	memset(newComp, 0, compList->compSize);
 	FE_FlagSet(&entity->byteFlag, componentUuid);
@@ -165,7 +169,6 @@ void* FE_EntityAttachComp(FE_EntityRegistry* registry, FE_EntityID entityUuid, F
 void FE_EntityDetachComp(FE_EntityRegistry* registry, FE_EntityID entityUuid, FE_EntityComponentTypeID componentUuid)
 {
 	FE_Entity* entity = FE_EntityQueryFromID(registry, entityUuid);
-	FE_CORE_ASSERT(entity != NULL, "The FE_Entity is invalid");
 
 	if (!FE_FlagExist(&entity->byteFlag, componentUuid))
 	{
@@ -173,10 +176,8 @@ void FE_EntityDetachComp(FE_EntityRegistry* registry, FE_EntityID entityUuid, FE
 	}
 
 	FE_EntityComponentList* compList = FE_EntityComponentListQueryFromID(registry, componentUuid);
-	FE_CORE_ASSERT(compList != NULL, "The FE_EntityComponentTypeID is invalid");
 	
 	FE_EntityComponentID singleCompUuid = FE_EntityComponentIDQueryFromID(registry, entityUuid, componentUuid);
-	FE_CORE_ASSERT(singleCompUuid >= 0, "The FE_EntityComponentID is invalid");
 
 	registry->compEntityUuids.data[componentUuid].data[singleCompUuid] = -1;
 	
@@ -188,6 +189,7 @@ FE_Entity* FE_EntityQueryFromID(const FE_EntityRegistry* registry, FE_EntityID u
 {
 	if ((Int64)registry->entities.impl.count <= uuid || registry->entities.data[uuid].entityUuid != uuid)
 	{
+		FE_CORE_ASSERT(FALSE, "The FE_Entity is invalid");
 		return NULL;
 	}
 
@@ -199,6 +201,7 @@ FE_EntityComponentList* FE_EntityComponentListQueryFromID(const FE_EntityRegistr
 {
 	if ((Int64)registry->dataList.impl.count <= uuid || (Int64)registry->compUuids.impl.count <= uuid || registry->compUuids.data[uuid] != uuid)
 	{
+		FE_CORE_ASSERT(FALSE, "The FE_EntityComponentTypeID is invalid");
 		return NULL;
 	}
 
@@ -209,6 +212,7 @@ void* FE_EntityComponentQueryFromID(const FE_EntityRegistry* registry, FE_Entity
 {
 	if ((Int64)registry->dataList.impl.count <= componentUuid || registry->compUuids.data[componentUuid] != componentUuid)
 	{
+		FE_CORE_ASSERT(FALSE, "The FE_EntityComponentTypeID is invalid");
 		return NULL;
 	}
 
@@ -216,16 +220,18 @@ void* FE_EntityComponentQueryFromID(const FE_EntityRegistry* registry, FE_Entity
 
 	if (singleCompUuid == -1)
 	{
+		FE_CORE_ASSERT(FALSE, "The FE_EntityComponentID is invalid");
 		return NULL;
 	}
 
-	return (void*)((UintptrT)(registry->dataList.data[componentUuid].dataList.data) + singleCompUuid * registry->dataList.data[componentUuid].compSize);
+	return (void*)((UintptrT)(registry->dataList.data[componentUuid].dataList) + singleCompUuid * registry->dataList.data[componentUuid].compSize);
 }
 
 FE_EntityComponentID FE_EntityComponentIDQueryFromID(const FE_EntityRegistry* registry, FE_EntityID entityUuid, FE_EntityComponentTypeID componentUuid)
 {
 	if ((Int64)registry->compEntityUuids.impl.count <= componentUuid)
 	{
+		FE_CORE_ASSERT(FALSE, "The FE_EntityComponentTypeID is invalid");
 		return -1;
 	}
 
@@ -245,7 +251,6 @@ FE_EntityComponentID FE_EntityComponentIDQueryFromID(const FE_EntityRegistry* re
 Bool FE_EntityHasComponent(const FE_EntityRegistry* registry, FE_EntityID entityUuid, FE_EntityComponentTypeID componentUuid)
 {
 	FE_Entity* entity = FE_EntityQueryFromID(registry, entityUuid);
-	FE_CORE_ASSERT(entity != NULL, "The FE_EntityID is invalid");
 
 	return FE_FlagExist(&entity->byteFlag, componentUuid);
 }
@@ -253,7 +258,6 @@ Bool FE_EntityHasComponent(const FE_EntityRegistry* registry, FE_EntityID entity
 void FE_EntityPrintEntityCompFlags(const FE_EntityRegistry* registry, FE_EntityID entityUuid)
 {
 	FE_Entity* entity = FE_EntityQueryFromID(registry, entityUuid);
-	FE_CORE_ASSERT(entity != NULL, "The FE_EntityID is invalid");
 
 	FE_FlagPrint(&entity->byteFlag);
 }

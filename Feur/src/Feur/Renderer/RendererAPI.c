@@ -6,7 +6,7 @@
 
 static RendererAPI rendererAPI;
 
-void FE_DECL InitRendererAPISelection(RendererAPIData* apiData)
+void FE_DECL InitRendererAPISelection(RendererData* apiData)
 {
 	apiData->defaultClearColor = (FE_Color){ .r = 0.01f, .g = 0.01f, .b = 0.01f, .a = 1 };
 
@@ -58,6 +58,9 @@ void FE_DECL InitRendererAPISelection(RendererAPIData* apiData)
 		rendererAPI.bufferAPI.AddVertexIntoBuffer = VulkanAddVertexIntoBuffer_impl;
 		rendererAPI.bufferAPI.CreateIndexBuffer = VulkanCreateIndexBuffer_impl;
 		rendererAPI.bufferAPI.AddIndexIntoBuffer = VulkanAddIndexIntoBuffer_impl;
+
+		rendererAPI.bufferAPI.DestroyVertexBuffer = VulkanDestroyVertexBuffer_impl;
+		rendererAPI.bufferAPI.DestroyIndexBuffer = VulkanDestroyIndexBuffer_impl;
 
 		//GetRenderer_VertexArray_Buffer()->InitVaoBuffer = InitVulkan_VertexArrayBuffer;
 		break;

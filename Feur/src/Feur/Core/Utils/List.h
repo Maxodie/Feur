@@ -40,12 +40,6 @@ FE_ListInsert_impl(&(fe_list).impl, (Byte**)&(fe_list).data, (const void*)&value
 //with 'fe_list' an FE_List(type); 'value' type of 'type'
 #define FE_ListPush(fe_list, value)  FE_CORE_ASSERT(FE_ListPushArray_impl(&(fe_list).impl, (Byte**)&(fe_list).data, (const void*)&value, 1, sizeof(*(fe_list).data)), "failed to push fe_list")
 
-//with 'fe_list' an FE_List(type); 'size' SizeT of the item size
-#define FE_ListPushSize(fe_list, size)  { \
-        Byte temp = 0; \
-        FE_CORE_ASSERT(FE_ListPushArray_impl(&(fe_list).impl, (Byte**)&(fe_list).data, &temp, 1, size), "failed to push fe_list") \
-}
-
 //#define FE_ListPush(fe_list, value) FE_ListPush_impl(&fe_list.impl, (Byte**)&fe_list.data, (const void*)&value, sizeof(*fe_list.data))
 //with 'fe_list' an FE_List(type); 'type' same type of *fe_list.data; 'value' type of 'type';
 #define FE_ListPushValue(fe_list, type, value) { \

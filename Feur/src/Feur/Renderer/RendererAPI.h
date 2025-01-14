@@ -3,15 +3,15 @@
 
 typedef enum Renderer_API_Type { FE_RENDERER_API_TYPE_OPENGL, FE_RENDERER_API_TYPE_VULKAN } Renderer_API_Type;
 
-typedef struct RendererAPIData
+typedef struct RendererData
 {
 	FE_Color defaultClearColor;
 	void* nativeInfoAPI;
-} RendererAPIData;
+} RendererData;
 
 typedef struct RendererAPI
 {
-	Bool (*Init)(RendererAPIData* api);
+	Bool (*Init)(RendererData* api);
 
 	void (*FramePrepare)();
 	Bool (*FrameCommandListBegin)();
@@ -39,5 +39,5 @@ typedef struct RendererAPI
 	Renderer_API_Type API_Type;
 } RendererAPI;
 
-void FE_DECL InitRendererAPISelection(RendererAPIData* apiData);
+void FE_DECL InitRendererAPISelection(RendererData* apiData);
 const RendererAPI* FE_DECL GetRendererAPI();
