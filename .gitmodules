@@ -10,3 +10,6 @@
 [submodule "Feur/vendor/Mathilda/Mathilda"]
 	path = Feur/vendor/Mathilda/Mathilda
 	url = https://github.com/Maxodie/Mathilda
+[submodule "Feur/vendor/assimp/assimp"]
+	path = Feur/vendor/assimp/assimp
+	url = https://github.com/assimp/assimp
