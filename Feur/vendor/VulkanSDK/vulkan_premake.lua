@@ -38,11 +38,22 @@ project ("Vulkan")
     filter "configurations:Debug"
         defines { "WIN32", "_DEBUG", "DEBUG", "_WINDOWS" }
         symbols "on"
+        optimize "On"
+        systemversion "latest"
+        staticruntime "On"
+        runtime "Debug"
 
     filter "configurations:Release"
-        defines { "WIN32", "NDEBUG", "PROFILE", "_WINDOWS" }
-        symbols "on"
+        runtime "Release"
         optimize "On"
+        symbols "on"
+        systemversion "latest"
+        staticruntime "On"
+     
+    filter "configurations:Release"
+        defines { "WIN32", "NDEBUG", "PROFILE", "_WINDOWS" }
+
+
 
 
 
@@ -53,8 +64,6 @@ project ("VulkanMemoryAllocator")
 	cppdialect "C++17"
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
-    staticruntime "on"
 
     links
     {
@@ -72,6 +81,19 @@ project ("VulkanMemoryAllocator")
         "$(ProjectDir)../1.3.290.0/Include"
     }
 
+    filter "system:linux"
+        systemversion "latest"
+        staticruntime "on"
+    
     filter "system:windows"
         linkoptions { "/NODEFAULTLIB:library" }
+        systemversion "latest"
+        staticruntime "on"
 
+        filter "configurations:Debug"
+            runtime "Debug"
+            symbols "on"
+
+        filter "configurations:Release"
+            runtime "Release"
+            optimize "on"

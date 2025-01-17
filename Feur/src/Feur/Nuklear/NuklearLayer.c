@@ -4,7 +4,7 @@
 #include "Platform/Nuklear/OpenGLNuklearLayer.h"
 #include "Platform/Nuklear/VulkanNuklearLayer.h"
 
-void FE_DECL NuklearGUIInterfaceInit(NuklearGUIInterface* interface)
+void NuklearGUIInterfaceInit(NuklearGUIInterface* interface)
 {
 	if (GetWindowAPI()->API_Type == FE_WINDOW_API_GLFW && GetRendererAPI()->API_Type == FE_RENDERER_API_TYPE_OPENGL)
 	{
@@ -22,4 +22,14 @@ void FE_DECL NuklearGUIInterfaceInit(NuklearGUIInterface* interface)
 		interface->OnEndRender = Vulkan_GLFW_NuklearGUIEndRender_impl;
 		interface->OnWindowResize = Vulkan_GLFW_NuklearGUIOnWindowResize_impl;
 	}
+}
+
+void NuklearGUIBeginRender()
+{
+	GetApp()->guiInterface.OnBeginRender(&GetApp()->guiInterface);
+}
+
+void NuklearGUIEndRender()
+{
+	GetApp()->guiInterface.OnEndRender(&GetApp()->guiInterface);
 }

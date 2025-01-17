@@ -90,16 +90,18 @@ FE_EntityComponentTypeID FE_EntityCreateComponentType(FE_EntityRegistry* registr
 		}
 	}
 
-	uuid = registry->compUuids.impl.count;
+	if (uuid == -1)
+	{
+		uuid = registry->compUuids.impl.count;
+		FE_ListPush(registry->compUuids, uuid);
+		FE_EntityComponentList compList = { .compSize = compSize };
+		FE_ListPush(registry->dataList, compList);
+	}
 
-	FE_ListPush(registry->compUuids, uuid);
-
-	FE_EntityComponentList compList = { .compSize = compSize };
 	FE_List(FE_EntityID) entityUuids = { 0 };
 	FE_ListInit(entityUuids);
 
 	FE_ListPush(registry->compEntityUuids, entityUuids);
-	FE_ListPush(registry->dataList, compList);
 
 	return uuid;
 }
@@ -210,6 +212,7 @@ FE_EntityComponentList* FE_EntityComponentListQueryFromID(const FE_EntityRegistr
 
 void* FE_EntityComponentQueryFromID(const FE_EntityRegistry* registry, FE_EntityID entityUuid, FE_EntityComponentTypeID componentUuid)
 {
+	//to verify if the good one is received
 	if ((Int64)registry->dataList.impl.count <= componentUuid || registry->compUuids.data[componentUuid] != componentUuid)
 	{
 		FE_CORE_ASSERT(FALSE, "The FE_EntityComponentTypeID is invalid");

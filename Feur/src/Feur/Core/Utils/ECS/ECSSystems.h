@@ -6,6 +6,6 @@ typedef struct FE_ECSSystemContext
 	Double dt;
 } FE_ECSSystemContext;
 
-void FE_ECSComputeDraw(FE_CompMesh* meshComp, FE_EntityComponentTypeID compTypeId, FE_EntityID entityId, FE_ECSSystemContext* context);
+void FE_ECSComputeDrawModel(FE_CompModel* modelComp, FE_EntityComponentTypeID compTypeId, FE_EntityID entityId, FE_ECSSystemContext* context);
 
-void FE_ECSComputeSystem(void(fun)(void* comp, FE_EntityID entityId, FE_ECSSystemContext* context), FE_EntityComponentTypeID compTypeId, FE_ECSSystemContext* context);
+void FE_ECSComputeSystem(void(fun)(void* comp, FE_EntityComponentTypeID compTypeId, FE_EntityID entityId, FE_ECSSystemContext* context), FE_EntityComponentTypeID compTypeId, FE_ECSSystemContext* context);

@@ -1,4 +1,4 @@
-project "Nuklear"
+project "assimp"
     location "build"
     kind "StaticLib"
     language "C"
@@ -8,34 +8,40 @@ project "Nuklear"
 
     files
     {
-        "Nuklear/src/**.h",
-        "Nuklear/src/**.c",
-        "NuklearImplementationCompile.c"
+        "assimp_compile.cpp"
     }
 
     includedirs
     {
-        "Nuklear"
+        "$(ProjectDir)assimp/include"
     }
-
-    defines
-    {
-        "NK_INCLUDE_FONT_BAKING"
-    }
+    
+    filter "configurations:Release"
+        links
+        {
+            "$(ProjectDir)assimp/lib/assimp"
+        }
+    
+    filter "configurations:Debug"
+        links
+        {
+            "$(ProjectDir)assimp/lib/lib/Debug/assimp-vc143-mtd",
+            "$(ProjectDir)assimp/lib/contrib/zlib/Debug/zlibstaticd"
+        }
 
     filter "system:linux"
         systemversion "latest"
-        staticruntime "On"
-    
+        staticruntime "on"
+
     filter "system:windows"
         linkoptions { "/NODEFAULTLIB:library" }
         systemversion "latest"
-        staticruntime "On"
+        staticruntime "on"
 
         filter "configurations:Debug"
             runtime "Debug"
-            symbols "On"
+            symbols "on"
 
         filter "configurations:Release"
             runtime "Release"
-            optimize "On"
+            optimize "on"

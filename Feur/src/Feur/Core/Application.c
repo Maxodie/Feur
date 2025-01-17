@@ -18,122 +18,6 @@ void FE_DECL StartApp_impl()
 
 void FE_DECL RunApp_impl()
 {
-	//ecs test
-	g_fe_App.cam3DComp = FE_EntityCreateComponentType(&g_fe_App.ecsRegistry, sizeof(FE_CompCamera3D));
-	g_fe_App.meshComp = FE_EntityCreateComponentType(&g_fe_App.ecsRegistry, sizeof(FE_CompMesh));
-
-	g_fe_App.ecsContext.registry = &g_fe_App.ecsRegistry;
-
-	//FE_EntityID newEntity = FE_EntityCreate(&g_fe_App.ecsRegistry);
-	//FE_EntityID newEntity1 = FE_EntityCreate(&g_fe_App.ecsRegistry);
-	//FE_EntityID newEntity2 = FE_EntityCreate(&g_fe_App.ecsRegistry);
-	//FE_EntityID newEntity3 = FE_EntityCreate(&g_fe_App.ecsRegistry);
-	//FE_EntityID newEntity4 = FE_EntityCreate(&g_fe_App.ecsRegistry);
-
-	//FE_CORE_LOG_DEBUG("attach e0 : cam");
-	//FE_EntityAttachComp(&g_fe_App.ecsRegistry, g_fe_App.camEntity, g_fe_App.cam3DComp);
-
-	//FE_CORE_LOG_DEBUG("component cam capacity : %lld     single dataSize : %lld", FE_EntityComponentListQueryFromID(&g_fe_App.ecsRegistry, g_fe_App.cam3DComp)->count, sizeof(FE_Camera3D));
-
-	//FE_CORE_LOG_DEBUG("e0 : cam %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, g_fe_App.camEntity, g_fe_App.cam3DComp));
-	//FE_CORE_LOG_DEBUG("e1 : cam %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, newEntity, g_fe_App.cam3DComp));
-
-	//FE_CORE_LOG_DEBUG("attach e1 : cam");
-	//FE_EntityAttachComp(&g_fe_App.ecsRegistry, newEntity, g_fe_App.cam3DComp);
-
-	//FE_CORE_LOG_DEBUG("e0 : cam %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, g_fe_App.camEntity, g_fe_App.cam3DComp));
-	//FE_CORE_LOG_DEBUG("e1 : cam %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, newEntity, g_fe_App.cam3DComp));
-
-	//FE_EntityComponentTypeID newComp = FE_EntityCreateComponentType(&g_fe_App.ecsRegistry, sizeof(FE_CompTransform3D));
-
-	//FE_CORE_LOG_DEBUG("component tra capacity : %lld     single dataSize : %lld", FE_EntityComponentListQueryFromID(&g_fe_App.ecsRegistry, newComp)->count, sizeof(FE_CompTransform3D));
-	//FE_CORE_LOG_DEBUG("component cam capacity : %lld     single dataSize : %lld", FE_EntityComponentListQueryFromID(&g_fe_App.ecsRegistry, g_fe_App.cam3DComp)->count, sizeof(FE_Camera3D));
-
-	//FE_CORE_LOG_DEBUG("attach e2 : cam");
-	//FE_EntityAttachComp(&g_fe_App.ecsRegistry, newEntity1, g_fe_App.cam3DComp);
-
-	//FE_CORE_LOG_DEBUG("component cam capacity : %lld     single dataSize : %lld", FE_EntityComponentListQueryFromID(&g_fe_App.ecsRegistry, g_fe_App.cam3DComp)->count, sizeof(FE_Camera3D));
-
-	//FE_CORE_LOG_DEBUG("attach e3 : cam");
-	//FE_Camera3D* camComp = FE_EntityAttachComp(&g_fe_App.ecsRegistry, newEntity2, g_fe_App.cam3DComp);
-	//camComp->position.x = 5.f;
-
-	//FE_CORE_LOG_DEBUG("%f", ((FE_Camera3D*)FE_EntityComponentQueryFromID(&g_fe_App.ecsRegistry, newEntity2, g_fe_App.cam3DComp))->position.x);
-	//FE_CORE_LOG_DEBUG("component tra capacity : %lld     single dataSize : %lld", FE_EntityComponentListQueryFromID(&g_fe_App.ecsRegistry, newComp)->count, sizeof(FE_CompTransform3D));
-	//FE_CORE_LOG_DEBUG("component cam capacity : %lld     single dataSize : %lld", FE_EntityComponentListQueryFromID(&g_fe_App.ecsRegistry, g_fe_App.cam3DComp)->count, sizeof(FE_Camera3D));
-
-	//FE_CORE_LOG_DEBUG("attach e1 : tra");
-	//FE_EntityAttachComp(&g_fe_App.ecsRegistry, newEntity, newComp);
-
-	//FE_CORE_LOG_DEBUG("e1 : cam %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, newEntity, g_fe_App.cam3DComp));
-	//FE_CORE_LOG_DEBUG("e1 : tra %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, newEntity, newComp));
-	//FE_CORE_LOG_DEBUG("e0 : tra %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, g_fe_App.camEntity, newComp));
-	//FE_CORE_LOG_DEBUG("e0 : cam %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, g_fe_App.camEntity, g_fe_App.cam3DComp));
-
-	//FE_CORE_LOG_DEBUG("component tra capacity : %lld     single dataSize : %lld", FE_EntityComponentListQueryFromID(&g_fe_App.ecsRegistry, newComp)->count, sizeof(FE_CompTransform3D));
-
-	//FE_CORE_LOG_DEBUG("attach e0 : tra");
-	//FE_EntityAttachComp(&g_fe_App.ecsRegistry, g_fe_App.camEntity, newComp);
-
-	//FE_CORE_LOG_DEBUG("e0 : tra %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, g_fe_App.camEntity, newComp));
-	//FE_CORE_LOG_DEBUG("e1 : tra %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, newEntity, newComp));
-
-	//FE_CORE_LOG_DEBUG("detach e0 : cam");
-	//FE_EntityDetachComp(&g_fe_App.ecsRegistry, g_fe_App.camEntity, g_fe_App.cam3DComp);
-
-	//FE_CORE_LOG_DEBUG("component cam capacity : %lld     single dataSize : %lld", FE_EntityComponentListQueryFromID(&g_fe_App.ecsRegistry, g_fe_App.cam3DComp)->count, sizeof(FE_Camera3D));
-
-	//FE_CORE_LOG_DEBUG("e0 : cam %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, g_fe_App.camEntity, g_fe_App.cam3DComp));
-	//FE_CORE_LOG_DEBUG("e1 : cam %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, newEntity, g_fe_App.cam3DComp));
-	//FE_CORE_LOG_DEBUG("e0 : tra %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, g_fe_App.camEntity, newComp));
-	//FE_CORE_LOG_DEBUG("e1 : tra %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, newEntity, newComp));
-
-	//FE_CORE_LOG_DEBUG("attach e0 : cam");
-	//FE_EntityAttachComp(&g_fe_App.ecsRegistry, g_fe_App.camEntity, g_fe_App.cam3DComp);
-
-	//FE_CORE_LOG_DEBUG("component cam capacity : %lld     single dataSize : %lld", FE_EntityComponentListQueryFromID(&g_fe_App.ecsRegistry, g_fe_App.cam3DComp)->count, sizeof(FE_Camera3D));
-
-	//FE_CORE_LOG_DEBUG("e0 : cam %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, g_fe_App.camEntity, g_fe_App.cam3DComp));
-	//FE_CORE_LOG_DEBUG("e1 : cam %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, newEntity, g_fe_App.cam3DComp));
-	//FE_CORE_LOG_DEBUG("e0 : tra %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, g_fe_App.camEntity, newComp));
-	//FE_CORE_LOG_DEBUG("e1 : tra %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, newEntity, newComp));
-
-	//FE_CORE_LOG_DEBUG("attach e1 : cam");
-	//FE_EntityAttachComp(&g_fe_App.ecsRegistry, newEntity, g_fe_App.cam3DComp);
-
-	//FE_CORE_LOG_DEBUG("component cam capacity : %lld     single dataSize : %lld", FE_EntityComponentListQueryFromID(&g_fe_App.ecsRegistry, g_fe_App.cam3DComp)->count, sizeof(FE_Camera3D));
-
-	//FE_CORE_LOG_DEBUG("e0 : cam %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, g_fe_App.camEntity, g_fe_App.cam3DComp));
-	//FE_CORE_LOG_DEBUG("e1 : cam %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, newEntity, g_fe_App.cam3DComp));
-	//FE_CORE_LOG_DEBUG("e0 : tra %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, g_fe_App.camEntity, newComp));
-	//FE_CORE_LOG_DEBUG("e1 : tra %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, newEntity, newComp));
-
-	//FE_CORE_LOG_DEBUG("destroy e1");
-	//FE_EntityDestroy(&g_fe_App.ecsRegistry, newEntity);
-
-	//FE_CORE_LOG_DEBUG("create e1");
-	//newEntity = FE_EntityCreate(&g_fe_App.ecsRegistry);
-
-	//FE_CORE_LOG_DEBUG("component cam capacity : %lld     single dataSize : %lld", FE_EntityComponentListQueryFromID(&g_fe_App.ecsRegistry, g_fe_App.cam3DComp)->count, sizeof(FE_Camera3D));
-
-	//FE_CORE_LOG_DEBUG("e0 : cam %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, g_fe_App.camEntity, g_fe_App.cam3DComp));
-	//FE_CORE_LOG_DEBUG("e1 : cam %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, newEntity, g_fe_App.cam3DComp));
-	//FE_CORE_LOG_DEBUG("e0 : tra %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, g_fe_App.camEntity, newComp));
-	//FE_CORE_LOG_DEBUG("e1 : tra %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, newEntity, newComp));
-
-	//FE_CORE_LOG_DEBUG("attach e1 : tra");
-	//FE_EntityAttachComp(&g_fe_App.ecsRegistry, newEntity, newComp);
-
-	//FE_EntityPrintEntityCompFlags(&g_fe_App.ecsRegistry, newEntity);
-	//FE_CORE_LOG_DEBUG("e0 : cam %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, g_fe_App.camEntity, g_fe_App.cam3DComp));
-	//FE_CORE_LOG_DEBUG("e1 : cam %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, newEntity, g_fe_App.cam3DComp));
-	//FE_CORE_LOG_DEBUG("e0 : tra %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, g_fe_App.camEntity, newComp));
-	//FE_CORE_LOG_DEBUG("e1 : tra %d", FE_EntityHasComponent(&g_fe_App.ecsRegistry, newEntity, newComp));
-
-	//FE_CORE_LOG_DEBUG("component tra capacity : %lld     single dataSize : %lld", FE_EntityComponentListQueryFromID(&g_fe_App.ecsRegistry, newComp)->count, sizeof(FE_CompTransform3D));
-	//FE_CORE_LOG_DEBUG("component cam capacity : %lld     single dataSize : %lld", FE_EntityComponentListQueryFromID(&g_fe_App.ecsRegistry, g_fe_App.cam3DComp)->count, sizeof(FE_Camera3D));
-	////ecs test
-
 	g_fe_App.endTime = clock();
 	double deltaTime;
 
@@ -152,6 +36,16 @@ void FE_DECL RunApp_impl()
 	ShutdownApp();
 }
 
+void FE_DECL AppInitECS()
+{
+	FE_EntityCreateRegistry(&g_fe_App.ecsRegistry);
+
+	g_fe_App.cam3DComp = FE_EntityCreateComponentType(&g_fe_App.ecsRegistry, sizeof(FE_CompCamera3D));
+	g_fe_App.modelComp = FE_EntityCreateComponentType(&g_fe_App.ecsRegistry, sizeof(FE_CompModel));
+
+	g_fe_App.ecsContext.registry = &g_fe_App.ecsRegistry;
+}
+
 void FE_DECL StartApp()
 {
 	FE_MemoryGeneralInit(FE_MEMORY_DEFAULT_STACK_ALLOCATION_SIZE);
@@ -166,12 +60,13 @@ void FE_DECL StartApp()
 		FE_CORE_LOG_ERROR("failed to initialize the renderer");
 	}
 
+	FE_Renderer3DInit();
 	FE_Renderer2DInit();
 
 	NuklearGUIInterfaceInit(&g_fe_App.guiInterface);
 	g_fe_App.guiInterface.Init(&g_fe_App.guiInterface);
 
-	FE_EntityCreateRegistry(&g_fe_App.ecsRegistry);
+	AppInitECS();
 }
 
 Double FE_DECL GetDeltaTime()
@@ -218,17 +113,14 @@ void FE_DECL AppUpdate(Double deltaTime)
 		g_fe_App.layerStack.stackedlayers.data[i]->OnUpdate(deltaTime);
 	}
 
-	FE_ECSComputeSystem(FE_ECSComputeDraw, g_fe_App.meshComp, &g_fe_App.ecsContext);
-
-	g_fe_App.guiInterface.OnBeginRender(&g_fe_App.guiInterface);
+	NuklearGUIBeginRender();
 
 	for (SizeT i = 0; i < FE_LayerStackGetCount(&g_fe_App.layerStack); i++)
 	{
 		g_fe_App.layerStack.stackedlayers.data[i]->OnNuklearRender(&g_fe_App.guiInterface, g_fe_App.layerStack.stackedlayers.data[i]);
 	}
 
-
-	g_fe_App.guiInterface.OnEndRender(&g_fe_App.guiInterface);
+	NuklearGUIEndRender();
 
 	RenderCommandEndRendering();
 	RenderCommandFrameCommandListEnd();
@@ -237,6 +129,7 @@ void FE_DECL AppUpdate(Double deltaTime)
 	RenderCommandWaitIdle();
 
 	FE_Renderer2DReset();
+	FE_Renderer3DReset();
 
 
 	GetWindowAPI()->Update(&g_fe_App.windowData);
@@ -321,6 +214,7 @@ void FE_DECL ShutdownApp()
 	FE_LayerStackClear(&g_fe_App.layerStack);
 
 	FE_Renderer2DShutdown();
+	FE_Renderer3DShutdown();
 	FE_CORE_LOG_SUCCESS("2D Renderer shuted down");
 	RendererShutdown(&g_fe_App.rendererData);
 	FE_CORE_LOG_SUCCESS("Renderer shuted down");

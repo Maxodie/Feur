@@ -22,7 +22,7 @@ typedef struct RendererAPI
 
 	void (*BeginScene)(const FE_Camera3D* cam);//put cam here
 	void (*EndScene)();
-	void (*DrawIndex)(Uint32 indexCount);
+	void (*DrawIndex)(Uint32 indexCount, SizeT indexBufferId, SizeT vertexBufferId);
 
 
 	void (*EndRendering)();

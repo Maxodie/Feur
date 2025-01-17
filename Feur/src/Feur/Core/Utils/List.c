@@ -49,23 +49,23 @@ Bool FE_DECL FE_ListPop_impl(FE_List_impl* list, Byte** data)
 	return TRUE;
 }
 
-Bool FE_ListRemove_impl(FE_List_impl* list, Byte** data, const void* value, SizeT dataSize)
+Int64 FE_ListRemove_impl(FE_List_impl* list, Byte** data, const void* value, SizeT dataSize)
 {
 	if (!FE_ListCheck(list, data) || *data == NULL)
 	{
 		FE_CORE_LOG_ERROR("failed to remove ptr %p", value);
-		return FALSE;
+		return -1;
 	}
 
 	Uint32 id = 0;
 	Bool isFound = FALSE;
-	for (SizeT i = 0; i < list->count; i++)
+	for (id = 0; id < list->count; id++)
 	{
-		isFound = memcmp((*data) + i * dataSize, value, dataSize) == 0;
+		isFound = memcmp((*data) + id * dataSize, value, dataSize) == 0;
 		if (isFound) break;
 	}
 
-	if (!isFound) return FALSE;
+	if (!isFound) return -1;
 
 	Uint32 nextId = id + 1;
 
@@ -73,7 +73,7 @@ Bool FE_ListRemove_impl(FE_List_impl* list, Byte** data, const void* value, Size
 
 	list->count--;
 
-	return TRUE;
+	return id;
 }
 
 Bool FE_ListRemoveAt_impl(FE_List_impl* list, Byte** data, Uint32 id, SizeT dataSize)
@@ -343,6 +343,12 @@ Bool FE_ListEqual_impl(FE_List_impl* listA, FE_List_impl* listB, Byte** dataA, B
 	return TRUE;
 }
 
+Bool FE_DECL FE_ListRemoveAll_impl(FE_List_impl* list)
+{
+	list->count = 0;
+	return TRUE;
+}
+
 void FE_DECL FE_ListPrint_impl(const FE_List_impl* list, const Byte* data, SizeT dataSize)
 {
 	for (SizeT i = 0; i < list->count; i++)
@@ -358,7 +364,14 @@ void FE_ListPrintReport()
 
 	if (allocatedListCount == freedListCount)
 	{
-		FE_CORE_LOG_SUCCESS("no memory leak in FE_List detected ! ");
+		if (allocatedListCount < freedListCount)
+		{
+			FE_CORE_LOG_SUCCESS("too much FE_List freed !");
+		}
+		else
+		{
+			FE_CORE_LOG_SUCCESS("no memory leak in FE_List detected ! ");
+		}
 	}
 	else
 	{

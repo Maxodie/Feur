@@ -1,7 +1,6 @@
 #include "fepch.h"
 #include "Feur/Renderer/Renderer.h"
 #include "Feur/Renderer/RenderCommand.h"
-#include "Feur/Renderer/Renderer2D.h"
 
 Bool FE_DECL InitRenderer(RendererData* api)
 {

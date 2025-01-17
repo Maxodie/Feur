@@ -47,9 +47,9 @@ void FE_DECL RenderCommandEndScene()
 	GetRendererAPI()->EndScene();
 }
 
-void FE_DECL RenderCommandDrawIndex(Uint32 indexCount)
+void FE_DECL RenderCommandDrawIndex(Uint32 indexCount, SizeT indexBufferId, SizeT vertexBufferId)
 {
-	GetRendererAPI()->DrawIndex(indexCount);
+	GetRendererAPI()->DrawIndex(indexCount, indexBufferId, vertexBufferId);
 }
 
 void FE_DECL RenderCommandEndRendering()

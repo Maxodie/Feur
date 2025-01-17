@@ -14,4 +14,6 @@ typedef struct NuklearGUIInterface
 
 } NuklearGUIInterface;
 
-void FE_DECL NuklearGUIInterfaceInit(NuklearGUIInterface* interface);
+void FE_DECL NuklearGUIInterfaceInit(NuklearGUIInterface* interface); 
+void FE_DECL NuklearGUIBeginRender(); 
+void FE_DECL NuklearGUIEndRender();

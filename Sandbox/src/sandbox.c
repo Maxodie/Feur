@@ -27,10 +27,9 @@ void tempMatrixPrint(const ILDA_matrix4x4* matrix)
 }
 
 FE_EntityID camEntity = -1;
-FE_EntityComponentTypeID cam3DComp = -1;
-FE_EntityRegistry ecsRegistry = { 0 };
 FE_CompCamera3D* cam = NULL;
 ILDA_vector3f camMovement = { .z = -1 };
+ILDA_vector3f camMovementLeft = { .x = -1 };
 ILDA_vector3f camRotateAxis = { .z = 1 };
 
 FE_EntityComponentTypeID camTransform3DCompID = -1;
@@ -41,30 +40,14 @@ FE_CompTransform3D* compTransform0 = NULL;
 FE_EntityID squar1 = -1;
 FE_CompTransform3D* compTransform1 = NULL;
 
+FE_EntityID cube3D = -1;
+FE_Model3D cube;
+FE_CompTransform3D* cubeTransform = NULL;
+FE_CompModel* cubeModelComponent = NULL;
+
 void StartSandbox()
 {
 	AddLayerApp(&layer); 
-
-	FE_EntityCreateRegistry(&ecsRegistry);
-	camEntity = FE_EntityCreate(&ecsRegistry);
-	cam3DComp = FE_EntityCreateComponentType(&ecsRegistry, sizeof(FE_CompCamera3D));
-	cam = FE_EntityAttachComp(&ecsRegistry, camEntity, cam3DComp);
-	
-	ILDA_vector3f pos = { .z = 1 };
-	ILDA_vector3f worldUp = { .y = 1 };
-	FE_CameraInit(&cam->camera, &pos, &worldUp, GetApp()->windowData.w / (Float32)GetApp()->windowData.h, 45.f, 0.0f, 1.0f);
-
-	camTransform3DCompID = FE_EntityCreateComponentType(&ecsRegistry, sizeof(FE_CompTransform3D));
-
-	squar0 = FE_EntityCreate(&ecsRegistry);
-	compTransform0 = FE_EntityAttachComp(&ecsRegistry, squar0, camTransform3DCompID);
-	compTransform0->position.x = 0.5f;
-	compTransform0->scale = (ILDA_vector3f){ .x = 1.1f, .y = 0.1f, .z = 1.0f };
-
-	squar1 = FE_EntityCreate(&ecsRegistry);
-	compTransform1 = FE_EntityAttachComp(&ecsRegistry, squar1, camTransform3DCompID);
-	compTransform1->position.x = -1.f;
-	compTransform1->scale = (ILDA_vector3f){ .x = 1.1f, .y = 1.2f, .z = 1.0f};
 
 //	==========================    FE_list test 
 	/*FE_List(Uint32) test = { 0 };
@@ -114,6 +97,37 @@ void StartSandbox()
 void OnAttachSandboxLayerBase(Layer* layer)
 {
 	FE_LOG_DEBUG("Sandbox base layer attached");
+
+
+	camEntity = FE_EntityCreate(&GetApp()->ecsRegistry);
+	cam = FE_EntityAttachComp(&GetApp()->ecsRegistry, camEntity, GetApp()->cam3DComp);
+
+	ILDA_vector3f pos = { .z = 1 };
+	ILDA_vector3f worldUp = { .y = 1 };
+	FE_CameraInit(&cam->camera, &pos, &worldUp, GetApp()->windowData.w / (Float32)GetApp()->windowData.h, 45.f, 0.0f, 1.0f);
+
+	camTransform3DCompID = FE_EntityCreateComponentType(&GetApp()->ecsRegistry, sizeof(FE_CompTransform3D));
+
+	squar0 = FE_EntityCreate(&GetApp()->ecsRegistry);
+	compTransform0 = FE_EntityAttachComp(&GetApp()->ecsRegistry, squar0, camTransform3DCompID);
+	compTransform0->position.x = 0.5f;
+	compTransform0->scale = (ILDA_vector3f){ .x = 1.1f, .y = 0.1f, .z = 1.0f };
+
+	squar1 = FE_EntityCreate(&GetApp()->ecsRegistry);
+	compTransform1 = FE_EntityAttachComp(&GetApp()->ecsRegistry, squar1, camTransform3DCompID);
+	compTransform1->position.x = -1.f;
+	compTransform1->scale = (ILDA_vector3f){ .x = 1.1f, .y = 1.2f, .z = 1.0f };
+
+	if (FE_ModelLoad("Models/monkey.fbx", &cube))
+	{
+		cube3D = FE_EntityCreate(&GetApp()->ecsRegistry);
+		cubeTransform = FE_EntityAttachComp(&GetApp()->ecsRegistry, cube3D, camTransform3DCompID);
+		cubeTransform->position.y = 1.f;
+		cubeTransform->scale = (ILDA_vector3f){ .x = 1.0f, .y = 1.0f, .z = 1.0f };
+
+		cubeModelComponent = FE_EntityAttachComp(&GetApp()->ecsRegistry, cube3D, GetApp()->modelComp);
+		cubeModelComponent->model = cube;
+	}
 }
 
 ILDA_vector3f pos = { .x = 0.0f, .y = 0.0f, .z = 0.f };
@@ -137,7 +151,6 @@ void UpdateSandboxLayerBase(Double dt)
 
 	if (FE_IsInputPressed(FE_KEYCODE_W))
 	{
-		FE_Renderer2DDrawQuad(&pos, &size, &color); 
 		ILDA_vector3f move = camMovement;
 		ILDA_vector3f_mul(&move, (Float32)dt);
 		FE_CameraMove(&cam->camera, &move);
@@ -145,7 +158,6 @@ void UpdateSandboxLayerBase(Double dt)
 
 	if (FE_IsInputPressed(FE_KEYCODE_S))
 	{
-		FE_Renderer2DDrawQuad(&pos, &size, &color);
 		ILDA_vector3f move = camMovement;
 		ILDA_vector3f_mul(&move, (Float32) - dt);
 		FE_CameraMove(&cam->camera, &move);
@@ -153,57 +165,45 @@ void UpdateSandboxLayerBase(Double dt)
 
 	if (FE_IsInputPressed(FE_KEYCODE_A))
 	{
-		FE_Renderer2DDrawQuad(&pos, &size, &color);
 		//pos2.x -= (float)dt * 10;
 		//FE_CameraMove(&cam, &camMovement);
 		FE_CameraRotate(&cam->camera, &camRotateAxis, 2.f);
 	}
 	if (FE_IsInputPressed(FE_KEYCODE_D))
 	{
-		FE_Renderer2DDrawQuad(&pos, &size, &color);
 		//pos2.x -= (float)dt * 10;
 		//FE_CameraMove(&cam, &camMovement);
 		FE_CameraRotate(&cam->camera, &camRotateAxis, -2.f);
 	}
+	if (FE_IsInputPressed(FE_KEYCODE_Q))
+	{
+		ILDA_vector3f move = camMovementLeft;
+		ILDA_vector3f_mul(&move, (Float32)dt);
+		FE_CameraMove(&cam->camera, &move);
+	}
+	if (FE_IsInputPressed(FE_KEYCODE_E))
+	{
+		ILDA_vector3f move = camMovementLeft;
+		ILDA_vector3f_mul(&move, (Float32)-dt);
+		FE_CameraMove(&cam->camera, &move);
+	}
 
-
-	FE_Renderer2DDrawQuad(&pos, &size, &color);
-	FE_Renderer2DDrawQuad(&pos3, &size2, &color2);
-	FE_Renderer2DDrawQuad(&pos2, &size3, &color3);
-
-
-	ILDA_vector3f pos4 = { .x = -1.f, .y = 0.5f, .z = 0.5f };
-	FE_Renderer2DDrawQuad(&pos4, &size2, &color);
-	pos4.x = 2.f;
-	FE_Renderer2DDrawQuad(&pos4, &size2, &color);
-
-	pos4.x = 1.f;
-	pos4.y = 1.f;
-	FE_Renderer2DDrawQuad(&pos4, &size2, &color);
-
-	pos4.x = 1.f;
-	pos4.y = -1.f;
-	FE_Renderer2DDrawQuad(&pos4, &size2, &color);
-
-	//FE_EntityComponentList* tr3DcompList = FE_EntityComponentListQueryFromID(&ecsRegistry, camTransform3DCompID);
-	//FE_CompTransform3D* transform3Ds = tr3DcompList->dataList.data;
-	//FE_EntityID* entityIds = ecsRegistry.compEntityUuids.data[camTransform3DCompID].data;
-	//for (SizeT i = 0; i < tr3DcompList->dataList.impl.count; i++)
-	//{
-	//	if (entityIds[i] == -1)
-	//	{
-	//		continue;
-	//	}
-
-	//	FE_CompTransform3D* tr = FE_EntityComponentQueryFromID(&ecsRegistry, entityIds[i], camTransform3DCompID);// exemple on how to get any component type of this entity
-	//	tr->position.x += 0.1f * dt;
-
-	//	FE_Renderer2DDrawQuad(&transform3Ds[i].position, &transform3Ds[i].scale, &color2);
-	//}
+	FE_Renderer2DDrawQuad(&pos, &size, &color2);
 
 	totalVertexCount = FE_Renderer2DGetVertexCount();
 	totalIndexCount = FE_Renderer2DGetIndexCount();
+
 	FE_Renderer2DEndScene();
+
+	// 3d renderer
+	FE_Renderer3DBeginScene(&cam->camera);
+
+	FE_ECSComputeSystem(FE_ECSComputeDrawModel, GetApp()->modelComp, &GetApp()->ecsContext);
+
+	totalVertexCount += FE_Renderer3DGetVertexCount();
+	totalIndexCount += FE_Renderer3DGetIndexCount();
+
+	FE_Renderer3DEndScene();
 }
 
 	char* t = NULL;
@@ -218,27 +218,17 @@ void OnNuklearRender(NuklearGUIInterface* interface, Layer* layer)
 		struct nk_vec2 size = nk_window_get_content_region_size(context);
 		nk_layout_row_dynamic(context, 20, 1);
 
-		if (t) {
-			FE_StringFormatFree(t);
-		}
-		if (t1) {
-			FE_StringFormatFree(t1);
-		}
-		if (t2) {
-		FE_StringFormatFree(t2);
-		}
-
 		t = FE_StringFormatAlloc("vertex count : %lld", totalVertexCount);
 		if (t) {
 			nk_label(context, t, NK_TEXT_LEFT);
 		}
 
-		t1 = FE_StringFormatAlloc("index count : %lld", FE_Renderer2DGetIndexCount());
+		t1 = FE_StringFormatAlloc("index count : %lld", totalIndexCount);
 		if (t1) {
 			nk_label(context, t1, NK_TEXT_LEFT);
 		}
 
-		t2 = FE_StringFormatAlloc("total vertex buffer count : %lld", FE_Renderer2DGetVertexBufferCount());
+		t2 = FE_StringFormatAlloc("total vertex buffer count : %lld", FE_Renderer3DGetVertexBufferCount() + FE_Renderer2DGetVertexBufferCount());
 		if (t2) {
 			nk_label(context, t2, NK_TEXT_LEFT);
 		}
@@ -264,7 +254,15 @@ void OnNuklearRender(NuklearGUIInterface* interface, Layer* layer)
 	}
 	nk_end(context);
 
-
+	if (t) {
+		FE_StringFormatFree(t);
+	}
+	if (t1) {
+		FE_StringFormatFree(t1);
+	}
+	if (t2) {
+		FE_StringFormatFree(t2);
+	}
 }
 
 
@@ -305,16 +303,7 @@ void UpdateLayerBaseEventSandbox(FE_Event* event)
 
 void EndLayer() 
 {
-	if (t) {
-		FE_StringFormatFree(t);
-	}
-	if (t1) {
-		FE_StringFormatFree(t1);
-	}
-	if (t2) {
-		FE_StringFormatFree(t2);
-	}
-	FE_EntityDestroyRegistry(&ecsRegistry);
+	FE_ModelFree(&cube);
 }
 
 #endif

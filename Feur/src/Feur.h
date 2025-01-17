@@ -33,10 +33,12 @@
 
 //Renderer
 #include "Feur/Renderer/Camera.h"
-#include "Feur/Renderer/Mesh.h"
+#include "Feur/Renderer/Models/Mesh.h"
 #include "Feur/Renderer/Buffers.h"
 #include "Feur/Renderer/RendererAPI.h"
 #include "Feur/Renderer/Renderer2D.h"
+#include "Feur/Renderer/Renderer3D.h"
+
 
 //Inputs
 #include "Feur/Core/Input/KeyCode.h"

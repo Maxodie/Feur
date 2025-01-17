@@ -35,4 +35,5 @@ void FE_DECL FE_CameraCalculeView(FE_Camera3D* cam, const ILDA_vector3f* pos, co
 	cam->view = ILDA_matrix4x4_identity;
 	cam->view.data[0][0] = -1;
 	cam->view.data[3][2] = pos->z;
+	cam->view.data[3][0] = -pos->x;
 }

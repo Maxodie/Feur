@@ -1,9 +1,9 @@
 #pragma once
 
-typedef struct FE_CompMesh
+typedef struct FE_CompModel
 {
-	FE_Mesh mesh;
-} FE_CompMesh;
+	FE_Model3D model;
+} FE_CompModel;
 
 typedef struct FE_CompTransform3D
 {

@@ -12,7 +12,7 @@ void FE_DECL RenderCommandBindPipeline();
 
 void FE_DECL RenderCommandBeginScene(const FE_Camera3D * cam);
 void FE_DECL RenderCommandEndScene();
-void FE_DECL RenderCommandDrawIndex(Uint32 indexCount);
+void FE_DECL RenderCommandDrawIndex(Uint32 indexCount, SizeT indexBufferId, SizeT vertexBufferId);
 
 
 void FE_DECL RenderCommandEndRendering();

@@ -11,7 +11,7 @@ void VulkanBindPipeline_impl();
 
 void VulkanBeginScene_impl(const FE_Camera3D* cam);
 void VulkanEndScene_impl();
-void VulkanDrawIndex_impl(Uint32 indexCount);
+void VulkanDrawIndex_impl(Uint32 indexCount, SizeT indexBufferId, SizeT vertexBufferId);
 
 void VulkanEndRendering_impl();
 Bool VulkanFrameCommandListEnd_impl();
@@ -25,9 +25,9 @@ void VulkanOnWindowResized_impl(Uint32 x, Uint32 y, Uint32 width, Uint32 height,
 Bool CanVulkanContinueRendering();
 
 /*======================== BUFFERS ==============================*/
-void VulkanCreateVertexBuffer_impl(Uint32 vertexCount);//add this in a buffer abstraction in buffer.h and use it in renderer2D
-void VulkanAddVertexIntoBuffer_impl(FE_Vertex3D* vertices, Uint32 vertexCount, Uint64 verticesOffset);
-void VulkanCreateIndexBuffer_impl(Uint32 indexCount);
-void VulkanAddIndexIntoBuffer_impl(Uint32* newIndices, Uint32 indexCount, Uint64 indicesOffset);
-void VulkanDestroyVertexBuffer_impl();
-void VulkanDestroyIndexBuffer_impl();
+void* VulkanCreateVertexBuffer_impl(Uint32 vertexCount);//add this in a buffer abstraction in buffer.h and use it in renderer2D
+void VulkanAddVertexIntoBuffer_impl(FE_Vertex3D* vertices, Uint32 vertexCount, Uint64 verticesOffset, void* allocatedBuffer);
+void* VulkanCreateIndexBuffer_impl(Uint32 indexCount);
+void VulkanAddIndexIntoBuffer_impl(Uint32* newIndices, Uint32 indexCount, Uint64 indicesOffset, void* allocatedBuffer);
+void VulkanDestroyVertexBuffer_impl(void* allocatedBuffer);
+void VulkanDestroyIndexBuffer_impl(void* allocatedBuffer);

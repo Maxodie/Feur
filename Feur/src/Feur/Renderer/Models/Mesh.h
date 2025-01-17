@@ -10,12 +10,9 @@ typedef struct FE_Color
 
 typedef struct FE_Vertex3D
 {
-	ILDA_vector4f position;
+	ILDA_vector3f position;
 	ILDA_vector3f normal;
 	FE_Color color;
-
-	ILDA_vector2f texCoord;
-
 } FE_Vertex3D;
 
 typedef struct FE_UniformBufferObject {
@@ -30,4 +27,10 @@ typedef struct FE_Mesh
 	FE_List(FE_Vertex3D) vertices;
 } FE_Mesh;
 
-void FE_MeshDraw(const FE_Mesh* mesh);
+typedef struct FE_Model3D
+{
+	FE_List(FE_Mesh) meshes;
+} FE_Model3D;
+
+Bool FE_DECL FE_ModelLoad(const char* path, FE_Model3D* outModel);
+void FE_DECL FE_ModelFree(FE_Model3D* outModel);

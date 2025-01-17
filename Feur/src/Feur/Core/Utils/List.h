@@ -25,8 +25,8 @@ typedef struct FE_List_impl {
 #define FE_ListPop(fe_list) FE_CORE_ASSERT(FE_ListPop_impl(&(fe_list).impl, (Byte**)&(fe_list).data), "failed to pop fe_list")
 //with 'fe_list' an FE_List(type); 'id' the item id to remove
 #define FE_ListRemoveAt(fe_list, id) FE_CORE_ASSERT(FE_ListRemoveAt_impl(&(fe_list).impl, (Byte**)&(fe_list).data, id, sizeof(*(fe_list).data)), "failed to removeAt fe_list")
-//with 'fe_list' an FE_List(type); 'value' the value to remove; don't work with char*
-#define FE_ListRemove(fe_list, value) FE_CORE_ASSERT(FE_ListRemove_impl(&(fe_list).impl, (Byte**)&(fe_list).data, value, sizeof(*(fe_list).data)), "failed to remove fe_list")
+//with 'fe_list' an FE_List(type); 'value' the value to remove; don't work with char*; return index of the item removed
+#define FE_ListRemove(fe_list, value) FE_ListRemove_impl(&(fe_list).impl, (Byte**)&(fe_list).data, (const void*)&value, sizeof(*(fe_list).data))
 //with 'fe_list' an FE_List(type); 'value' type of 'type'; 'position' is Uint32
 #define FE_ListInsert(fe_list, value, position) FE_CORE_ASSERT(FE_ListInsert_impl(&(fe_list).impl, (Byte**)&(fe_list).data, (const void*)&value, position, sizeof(*(fe_list).data)), "failed to insert fe_list")
 
@@ -60,12 +60,15 @@ FE_CORE_ASSERT(FE_ListPushArray_impl(&(fe_list).impl, (Byte**)&(fe_list).data, (
 #define FE_ListEqual(fe_listA, fe_listB) FE_ListEqual_impl(&(fe_listA).impl, &(fe_listB).impl, (Byte**)&(fe_listA).data, (Byte**)&(fe_listB).data, sizeof(*(fe_list).data))
 
 //with 'fe_list' an FE_List(type);
+#define FE_ListRemoveAll(fe_list) FE_CORE_ASSERT(FE_ListRemoveAll_impl(&(fe_list).impl), "failed to set count")
+
+//with 'fe_list' an FE_List(type);
 #define FE_ListPrint(fe_list) FE_ListPrint_impl(&(fe_list).impl, (Byte**)&(fe_list).data, sizeof(*(fe_list).data))
 
 
 Bool FE_DECL FE_ListInit_impl(FE_List_impl* list, Byte** data);
 Bool FE_DECL FE_ListPop_impl(FE_List_impl* list, Byte** data);
-Bool FE_DECL FE_ListRemove_impl(FE_List_impl* list, Byte** data, const void* value, SizeT dataSize);
+Int64 FE_DECL FE_ListRemove_impl(FE_List_impl* list, Byte** data, const void* value, SizeT dataSize);
 Bool FE_DECL FE_ListRemoveAt_impl(FE_List_impl* list, Byte** data, Uint32 id, SizeT dataSize);
 
 Bool FE_DECL FE_ListInsert_impl(FE_List_impl* list, Byte** data, const void* value, Uint32 position, SizeT dataSize);
@@ -80,6 +83,8 @@ Bool FE_DECL FE_ListClear_impl(FE_List_impl* list, Byte** data);
 Bool FE_DECL FE_ListRemoveDuplicate_impl(FE_List_impl* list, Byte** data, SizeT dataSize);
 
 Bool FE_DECL FE_ListEqual_impl(FE_List_impl* listA, FE_List_impl* listB, Byte** dataA, Byte** dataB, SizeT dataSize);
+
+Bool FE_DECL FE_ListRemoveAll_impl(FE_List_impl* list);
 
 void FE_DECL FE_ListPrint_impl(const FE_List_impl* list, const Byte* data, SizeT dataSize);
 void FE_DECL FE_ListPrintReport();

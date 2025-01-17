@@ -16,12 +16,14 @@ typedef struct FE_App
 
 	FE_EntityRegistry ecsRegistry;
 	FE_EntityComponentTypeID cam3DComp;
-	FE_EntityComponentTypeID meshComp;
+	FE_EntityComponentTypeID modelComp;
 	FE_ECSSystemContext ecsContext;
 } FE_App;
 
 void FE_DECL StartApp_impl();
 void FE_DECL RunApp_impl();
+
+void FE_DECL AppInitECS();
 
 void FE_DECL StartApp();
 Double FE_DECL GetDeltaTime();

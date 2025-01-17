@@ -113,8 +113,12 @@ typedef struct FE_VulkanInfo
 	VkCommandBuffer* cmdBuffers;//static array
 	VkImageMemoryBarrier* imageBarriers;//static array
 
-	FE_VulkanAllocatedBuffer vertexBuffer;
-	FE_VulkanAllocatedBuffer indexBuffer;
+	//FE_VulkanAllocatedBuffer vertexBuffer;
+	//FE_VulkanAllocatedBuffer indexBuffer;
+	FE_List(VkBuffer) vertexBuffers;
+	FE_List(VkDeviceSize) vertexBuffersOffsets;
+	FE_List(VkBuffer) indexBuffers;
+
 	FE_VulkanUniformData uniformData;
 
 	RendererData* apiData;

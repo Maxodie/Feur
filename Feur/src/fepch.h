@@ -57,12 +57,13 @@
 #include "Feur/Nuklear/NuklearLayer.h"
 
 #include "Feur/Renderer/Camera.h"
-#include "Feur/Renderer/Mesh.h"
+#include "Feur/Renderer/Models/Mesh.h"
 #include "Feur/Renderer/Buffers.h"
 #include "Feur/Renderer/RendererAPI.h"
 #include "Feur/Renderer/GraphicsContext.h"
 #include "Feur/Renderer/Renderer.h"
 #include "Feur/Renderer/Renderer2D.h"
+#include "Feur/Renderer/Renderer3D.h"
 
 #include "Feur/Core/Utils/ECS/ECS.h"
 #include "Feur/Core/Utils/ECS/ECSSystems.h"

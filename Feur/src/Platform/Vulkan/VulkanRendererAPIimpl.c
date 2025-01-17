@@ -22,6 +22,9 @@ Bool VulkanInit_impl(RendererData* apiData)
 {
 	vkInfo = FE_MemoryGeneralAlloc(sizeof(FE_VulkanInfo));
 	vkInfo->apiData = apiData;
+	FE_ListInit(vkInfo->vertexBuffers);
+	FE_ListInit(vkInfo->vertexBuffersOffsets);
+	FE_ListInit(vkInfo->indexBuffers);
 
 	VulkanInitValidationLayer(&vkInfo->debugger.validationLayer);
 
@@ -214,11 +217,11 @@ void VulkanEndScene_impl()
 {
 }
 
-void VulkanDrawIndex_impl(Uint32 indexCount)
+void VulkanDrawIndex_impl(Uint32 indexCount, SizeT indexBufferId, SizeT vertexBufferId)
 {
 	//if (!CanVulkanContinueRendering()) return;
 	VulkanAddDrawIndexedIndirectCommandsBuffer(vkInfo, indexCount);
-	VulkanBindBuffers(vkInfo, vkInfo->cmdBuffers[vkInfo->currentFrame]);
+	VulkanBindBuffers(vkInfo, vkInfo->cmdBuffers[vkInfo->currentFrame], indexBufferId, vertexBufferId);
 
 	if (vkInfo->physicalDevice.features.multiDrawIndirect)
 	{
@@ -226,7 +229,7 @@ void VulkanDrawIndex_impl(Uint32 indexCount)
 	}
 	else
 	{
-		//for (Uint32 i = 0; i < 1; i++)
+		for (Uint32 i = 0; i < 1; i++)
 		{
 			vkCmdDrawIndexedIndirect(vkInfo->cmdBuffers[vkInfo->currentFrame], vkInfo->drawIndexedIndirectCmdBuffer.buffer, 0, 1, 0); //sizeof(cpu_commands[0]) =  stride from doc
 		}
@@ -385,6 +388,9 @@ void VulkanShutdown_impl()
 		FE_ListClear(vkInfo->debugger.validationLayer.validationLayers);
 	}
 
+	FE_ListClear(vkInfo->indexBuffers);
+	FE_ListClear(vkInfo->vertexBuffersOffsets);
+	FE_ListClear(vkInfo->vertexBuffers);
 	FE_MemoryGeneralFree(vkInfo);
 }
 
@@ -402,7 +408,7 @@ void VulkanOnWindowResized_impl(Uint32 x, Uint32 y, Uint32 width, Uint32 height,
 
 	VulkanBeginScene_impl(NULL);
 	VulkanEndScene_impl();
-	VulkanDrawIndex_impl((Uint32)vkInfo->indexBuffer.info.size / vkInfo->indexBuffer.info.memoryType); //horible and will not be enough if the buffer has too much info but meh..
+	VulkanDrawIndex_impl(drawIndexCount, 0, 0); //horible and will not be enough if the buffer has too much info but meh..
 
 	VulkanEndRendering_impl();
 	VulkanFrameCommandListEnd_impl();
@@ -418,32 +424,37 @@ Bool CanVulkanContinueRendering()
 
 
 /*======================== BUFFERS ==============================*/
-void VulkanCreateVertexBuffer_impl(Uint32 vertexCount)
+void* VulkanCreateVertexBuffer_impl(Uint32 vertexCount, SizeT* outVertexBufferId)
 {
-	VulkanCreateVertexBuffer(vkInfo, vertexCount);
+	return VulkanCreateVertexBuffer(vkInfo, vertexCount, outVertexBufferId);
 }
 
-void VulkanAddVertexIntoBuffer_impl(FE_Vertex3D* vertices, Uint32 vertexCount, Uint64 verticesOffset)
+void VulkanAddVertexIntoBuffer_impl(FE_Vertex3D* vertices, Uint32 vertexCount, Uint64 verticesOffset, void* allocatedBuffer)
 {
-	VulkanAddVertexIntoBuffer(vkInfo, vertices, vertexCount, verticesOffset);
+	VulkanAddVertexIntoBuffer(vkInfo, vertices, vertexCount, verticesOffset, allocatedBuffer);
 }
 
-void VulkanCreateIndexBuffer_impl(Uint32 indexCount)
+void* VulkanCreateIndexBuffer_impl(Uint32 indexCount, SizeT* outIndexBufferId)
 {
-	VulkanCreateIndexBuffer(vkInfo, indexCount);
+	return VulkanCreateIndexBuffer(vkInfo, indexCount, outIndexBufferId);
 }
 
-void VulkanAddIndexIntoBuffer_impl(Uint32* newIndices, Uint32 indexCount, Uint64 indicesOffset)
+void VulkanAddIndexIntoBuffer_impl(Uint32* newIndices, Uint32 indexCount, Uint64 indicesOffset, void* allocatedBuffer)
 {
-	VulkanAddIndexIntoBuffer(vkInfo, newIndices, indexCount, indicesOffset);
+	VulkanAddIndexIntoBuffer(vkInfo, newIndices, indexCount, indicesOffset, allocatedBuffer);
 }
 
-void VulkanDestroyVertexBuffer_impl()
+void VulkanDestroyVertexBuffer_impl(void* allocatedBuffer)
 {
-	VulkanDestroyBuffer(vkInfo, &vkInfo->vertexBuffer);
+	Int64 id = FE_ListRemove(vkInfo->vertexBuffers, ((FE_VulkanAllocatedBuffer*)allocatedBuffer)->buffer);
+	FE_ListRemoveAt(vkInfo->vertexBuffersOffsets, id);
+	VulkanDestroyBuffer(vkInfo, (FE_VulkanAllocatedBuffer*)allocatedBuffer);
+	FE_MemoryGeneralFree(allocatedBuffer);
 }
 
-void VulkanDestroyIndexBuffer_impl()
+void VulkanDestroyIndexBuffer_impl(void* allocatedBuffer)
 {
-	VulkanDestroyBuffer(vkInfo, &vkInfo->indexBuffer);
+	FE_ListRemove(vkInfo->indexBuffers, ((FE_VulkanAllocatedBuffer*)allocatedBuffer)->buffer);
+	VulkanDestroyBuffer(vkInfo, (FE_VulkanAllocatedBuffer*)allocatedBuffer);
+	FE_MemoryGeneralFree(allocatedBuffer);
 }

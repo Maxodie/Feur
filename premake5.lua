@@ -19,6 +19,7 @@ IncludeDir["nuklear"] = "Feur/vendor/nuklear"
 IncludeDir["Mathilda"] = "Feur/vendor/Mathilda/Mathilda/Mathilda/include"
 IncludeDir["Vulkan"] = "Feur/vendor/VulkanSDK/1.3.290.0/Include"
 IncludeDir["VulkanMemoryAllocator"] = "Feur/vendor/VulkanSDK/VulkanMemoryAllocator/include"
+IncludeDir["assimp"] = "Feur/vendor/assimp/assimp/include"
 
 group "Dependencies"
 	group "Window"
@@ -36,10 +37,13 @@ group "Dependencies"
 	group "Math"
 		include "Feur/vendor/Mathilda/Mathilda_premake5.lua"
 
+	group "Model"
+		include "Feur/vendor/assimp/premake5.lua"
+
 group "Feur"
 
 project "Feur"
-	location "Feur"
+	location "Feur/build"
 	kind "StaticLib"
 	language "C"
 	cdialect "C17"
@@ -74,7 +78,8 @@ project "Feur"
         "%{IncludeDir.VulkanMemoryAllocator}",
         "%{IncludeDir.GLFW}",
 		"%{IncludeDir.nuklear}",
-		"%{IncludeDir.Mathilda}"
+		"%{IncludeDir.Mathilda}",
+		"%{IncludeDir.assimp}"
 	}
 
 	links
@@ -86,7 +91,8 @@ project "Feur"
 		"Mathilda",
         "Vulkan",
         "VulkanMemoryAllocator",
-        "Nuklear"
+        "Nuklear",
+        "assimp"
 	}
 
 	filter "system:windows"
@@ -170,7 +176,8 @@ project "Sandbox"
 		"Mathilda",
         --temp test includes
 --        "Vulkan",
-		"Glad"
+		"Glad",
+        "assimp"
 	}
 
 	defines

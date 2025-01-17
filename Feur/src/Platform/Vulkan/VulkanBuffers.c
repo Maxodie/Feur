@@ -21,7 +21,7 @@ void VulkanCreateBuffer(FE_VulkanInfo* vkInfo, SizeT allocSize, VkBufferUsageFla
 	VmaAllocationCreateInfo vmaAllocInfo = {
 		.usage = VMA_MEMORY_USAGE_AUTO_PREFER_DEVICE,
 		.flags = VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT,
-		.requiredFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
+		.requiredFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
 	};
 
 	// allocate the buffer
@@ -29,41 +29,55 @@ void VulkanCreateBuffer(FE_VulkanInfo* vkInfo, SizeT allocSize, VkBufferUsageFla
 	FE_CORE_ASSERT(result == VK_SUCCESS, "failed to allocate vulkan buffer : %d", result);
 }
 
-void VulkanDestroyBuffer(FE_VulkanInfo* vkInfo, const FE_VulkanAllocatedBuffer* buffer)
+void VulkanDestroyBuffer(FE_VulkanInfo* vkInfo, FE_VulkanAllocatedBuffer* buffer)
 {
 	vmaDestroyBuffer(vkInfo->allocator, buffer->buffer, buffer->allocation);
 }
 
-void VulkanCreateVertexBuffer(FE_VulkanInfo* vkInfo, Uint32 vertexCount)
+FE_VulkanAllocatedBuffer* VulkanCreateVertexBuffer(FE_VulkanInfo* vkInfo, Uint32 vertexCount, SizeT* outVertexBufferId)
 {
-	VulkanCreateBuffer(vkInfo, vertexCount * sizeof(FE_Vertex3D), VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, &vkInfo->vertexBuffer);
+	FE_VulkanAllocatedBuffer* vertexBuffer = FE_MemoryGeneralAlloc(sizeof(FE_VulkanAllocatedBuffer));
+	//VulkanCreateBuffer(vkInfo, vertexCount * sizeof(FE_Vertex3D), VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, &vkInfo->vertexBuffer);
+	VulkanCreateBuffer(vkInfo, vertexCount * sizeof(FE_Vertex3D), VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, vertexBuffer);
+	FE_ListPush(vkInfo->vertexBuffers, vertexBuffer->buffer);
+	FE_ListPushValue(vkInfo->vertexBuffersOffsets, VkDeviceSize, 0);
+	*outVertexBufferId = vkInfo->vertexBuffers.impl.count - 1;
+
+	return vertexBuffer;
 }
 
-void VulkanAddVertexIntoBuffer(struct FE_VulkanInfo* vkInfo, FE_Vertex3D* vertices, Uint32 vertexCount, Uint64 verticesOffset)
+void VulkanAddVertexIntoBuffer(struct FE_VulkanInfo* vkInfo, FE_Vertex3D* vertices, Uint32 vertexCount, Uint64 verticesOffset, FE_VulkanAllocatedBuffer* allocatedVertexBuffer)
 {
 	FE_VulkanAllocatedBuffer stagingBuffer;
 	VulkanCreateBuffer(vkInfo, vertexCount * sizeof(FE_Vertex3D), VK_BUFFER_USAGE_TRANSFER_SRC_BIT, &stagingBuffer);
 
 	VkResult result = vmaCopyMemoryToAllocation(vkInfo->allocator, vertices, stagingBuffer.allocation, verticesOffset, vertexCount * sizeof(FE_Vertex3D));
 	FE_CORE_ASSERT(result == VK_SUCCESS, "failed to copy memory into vulkan allocator : %d", result);
-	VulkanCopyBuffer(vkInfo, stagingBuffer.buffer, vkInfo->vertexBuffer.buffer, vertexCount * sizeof(FE_Vertex3D));
+	//VulkanCopyBuffer(vkInfo, stagingBuffer.buffer, vkInfo->vertexBuffer.buffer, vertexCount * sizeof(FE_Vertex3D));
+	VulkanCopyBuffer(vkInfo, stagingBuffer.buffer, allocatedVertexBuffer->buffer, vertexCount * sizeof(FE_Vertex3D));
 
 	VulkanDestroyBuffer(vkInfo, &stagingBuffer);
 }
 
-void VulkanCreateIndexBuffer(FE_VulkanInfo* vkInfo, Uint32 indexCount)
+FE_VulkanAllocatedBuffer* VulkanCreateIndexBuffer(FE_VulkanInfo* vkInfo, Uint32 indexCount, SizeT* outIndexBufferId)
 {
-	VulkanCreateBuffer(vkInfo, indexCount * sizeof(Uint32), VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, &vkInfo->indexBuffer);
+	FE_VulkanAllocatedBuffer* indexBuffer = FE_MemoryGeneralAlloc(sizeof(FE_VulkanAllocatedBuffer));
+	//VulkanCreateBuffer(vkInfo, indexCount * sizeof(Uint32), VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, &vkInfo->indexBuffer);
+	VulkanCreateBuffer(vkInfo, indexCount * sizeof(Uint32), VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, indexBuffer);
+	FE_ListPush(vkInfo->indexBuffers, indexBuffer->buffer);
+	*outIndexBufferId = vkInfo->indexBuffers.impl.count - 1;
+
+	return indexBuffer;
 }
 
-void VulkanAddIndexIntoBuffer(FE_VulkanInfo* vkInfo, Uint32* newIndices, Uint32 indexCount, Uint64 indicesOffset)
+void VulkanAddIndexIntoBuffer(FE_VulkanInfo* vkInfo, Uint32* newIndices, Uint32 indexCount, Uint64 indicesOffset, struct FE_VulkanAllocatedBuffer* allocatedVertexBuffer)
 {
 	FE_VulkanAllocatedBuffer stagingBuffer;
 	VulkanCreateBuffer(vkInfo, indexCount * sizeof(Uint32), VK_BUFFER_USAGE_TRANSFER_SRC_BIT, &stagingBuffer);
 
 	VkResult result = vmaCopyMemoryToAllocation(vkInfo->allocator, newIndices, stagingBuffer.allocation, indicesOffset, indexCount * sizeof(Uint32));
 	FE_CORE_ASSERT(result == VK_SUCCESS, "failed to copy memory into vulkan allocator : %d", result);
-	VulkanCopyBuffer(vkInfo, stagingBuffer.buffer, vkInfo->indexBuffer.buffer, indexCount * sizeof(Uint32));
+	VulkanCopyBuffer(vkInfo, stagingBuffer.buffer, allocatedVertexBuffer->buffer, indexCount * sizeof(Uint32));
 
 	VulkanDestroyBuffer(vkInfo, &stagingBuffer);
 }
@@ -118,11 +132,13 @@ void VulkanUpdateUniformBuffer(FE_VulkanInfo* vkInfo, const FE_Camera3D* cam)
 	memcpy(vkInfo->uniformData.uniformBuffersMapped[vkInfo->currentFrame], &ubo, sizeof(ubo));
 }
 
-void VulkanBindBuffers(FE_VulkanInfo* vkInfo, VkCommandBuffer cmdBuffer)
+void VulkanBindBuffers(FE_VulkanInfo* vkInfo, VkCommandBuffer cmdBuffer, SizeT indexBufferId, SizeT vertexBufferId)
 {
-	VkDeviceSize offsets[] = { 0 };
-	vkCmdBindVertexBuffers(cmdBuffer, 0, 1, &vkInfo->vertexBuffer.buffer, offsets);
-	vkCmdBindIndexBuffer(cmdBuffer, vkInfo->indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
+	//vkCmdBindVertexBuffers(cmdBuffer, 0, (Uint32)vkInfo->vertexBuffers.impl.count, vkInfo->vertexBuffers.data, vkInfo->vertexBuffersOffsets.data);
+	vkCmdBindVertexBuffers(cmdBuffer, 0, 1, &vkInfo->vertexBuffers.data[indexBufferId], vkInfo->vertexBuffersOffsets.data);
+
+	vkCmdBindIndexBuffer(vkInfo->cmdBuffers[vkInfo->currentFrame], vkInfo->indexBuffers.data[indexBufferId], 0, VK_INDEX_TYPE_UINT32);
+
 	vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkInfo->graphicsPipeline.layout, 0, 1, &vkInfo->descriptor.sets[vkInfo->currentFrame], 0, NULL);
 }
 
