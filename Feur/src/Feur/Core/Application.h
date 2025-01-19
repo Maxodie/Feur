@@ -17,6 +17,7 @@ typedef struct FE_App
 	FE_EntityRegistry ecsRegistry;
 	FE_EntityComponentTypeID cam3DComp;
 	FE_EntityComponentTypeID modelComp;
+	FE_EntityComponentTypeID tr3DComp;
 	FE_ECSSystemContext ecsContext;
 } FE_App;
 

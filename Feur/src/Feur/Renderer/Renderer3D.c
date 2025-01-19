@@ -138,7 +138,7 @@ SizeT FE_DECL FE_Renderer3DGetVertexBufferCount()
 	return renderer3DData.meshVertexBufferCount;
 }
 
-void FE_DECL FE_Renderer3DDrawMesh(const FE_Mesh* mesh)
+void FE_DECL FE_Renderer3DDrawMesh(const FE_Mesh* mesh, const FE_CompTransform3D* tr3D)
 {
 	SizeT currentVerticesCount = mesh->vertices.impl.count + renderer3DData.meshVertexCount;
 	if (currentVerticesCount > renderer3DData.maxVertices * renderer3DData.meshVertexBufferCount)
@@ -154,11 +154,22 @@ void FE_DECL FE_Renderer3DDrawMesh(const FE_Mesh* mesh)
 		FE_Renderer3DResizeIndexBuffer(count + 1);
 	}
 
+	ILDA_matrix4x4 transform = ILDA_translation(&ILDA_matrix4x4_identity, &tr3D->position);
+	ILDA_matrix4x4 scale = ILDA_matrix4x4_identity;
+
+	ILDA_scale(&scale, &tr3D->scale);
+	ILDA_matrix4x4_mul_same(&transform, &scale);
+	ILDA_vector4f transformPos;
+	ILDA_vector4f vertexPos;
+
 	renderer3DData.meshVertexCount += mesh->vertices.impl.count;
 	SizeT i = 0;
 	for (i = 0; i < mesh->vertices.impl.count; i++)
 	{
+		vertexPos = (ILDA_vector4f){ .x = mesh->vertices.data[i].position.x, .y = mesh->vertices.data[i].position.y, .z = mesh->vertices.data[i].position.z, 1 };
+		transformPos = ILDA_matrix4x4_mul_vector(&transform, &vertexPos);
 		*renderer3DData.meshVertexPtr = mesh->vertices.data[i];
+		renderer3DData.meshVertexPtr->position = (ILDA_vector3f){ .x = transformPos.x, .y = transformPos.y, .z = transformPos.z };
 		renderer3DData.meshVertexPtr++;
 	}
 
@@ -179,10 +190,10 @@ void FE_DECL FE_Renderer3DDrawMesh(const FE_Mesh* mesh)
 	renderer3DData.meshIndexOffset += indexOffset + 1;
 }
 
-void FE_DECL FE_Renderer3DDrawModel(const FE_Model3D* model)
+void FE_DECL FE_Renderer3DDrawModel(const FE_Model3D* model, const FE_CompTransform3D* tr3D)
 {
 	for (SizeT i = 0; i < model->meshes.impl.count; i++)
 	{
-		FE_Renderer3DDrawMesh(&model->meshes.data[i]);
+		FE_Renderer3DDrawMesh(&model->meshes.data[i], tr3D);
 	}
 }

@@ -42,6 +42,7 @@ void FE_DECL AppInitECS()
 
 	g_fe_App.cam3DComp = FE_EntityCreateComponentType(&g_fe_App.ecsRegistry, sizeof(FE_CompCamera3D));
 	g_fe_App.modelComp = FE_EntityCreateComponentType(&g_fe_App.ecsRegistry, sizeof(FE_CompModel));
+	g_fe_App.tr3DComp = FE_EntityCreateComponentType(&g_fe_App.ecsRegistry, sizeof(FE_CompTransform3D));
 
 	g_fe_App.ecsContext.registry = &g_fe_App.ecsRegistry;
 }

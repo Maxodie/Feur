@@ -1,12 +1,53 @@
 #include "fepch.h"
 #include "Feur/Core/Utils/ECS/ECSSystems.h"
 
+void FE_ECSComputeCameraMovement(FE_CompCamera3D* cameraComp, FE_EntityComponentTypeID compTypeId, FE_EntityID entityId, FE_ECSSystemContext* context)
+{
+
+	if (FE_IsInputPressed(FE_KEYCODE_W))
+	{
+		ILDA_vector3f move = (ILDA_vector3f){ 0.0f, 0.0f, -1.0f };
+		ILDA_vector3f_mul(&move, (Float32)context->dt);
+		FE_CameraMove(&cameraComp->camera, &move);
+	}
+
+	if (FE_IsInputPressed(FE_KEYCODE_S))
+	{
+		ILDA_vector3f move = (ILDA_vector3f){ 0.0f, 0.0f, 1.0f };
+		ILDA_vector3f_mul(&move, (Float32)context->dt);
+		FE_CameraMove(&cameraComp->camera, &move);
+	}
+
+	if (FE_IsInputPressed(FE_KEYCODE_A))
+	{
+		ILDA_vector3f rotationAxis = (ILDA_vector3f){ 0.0f, 0.0f, 1.0f };
+		FE_CameraRotate(&cameraComp->camera, &rotationAxis, 2.f);
+	}
+	if (FE_IsInputPressed(FE_KEYCODE_D))
+	{
+		ILDA_vector3f rotationAxis = (ILDA_vector3f){ 0.0f, 0.0f, -1.0f };
+		FE_CameraRotate(&cameraComp->camera, &rotationAxis, 2.f);
+	}
+	if (FE_IsInputPressed(FE_KEYCODE_Q))
+	{
+		ILDA_vector3f move = (ILDA_vector3f){ -1.0f, 0.0f, 0.0f };
+		ILDA_vector3f_mul(&move, (Float32)context->dt);
+		FE_CameraMove(&cameraComp->camera, &move);
+	}
+	if (FE_IsInputPressed(FE_KEYCODE_E))
+	{
+		ILDA_vector3f move = (ILDA_vector3f){ 1.0f, 0.0f, 0.0f };
+		ILDA_vector3f_mul(&move, (Float32)context->dt);
+		FE_CameraMove(&cameraComp->camera, &move);
+	}
+}
+
 void FE_ECSComputeDrawModel(FE_CompModel* modelComp, FE_EntityComponentTypeID compTypeId, FE_EntityID entityId, FE_ECSSystemContext* context)
 {
-	//FE_CompTransform3D* tr = FE_EntityComponentQueryFromID(context->registry, entityId, compTypeId);// exemple on how to get any component type of this entity
+	FE_CompTransform3D* tr = FE_EntityComponentQueryFromID(context->registry, entityId, GetApp()->tr3DComp);
 	//tr->position.x += 0.1f * (Float32)context->dt;
 
-	FE_Renderer3DDrawModel(&modelComp->model);
+	FE_Renderer3DDrawModel(&modelComp->model, tr);
 }
 
 void FE_ECSComputeSystem(void(fun)(void* comp, FE_EntityComponentTypeID compTypeId, FE_EntityID entityId, FE_ECSSystemContext* context), FE_EntityComponentTypeID compTypeId, FE_ECSSystemContext* context) // maybe give a context data

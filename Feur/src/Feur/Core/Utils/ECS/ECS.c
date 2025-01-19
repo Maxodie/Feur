@@ -86,7 +86,6 @@ FE_EntityComponentTypeID FE_EntityCreateComponentType(FE_EntityRegistry* registr
 		{
 			uuid = i;
 			registry->compUuids.data[i] = uuid;
-			return uuid;
 		}
 	}
 
@@ -151,14 +150,14 @@ void* FE_EntityAttachComp(FE_EntityRegistry* registry, FE_EntityID entityUuid, F
 	if (compList->dataList == NULL)
 	{
 		compList->dataList = FE_MemoryGeneralAlloc(compList->compSize);
-		compList->count++;
 	}
 	else
 	{
-		compList->dataList = FE_MemoryGeneralRealloc(compList->dataList, (compList->count++ + 1) * compList->compSize);
+		compList->dataList = FE_MemoryGeneralRealloc(compList->dataList, (compList->count + 1) * compList->compSize);
 	}
 
-	void* newComp = (void*)((UintptrT)compList->dataList + (compList->compSize * (compList->count - 1)));
+	void* newComp = (void*)((UintptrT)compList->dataList + (compList->compSize * (compList->count)));
+	compList->count++;
 
 	memset(newComp, 0, compList->compSize);
 	FE_FlagSet(&entity->byteFlag, componentUuid);
@@ -195,7 +194,7 @@ FE_Entity* FE_EntityQueryFromID(const FE_EntityRegistry* registry, FE_EntityID u
 		return NULL;
 	}
 
-	return registry->entities.data + uuid;
+	return registry->entities.data + (UintptrT)uuid;
 
 }
 
@@ -207,7 +206,7 @@ FE_EntityComponentList* FE_EntityComponentListQueryFromID(const FE_EntityRegistr
 		return NULL;
 	}
 
-	return registry->dataList.data + uuid;
+	return registry->dataList.data + (UintptrT)uuid;
 }
 
 void* FE_EntityComponentQueryFromID(const FE_EntityRegistry* registry, FE_EntityID entityUuid, FE_EntityComponentTypeID componentUuid)

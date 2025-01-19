@@ -36,6 +36,11 @@
 #include "Feur/Renderer/Models/Mesh.h"
 #include "Feur/Renderer/Buffers.h"
 #include "Feur/Renderer/RendererAPI.h"
+
+//ECS
+#include "Feur/Core/Utils/ECS/ECS.h"
+
+//Renderer2D/3D
 #include "Feur/Renderer/Renderer2D.h"
 #include "Feur/Renderer/Renderer3D.h"
 
@@ -53,7 +58,6 @@
 #include "Feur/Nuklear/NuklearLayer.h"
 
 //ECS
-#include "Feur/Core/Utils/ECS/ECS.h"
 #include "Feur/Core/Utils/ECS/ECSSystems.h"
 
 //Application

@@ -32,8 +32,6 @@ ILDA_vector3f camMovement = { .z = -1 };
 ILDA_vector3f camMovementLeft = { .x = -1 };
 ILDA_vector3f camRotateAxis = { .z = 1 };
 
-FE_EntityComponentTypeID camTransform3DCompID = -1;
-
 FE_EntityID squar0 = -1;
 FE_CompTransform3D* compTransform0 = NULL;
 
@@ -102,28 +100,26 @@ void OnAttachSandboxLayerBase(Layer* layer)
 	camEntity = FE_EntityCreate(&GetApp()->ecsRegistry);
 	cam = FE_EntityAttachComp(&GetApp()->ecsRegistry, camEntity, GetApp()->cam3DComp);
 
-	ILDA_vector3f pos = { .z = 1 };
+	ILDA_vector3f pos = { .z = 2 };
 	ILDA_vector3f worldUp = { .y = 1 };
 	FE_CameraInit(&cam->camera, &pos, &worldUp, GetApp()->windowData.w / (Float32)GetApp()->windowData.h, 45.f, 0.0f, 1.0f);
 
-	camTransform3DCompID = FE_EntityCreateComponentType(&GetApp()->ecsRegistry, sizeof(FE_CompTransform3D));
-
 	squar0 = FE_EntityCreate(&GetApp()->ecsRegistry);
-	compTransform0 = FE_EntityAttachComp(&GetApp()->ecsRegistry, squar0, camTransform3DCompID);
+	compTransform0 = FE_EntityAttachComp(&GetApp()->ecsRegistry, squar0, GetApp()->tr3DComp);
 	compTransform0->position.x = 0.5f;
 	compTransform0->scale = (ILDA_vector3f){ .x = 1.1f, .y = 0.1f, .z = 1.0f };
 
 	squar1 = FE_EntityCreate(&GetApp()->ecsRegistry);
-	compTransform1 = FE_EntityAttachComp(&GetApp()->ecsRegistry, squar1, camTransform3DCompID);
+	compTransform1 = FE_EntityAttachComp(&GetApp()->ecsRegistry, squar1, GetApp()->tr3DComp);
 	compTransform1->position.x = -1.f;
 	compTransform1->scale = (ILDA_vector3f){ .x = 1.1f, .y = 1.2f, .z = 1.0f };
 
-	if (FE_ModelLoad("Models/monkey.fbx", &cube))
+	if (FE_ModelLoad("Models/cube.fbx", &cube))
 	{
 		cube3D = FE_EntityCreate(&GetApp()->ecsRegistry);
-		cubeTransform = FE_EntityAttachComp(&GetApp()->ecsRegistry, cube3D, camTransform3DCompID);
-		cubeTransform->position.y = 1.f;
-		cubeTransform->scale = (ILDA_vector3f){ .x = 1.0f, .y = 1.0f, .z = 1.0f };
+		cubeTransform = FE_EntityAttachComp(&GetApp()->ecsRegistry, cube3D, GetApp()->tr3DComp);
+		cubeTransform->position.x = 1.f;
+		cubeTransform->scale = (ILDA_vector3f){ .x = 2.0f, .y = 1.0f, .z = 1.0f };
 
 		cubeModelComponent = FE_EntityAttachComp(&GetApp()->ecsRegistry, cube3D, GetApp()->modelComp);
 		cubeModelComponent->model = cube;
@@ -147,46 +143,10 @@ SizeT totalIndexCount = 0;
 
 void UpdateSandboxLayerBase(Double dt)
 {
+	FE_ECSComputeSystem(FE_ECSComputeCameraMovement, GetApp()->cam3DComp, &GetApp()->ecsContext);
+
 	FE_Renderer2DBeginScene(&cam->camera);
 
-	if (FE_IsInputPressed(FE_KEYCODE_W))
-	{
-		ILDA_vector3f move = camMovement;
-		ILDA_vector3f_mul(&move, (Float32)dt);
-		FE_CameraMove(&cam->camera, &move);
-	}
-
-	if (FE_IsInputPressed(FE_KEYCODE_S))
-	{
-		ILDA_vector3f move = camMovement;
-		ILDA_vector3f_mul(&move, (Float32) - dt);
-		FE_CameraMove(&cam->camera, &move);
-	}
-
-	if (FE_IsInputPressed(FE_KEYCODE_A))
-	{
-		//pos2.x -= (float)dt * 10;
-		//FE_CameraMove(&cam, &camMovement);
-		FE_CameraRotate(&cam->camera, &camRotateAxis, 2.f);
-	}
-	if (FE_IsInputPressed(FE_KEYCODE_D))
-	{
-		//pos2.x -= (float)dt * 10;
-		//FE_CameraMove(&cam, &camMovement);
-		FE_CameraRotate(&cam->camera, &camRotateAxis, -2.f);
-	}
-	if (FE_IsInputPressed(FE_KEYCODE_Q))
-	{
-		ILDA_vector3f move = camMovementLeft;
-		ILDA_vector3f_mul(&move, (Float32)dt);
-		FE_CameraMove(&cam->camera, &move);
-	}
-	if (FE_IsInputPressed(FE_KEYCODE_E))
-	{
-		ILDA_vector3f move = camMovementLeft;
-		ILDA_vector3f_mul(&move, (Float32)-dt);
-		FE_CameraMove(&cam->camera, &move);
-	}
 
 	FE_Renderer2DDrawQuad(&pos, &size, &color2);
 

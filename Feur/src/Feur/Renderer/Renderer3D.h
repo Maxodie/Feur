@@ -15,5 +15,5 @@ Uint32 FE_DECL FE_Renderer3DGetIndexCount();
 SizeT FE_DECL FE_Renderer3DGetVertexCount();
 SizeT FE_DECL FE_Renderer3DGetVertexBufferCount();
 
-void FE_DECL FE_Renderer3DDrawMesh(const FE_Mesh* mesh); 
-void FE_DECL FE_Renderer3DDrawModel(const FE_Model3D* model);
+void FE_DECL FE_Renderer3DDrawMesh(const FE_Mesh* mesh, const FE_CompTransform3D* tr3D);
+void FE_DECL FE_Renderer3DDrawModel(const FE_Model3D* model, const FE_CompTransform3D* tr3D);
