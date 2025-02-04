@@ -5,12 +5,34 @@
 
 #include "Platform/Vulkan/RenderPipeline/VulkanShader.h"
 
-void VulkanCreateGraphicsPipeline(FE_VulkanInfo* vkInfo)
-{
-	VulkanCreateShaderCompiler(vkInfo);
+void VulkanCreateGraphicsPipeline(FE_VulkanInfo* vkInfo, const char* vertexShaderPath, const char* fragmentShaderPath)
+{	
+	vertexShaderPath = vertexShaderPath == NULL ? vkInfo->cachedVertexShaderPath : vertexShaderPath;
+	fragmentShaderPath = fragmentShaderPath == NULL ? vkInfo->cachedFragmentShaderPath : fragmentShaderPath;
 
-	VkShaderModule vertexShader = VulkanCreateShaderModule(vkInfo, "VertexShader", VERTEX_SHADER);
-	VkShaderModule fragmentShader = VulkanCreateShaderModule(vkInfo, "FragmentShader", FRAGMENT_SHADER);
+	VkShaderModule vertexShader = VulkanCreateShaderModule(vkInfo, vertexShaderPath, VERTEX_SHADER);
+	VkShaderModule fragmentShader = VulkanCreateShaderModule(vkInfo, fragmentShaderPath, FRAGMENT_SHADER);
+
+	if (vertexShader == NULL)
+	{
+		vertexShader = VulkanCreateShaderModule(vkInfo, vkInfo->cachedVertexShaderPath, VERTEX_SHADER);
+	}
+	else
+	{
+		strcpy(vkInfo->cachedVertexShaderPath, vertexShaderPath);
+	}
+
+	if (fragmentShader == NULL)
+	{
+		fragmentShader = VulkanCreateShaderModule(vkInfo, vkInfo->cachedFragmentShaderPath, FRAGMENT_SHADER);
+	}
+	else
+	{
+		strcpy(vkInfo->cachedFragmentShaderPath, fragmentShaderPath);
+	}
+
+	vkInfo->apiData->pendingVertexShaderPath = NULL;
+	vkInfo->apiData->pendingFragmentShaderPath = NULL;
 
 	/*---------------------- Shader Stage Creation ----------------------*/
 
@@ -55,7 +77,7 @@ void VulkanCreateGraphicsPipeline(FE_VulkanInfo* vkInfo)
 	};
 
 	// vertex Input
-	VkVertexInputAttributeDescription attributeDescription[2] = {
+	VkVertexInputAttributeDescription attributeDescription[7] = {
 		(VkVertexInputAttributeDescription) {
 			.binding = 0,
 			.location = 0,
@@ -67,6 +89,37 @@ void VulkanCreateGraphicsPipeline(FE_VulkanInfo* vkInfo)
 			.location = 1,
 			.format = VK_FORMAT_R32G32B32A32_SFLOAT,
 			.offset = offsetof(FE_Vertex3D, color)
+		},
+		(VkVertexInputAttributeDescription) {
+			.binding = 0,
+			.location = 2,
+			.format = VK_FORMAT_R32G32B32_SFLOAT,
+			.offset = offsetof(FE_Vertex3D, normal)
+		},
+
+		(VkVertexInputAttributeDescription) {
+			.binding = 0,
+			.location = 3,
+			.format = VK_FORMAT_R32G32B32A32_SFLOAT,
+			.offset = offsetof(FE_Vertex3D, transform)
+		},
+		(VkVertexInputAttributeDescription) {
+			.binding = 0,
+			.location = 4,
+			.format = VK_FORMAT_R32G32B32A32_SFLOAT,
+			.offset = offsetof(FE_Vertex3D, transform) + sizeof(ILDA_vector4f)
+		},
+		(VkVertexInputAttributeDescription) {
+			.binding = 0,
+			.location = 5,
+			.format = VK_FORMAT_R32G32B32A32_SFLOAT,
+			.offset = offsetof(FE_Vertex3D, transform) + sizeof(ILDA_vector4f) * 2
+		},
+		(VkVertexInputAttributeDescription) {
+			.binding = 0,
+			.location = 6,
+			.format = VK_FORMAT_R32G32B32A32_SFLOAT,
+			.offset = offsetof(FE_Vertex3D, transform) + sizeof(ILDA_vector4f) * 3
 		}
 
 	};
@@ -205,8 +258,6 @@ void VulkanDestoryGraphicsPipeline(FE_VulkanInfo* vkInfo)
 	vkDestroyPipeline(vkInfo->logicalDevice, vkInfo->graphicsPipeline.handle, NULL);
 	vkDestroyPipelineLayout(vkInfo->logicalDevice, vkInfo->graphicsPipeline.layout, NULL);
 	VulkanDestroyDescriptionSetLayout(vkInfo);
-
-	VulkanDestroyShaderCompiler(vkInfo);
 }
 
 void VulkanGraphicsPipelineBind(VkCommandBuffer cmdBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline)
@@ -311,6 +362,6 @@ void VulkanCreateDescriptorSets(FE_VulkanInfo* vkInfo)
 
 void VulkanDestroyDescriptorSets(FE_VulkanInfo* vkInfo)
 {
-	//vkFreeDescriptorSets(vkInfo->logicalDevice, vkInfo->descriptor.pool, vkInfo->swapChain.maxFramesInFlight, vkInfo->descriptor.sets);
+	vkFreeDescriptorSets(vkInfo->logicalDevice, vkInfo->descriptor.pool, vkInfo->swapChain.maxFramesInFlight, vkInfo->descriptor.sets);
 	FE_MemoryGeneralFree(vkInfo->descriptor.sets);
 }

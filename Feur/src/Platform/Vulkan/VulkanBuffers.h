@@ -10,6 +10,7 @@ void VulkanAddVertexIntoBuffer(struct FE_VulkanInfo* vkInfo, FE_Vertex3D* vertic
 struct FE_VulkanAllocatedBuffer* VulkanCreateIndexBuffer(struct FE_VulkanInfo* vkInfo, Uint32 indexCount, SizeT* outIndexBufferId);
 void VulkanAddIndexIntoBuffer(struct FE_VulkanInfo* vkInfo, Uint32* newIndices, Uint32 indexCount, Uint64 indicesOffset, struct FE_VulkanAllocatedBuffer* allocatedVertexBuffer);
 void VulkanCreateUniformBuffer(struct FE_VulkanInfo* vkInfo);
+void VulkanDestroyUniformBuffer(struct FE_VulkanInfo* vkInfo);
 void VulkanCreateDrawIndexedIndirectCommandsBuffer(struct FE_VulkanInfo* vkInfo);
 void VulkanAddDrawIndexedIndirectCommandsBuffer(struct FE_VulkanInfo* vkInfo, Uint32 indexCount);
 

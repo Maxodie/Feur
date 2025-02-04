@@ -24,3 +24,14 @@ void FE_DECL RenderCommandWaitIdle();
 void FE_DECL RenderCommandShutDown();
 
 void FE_DECL RenderCommandOnWindowResized(Uint32 w, Uint32 h, Uint32 width, Uint32 height, Uint32 drawIndexCount);
+
+//images
+void* FE_DECL RenderCommandGetFrameImageView();
+//images
+
+// TODO : add buffer creation/destruction in renderCommand
+
+//shaders
+void FE_DECL RenderCommandPostTaskUpdateGraphicsPipelineShaders();
+void FE_DECL RenderCommandChangeGraphicsPipelineShaders(const char* vertexShaderPath, const char* fragmentShaderPath);
+//shaders

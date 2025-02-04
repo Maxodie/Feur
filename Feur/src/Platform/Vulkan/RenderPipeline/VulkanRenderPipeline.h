@@ -1,7 +1,7 @@
 #pragma once
 #include <vulkan/vulkan.h>
 
-void VulkanCreateGraphicsPipeline(struct FE_VulkanInfo* vkInfo); 
+void VulkanCreateGraphicsPipeline(struct FE_VulkanInfo* vkInfo, const char* vertexShaderPath, const char* fragmentShaderPath); 
 void VulkanDestoryGraphicsPipeline(struct FE_VulkanInfo* vkInfo);
 
 void VulkanGraphicsPipelineBind(VkCommandBuffer cmdBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline);

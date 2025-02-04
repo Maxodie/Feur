@@ -13,12 +13,16 @@ typedef struct FE_Vertex3D
 	ILDA_vector3f position;
 	ILDA_vector3f normal;
 	FE_Color color;
+	ILDA_matrix4x4 transform;
 } FE_Vertex3D;
 
-typedef struct FE_UniformBufferObject {
-	FE_ALIGN_AS(16) ILDA_matrix4x4 model;
-	FE_ALIGN_AS(16) ILDA_matrix4x4 view;
-	FE_ALIGN_AS(16) ILDA_matrix4x4 proj;
+typedef struct FE_UniformBufferObject 
+{
+	ILDA_matrix4x4 mvp;
+
+	FE_Color ambientLightColor;  // a is intensity
+	ILDA_vector3f lightPosition;
+	FE_ALIGN_AS(16) FE_Color lightColor;  // a is intensity
 } FE_UniformBufferObject;
 
 typedef struct FE_Mesh

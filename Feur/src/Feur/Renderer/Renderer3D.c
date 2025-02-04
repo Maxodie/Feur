@@ -154,26 +154,32 @@ void FE_DECL FE_Renderer3DDrawMesh(const FE_Mesh* mesh, const FE_CompTransform3D
 		FE_Renderer3DResizeIndexBuffer(count + 1);
 	}
 
-	ILDA_matrix4x4 transform = ILDA_translation(&ILDA_matrix4x4_identity, &tr3D->position);
+	ILDA_matrix4x4 transform = ILDA_matrix4x4_identity;
+
 	ILDA_matrix4x4 scale = ILDA_matrix4x4_identity;
-
 	ILDA_scale(&scale, &tr3D->scale);
-	ILDA_matrix4x4_mul_same(&transform, &scale);
-	ILDA_vector4f transformPos;
-	ILDA_vector4f vertexPos;
+	ILDA_matrix4x4 translation = ILDA_translation(&ILDA_matrix4x4_identity, &tr3D->position);
+	ILDA_matrix4x4 rotation = ILDA_eulerAngleXYZ(ILDA_radians(tr3D->rotation.x), ILDA_radians(tr3D->rotation.y), ILDA_radians(tr3D->rotation.z));
 
-	renderer3DData.meshVertexCount += mesh->vertices.impl.count;
+	ILDA_matrix4x4_mul_same(&transform, &translation);
+	ILDA_matrix4x4_mul_same(&transform, &rotation);
+	ILDA_matrix4x4_mul_same(&transform, &scale);
+
+	renderer3DData.meshVertexCount += (Uint32)mesh->vertices.impl.count;
 	SizeT i = 0;
 	for (i = 0; i < mesh->vertices.impl.count; i++)
 	{
-		vertexPos = (ILDA_vector4f){ .x = mesh->vertices.data[i].position.x, .y = mesh->vertices.data[i].position.y, .z = mesh->vertices.data[i].position.z, 1 };
-		transformPos = ILDA_matrix4x4_mul_vector(&transform, &vertexPos);
+		//vertexPos = (ILDA_vector4f){ .x = mesh->vertices.data[i].position.x, .y = mesh->vertices.data[i].position.y, .z = mesh->vertices.data[i].position.z, 1 };
+		//transformPos = ILDA_matrix4x4_mul_vector(&transform, &vertexPos);
+		//renderer3DData.meshVertexPtr->position = (ILDA_vector3f){ .x = vertexPos.x, .y = vertexPos.y, .z = vertexPos.z };
 		*renderer3DData.meshVertexPtr = mesh->vertices.data[i];
-		renderer3DData.meshVertexPtr->position = (ILDA_vector3f){ .x = transformPos.x, .y = transformPos.y, .z = transformPos.z };
+		renderer3DData.meshVertexPtr->color = (FE_Color){ .r = 1, .g = 1, .b = 1, .a = 1};
+		renderer3DData.meshVertexPtr->transform = transform;
+		renderer3DData.meshVertexPtr->normal = (ILDA_vector3f){ 0.0f, 1.0f, 0.0f };
 		renderer3DData.meshVertexPtr++;
 	}
 
-	renderer3DData.meshIndexCount += mesh->indices.impl.count;
+	renderer3DData.meshIndexCount += (Uint32)mesh->indices.impl.count;
 	Uint32 indexOffset = 0;
 	Uint32 currentIndex = 0;
 	for (i = 0; i < mesh->indices.impl.count; i++)

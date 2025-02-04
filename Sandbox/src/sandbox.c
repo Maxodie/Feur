@@ -10,9 +10,16 @@ void UpdateLayerBaseEventSandbox(FE_Event* event);
 void OnAttachSandboxLayerBase(Layer* layer);
 void EndLayer();
 
+void OverlayUpdateSandboxLayerBase(Double dt);
+void OverlayOnNuklearRender(NuklearGUIInterface* interface, Layer* layer);
+void OverlayUpdateLayerBaseEventSandbox(FE_Event* event);
+void OverlayOnAttachSandboxLayerBase(Layer* layer);
+void OverlayEndLayer();
+
 //const char* LoadFile(const char* filePath);
 
 Layer layer = { .OnUpdate = UpdateSandboxLayerBase,.OnAttach = OnAttachSandboxLayerBase,.OnNuklearRender = OnNuklearRender, .OnUpdateLayerEvent = UpdateLayerBaseEventSandbox, .OnDetach = EndLayer };
+Layer overlayLayer = { .OnUpdate = OverlayUpdateSandboxLayerBase,.OnAttach = OverlayOnAttachSandboxLayerBase,.OnNuklearRender = OverlayOnNuklearRender, .OnUpdateLayerEvent = OverlayUpdateLayerBaseEventSandbox, .OnDetach = OverlayEndLayer };
 
 void tempMatrixPrint(const ILDA_matrix4x4* matrix)
 {
@@ -45,7 +52,8 @@ FE_CompModel* cubeModelComponent = NULL;
 
 void StartSandbox()
 {
-	AddLayerApp(&layer); 
+	AddLayerApp(&layer);
+	AddOverlayLayerApp(&overlayLayer);
 
 //	==========================    FE_list test 
 	/*FE_List(Uint32) test = { 0 };
@@ -100,7 +108,7 @@ void OnAttachSandboxLayerBase(Layer* layer)
 	camEntity = FE_EntityCreate(&GetApp()->ecsRegistry);
 	cam = FE_EntityAttachComp(&GetApp()->ecsRegistry, camEntity, GetApp()->cam3DComp);
 
-	ILDA_vector3f pos = { .z = 2 };
+	ILDA_vector3f pos = { .z = -2 };
 	ILDA_vector3f worldUp = { .y = 1 };
 	FE_CameraInit(&cam->camera, &pos, &worldUp, GetApp()->windowData.w / (Float32)GetApp()->windowData.h, 45.f, 0.0f, 1.0f);
 
@@ -132,7 +140,7 @@ FE_Color color = { .r = .5f, .g = 0.1f, .b = 1.0f, .a = 0.2f};
 
 ILDA_vector3f pos2 = { .x = 0.5f, .y = 0.0f, .z = 0.f };
 ILDA_vector2f size2 = { .x = 1.1f, .y = 0.1f };
-FE_Color color2 = { .r = .2f, .g = 1.f, .b = 0.0f, .a = 0.2f };
+FE_Color color2 = { .r = .2f, .g = 1.f, .b = 0.0f, .a = 1.0f };
 
 ILDA_vector3f pos3 = { .x = -1.f, .y = 0.0f, .z = 0.f };
 ILDA_vector2f size3 = { .x = 1.1f, .y = 1.2f };
@@ -141,8 +149,12 @@ FE_Color color3 = { .r = 10.5f, .g = 10.1f, .b = 10.8f, .a = 1.f };
 SizeT totalVertexCount = 0;
 SizeT totalIndexCount = 0;
 
+Double currentUpdateDt;
+
 void UpdateSandboxLayerBase(Double dt)
 {
+	currentUpdateDt = dt;
+
 	FE_ECSComputeSystem(FE_ECSComputeCameraMovement, GetApp()->cam3DComp, &GetApp()->ecsContext);
 
 	FE_Renderer2DBeginScene(&cam->camera);
@@ -166,63 +178,52 @@ void UpdateSandboxLayerBase(Double dt)
 	FE_Renderer3DEndScene();
 }
 
-	char* t = NULL;
-	char* t1 = NULL;
-	char* t2 = NULL;
+
+
+char vertexShaderPathBuf[256] = { 0 };
+char fragmentShaderPathBuf[256] = { 0 };
+char modelpathBuf[256] = { 0 };
+
+char vertexCountBuf[256] = { 0 };
+char indicesCountBuf[256] = { 0 };
+char bufferCountBuf[256] = { 0 };
+
+char msBuf[256] = { 0 };
+
+void UploadVertexShaderEditor()
+{
+	if (vertexShaderPathBuf[0] == '\0')
+	{
+		return;
+	}
+
+	FE_ShaderChangeRenderPipeline(vertexShaderPathBuf, NULL);
+	FE_UpdateRenderPipeline();
+}
+
+void UploadFragmentShaderEditor()
+{
+	if (fragmentShaderPathBuf[0] == '\0')
+	{
+		return;
+	}
+
+	FE_ShaderChangeRenderPipeline(NULL, fragmentShaderPathBuf);
+	FE_UpdateRenderPipeline();
+}
+
+void LoadNewModelTask()
+{
+	FE_ModelFree(&cube);
+	if (FE_ModelLoad(modelpathBuf, &cube))
+	{
+		cubeModelComponent->model = cube;
+	}
+}
+
 void OnNuklearRender(NuklearGUIInterface* interface, Layer* layer)
 {
-	struct nk_context* context = (struct nk_context*)interface->handle;
-	if (nk_begin(context, "Nuklear Window", nk_rect(0, 0, 500, 500), NK_WINDOW_TITLE | NK_WINDOW_SCALABLE | NK_WINDOW_MOVABLE))
-	{
-		struct nk_vec2 rect = nk_window_get_content_region_min(context);
-		struct nk_vec2 size = nk_window_get_content_region_size(context);
-		nk_layout_row_dynamic(context, 20, 1);
-
-		t = FE_StringFormatAlloc("vertex count : %lld", totalVertexCount);
-		if (t) {
-			nk_label(context, t, NK_TEXT_LEFT);
-		}
-
-		t1 = FE_StringFormatAlloc("index count : %lld", totalIndexCount);
-		if (t1) {
-			nk_label(context, t1, NK_TEXT_LEFT);
-		}
-
-		t2 = FE_StringFormatAlloc("total vertex buffer count : %lld", FE_Renderer3DGetVertexBufferCount() + FE_Renderer2DGetVertexBufferCount());
-		if (t2) {
-			nk_label(context, t2, NK_TEXT_LEFT);
-		}
-
-		if (nk_button_label(context, "button"))
-			fprintf(stdout, "button pressed\n");
-
-		nk_layout_row_dynamic(context, 20, 1);
-		nk_label(context, "background:", NK_TEXT_LEFT);
-		nk_layout_row_dynamic(context, 25, 1);
-		struct nk_colorf background = { .r = color2.r, .g = color2.g, .b = color2.b, .a = color2.a };
-		if (nk_combo_begin_color(context, nk_rgb_cf(background),
-			nk_vec2(nk_widget_width(context), 400))) {
-			nk_layout_row_dynamic(context, 120, 1);
-			background = nk_color_picker(context, background, NK_RGBA);
-			color2.r = background.r;
-			color2.g = background.g;
-			color2.b = background.b;
-			color2.a = background.a;
-			nk_layout_row_dynamic(context, 25, 1);
-			nk_combo_end(context);
-		}
-	}
-	nk_end(context);
-
-	if (t) {
-		FE_StringFormatFree(t);
-	}
-	if (t1) {
-		FE_StringFormatFree(t1);
-	}
-	if (t2) {
-		FE_StringFormatFree(t2);
-	}
+	
 }
 
 
@@ -263,7 +264,93 @@ void UpdateLayerBaseEventSandbox(FE_Event* event)
 
 void EndLayer() 
 {
-	FE_ModelFree(&cube);
+	FE_ECSComputeSystem(FE_ECSComputeFreeModels, GetApp()->modelComp, &GetApp()->ecsContext);
+}
+
+
+//Overlay
+void OverlayUpdateSandboxLayerBase(Double dt)
+{
+}
+
+void OverlayOnNuklearRender(NuklearGUIInterface* interface, Layer* layer)
+{
+	struct nk_context* context = (struct nk_context*)interface->handle;
+
+	if (FE_OverlayGUIBegin(interface, "#Nuklear Window", 500, 500, FE_WINDOW_TITLE | FE_WINDOW_SCALABLE | FE_WINDOW_MOVABLE))
+	{
+		nk_layout_row_dynamic(context, 20, 1);
+
+		// in window
+		nk_edit_string_zero_terminated(context, NK_EDIT_FIELD, vertexShaderPathBuf, sizeof(vertexShaderPathBuf) - 1, nk_filter_default);
+		if (nk_button_label(context, "Submit vertex shaders"))
+		{
+			UploadVertexShaderEditor();
+		}
+
+		nk_edit_string_zero_terminated(context, NK_EDIT_FIELD, fragmentShaderPathBuf, sizeof(fragmentShaderPathBuf) - 1, nk_filter_default);
+		if (nk_button_label(context, "Submit fragment shaders"))
+		{
+			UploadFragmentShaderEditor();
+		}
+
+		if (nk_button_label(context, "Update graphics pipeline"))
+		{
+			FE_UpdateRenderPipeline();
+		}
+
+		nk_edit_string_zero_terminated(context, NK_EDIT_FIELD, modelpathBuf, sizeof(modelpathBuf) - 1, nk_filter_default);
+		if (nk_button_label(context, "Load new model (check the path nerd (project local))"))
+		{
+			FE_EventPostTask(&GetApp()->eventRegistry, LoadNewModelTask);
+		}
+
+		//stats
+		FE_StringFormat(bufferCountBuf, "ms : %f", currentUpdateDt);
+		nk_label(context, bufferCountBuf, NK_TEXT_LEFT);
+
+		FE_StringFormat(vertexCountBuf, "vertex count : %lld", totalVertexCount);
+		nk_label(context, vertexCountBuf, NK_TEXT_LEFT);
+
+		FE_StringFormat(indicesCountBuf, "index count : %lld", totalIndexCount);
+		nk_label(context, indicesCountBuf, NK_TEXT_LEFT);
+
+		FE_StringFormat(bufferCountBuf, "total vertex buffer count : %lld", FE_Renderer3DGetVertexBufferCount() + FE_Renderer2DGetVertexBufferCount());
+		nk_label(context, bufferCountBuf, NK_TEXT_LEFT);
+
+		//stats
+		FE_PropertyGUITransformField(interface, cubeTransform);
+
+		nk_layout_row_dynamic(context, 20, 1);
+		nk_label(context, "background:", NK_TEXT_LEFT);
+		nk_layout_row_dynamic(context, 25, 1);
+		struct nk_colorf background = { .r = color2.r, .g = color2.g, .b = color2.b, .a = color2.a };
+		if (nk_combo_begin_color(context, nk_rgb_cf(background),
+			nk_vec2(nk_widget_width(context), 400))) {
+			nk_layout_row_dynamic(context, 120, 1);
+			background = nk_color_picker(context, background, NK_RGBA);
+			color2.r = background.r;
+			color2.g = background.g;
+			color2.b = background.b;
+			color2.a = background.a;
+			nk_layout_row_dynamic(context, 25, 1);
+			nk_combo_end(context);
+		}
+	}
+
+	FE_OverlayGUIEnd(interface);
+}
+
+void OverlayUpdateLayerBaseEventSandbox(FE_Event* event)
+{
+}
+
+void OverlayOnAttachSandboxLayerBase(Layer* layer)
+{
+}
+
+void OverlayEndLayer()
+{
 }
 
 #endif

@@ -33,6 +33,9 @@ typedef clock_t ClockT;
 
 #define BIT(x) (1 << (x))
 
+#define FE_FLOAT_MIN_PRECISION FLT_MIN
+#define FE_FLOAT_MAX_PRECISION FLT_MAX
+
 #if defined(_MSC_VER)
 #	define FE_CORE_DEBUG_BREAK __debugbreak()
 #elif defined(__GNUC__) || defined(__GNUG__)

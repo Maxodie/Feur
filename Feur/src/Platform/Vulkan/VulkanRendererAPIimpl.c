@@ -9,6 +9,7 @@
 #include "Platform/Vulkan/Setup/VulkanSwapChain.h"
 #include "Platform/Vulkan/Setup/VulkanImageView.h"
 #include "Platform/Vulkan/Setup/VulkanCommands.h"
+#include "Platform/Vulkan/RenderPipeline/VulkanShader.h"
 #include "Platform/Vulkan/Setup/VulkanMemoryAllocation.h"
 
 #include "Platform/Vulkan/Debug/VulkanValidationLayer.h"
@@ -46,7 +47,9 @@ Bool VulkanInit_impl(RendererData* apiData)
 
 	VulkanInitImageViewsDefaultData(vkInfo);
 	VulkanCreateImageView(vkInfo);
-	VulkanCreateGraphicsPipeline(vkInfo);
+
+	VulkanCreateShaderCompiler(vkInfo);
+	VulkanCreateGraphicsPipeline(vkInfo, apiData->pendingVertexShaderPath, apiData->pendingFragmentShaderPath);
 
 	VulkanCreateCommandPool(vkInfo);
 	VulkanCreateCommandBuffers(vkInfo);
@@ -344,27 +347,20 @@ void VulkanShutdown_impl()
 {
 	vkWaitForFences(vkInfo->logicalDevice, 1, &vkInfo->inFlightFences[vkInfo->currentFrame], VK_TRUE, UINT64_MAX);
 	vkDeviceWaitIdle(vkInfo->logicalDevice);
-	//temp
+
 	VulkanDestroyBuffer(vkInfo, &vkInfo->drawIndexedIndirectCmdBuffer);
 
-	for (SizeT i = 0; i < vkInfo->swapChain.maxFramesInFlight; i++)
-	{
-		vmaUnmapMemory(vkInfo->allocator, vkInfo->uniformData.uniformBuffers[i].allocation);
-		VulkanDestroyBuffer(vkInfo, &vkInfo->uniformData.uniformBuffers[i]);
-	}
-
-	FE_MemoryGeneralFree(vkInfo->uniformData.uniformBuffers);
-	FE_MemoryGeneralFree(vkInfo->uniformData.uniformBuffersMapped);
+	VulkanDestroyUniformBuffer(vkInfo);
 
 	VulkanDestroyDescriptorSets(vkInfo);
 	VulkanDestroyDescriptorPool(vkInfo); 
-	//temp
 
 	VulkanDestroyAllocator(vkInfo);
 	VulkanDestroySemaphoresAndFences(vkInfo);
 	VulkanDestroyCommandBuffers(vkInfo);
 	VulkanDestroyCommandPool(vkInfo);
 	VulkanDestoryGraphicsPipeline(vkInfo);
+	VulkanDestroyShaderCompiler(vkInfo);
 
 	VulkanDestroyImageView(vkInfo);
 	VulkanShutdownImageViewsDefaultData(vkInfo);
@@ -417,11 +413,27 @@ void VulkanOnWindowResized_impl(Uint32 x, Uint32 y, Uint32 width, Uint32 height,
 	VulkanWaitIdle_impl();
 }
 
+void* VulkanGetFrameImageView()
+{
+	return vkInfo->swapChain.imageViews.data[vkInfo->imageIndex];
+}
+
 Bool CanVulkanContinueRendering()
 {
 	return TRUE;
 }
 
+/*======================== SHADERS ==============================*/
+void VulkanUpdatePendingShaders_impl()
+{
+	if (vkInfo->graphicsPipeline.handle != VK_NULL_HANDLE)
+	{
+		VulkanDestoryGraphicsPipeline(vkInfo);
+		vkInfo->graphicsPipeline.handle = VK_NULL_HANDLE;
+	}
+
+	VulkanCreateGraphicsPipeline(vkInfo, vkInfo->apiData->pendingVertexShaderPath, vkInfo->apiData->pendingFragmentShaderPath);
+}
 
 /*======================== BUFFERS ==============================*/
 void* VulkanCreateVertexBuffer_impl(Uint32 vertexCount, SizeT* outVertexBufferId)

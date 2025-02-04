@@ -8,7 +8,7 @@
 
 Bool FE_DECL FE_ModelLoad(const char* path, FE_Model3D* outModel)
 {
-	const struct aiScene* scene = aiImportFile(path, 
+	const struct aiScene* const scene = aiImportFile(path,
         aiProcess_Triangulate | aiProcess_GenSmoothNormals |
         aiProcess_CalcTangentSpace | aiProcess_OptimizeMeshes |
         aiProcess_OptimizeGraph | aiProcess_ValidateDataStructure |
@@ -18,12 +18,12 @@ Bool FE_DECL FE_ModelLoad(const char* path, FE_Model3D* outModel)
 
     if (scene == NULL)
     {
-        FE_CORE_LOG_ERROR("failed to load assimp scene");
+        FE_CORE_LOG_ERROR("failed to load assimp scene : %s", path);
         outModel = NULL;
         return FALSE;
     }
 
-    FE_CORE_LOG_DEBUG("Starting the loading of the model : %s", scene->mName);
+    FE_CORE_LOG_DEBUG("Starting the loading of the model : %s", path);
 
     FE_ListInit(outModel->meshes);
     FE_ListReserve(outModel->meshes, scene->mNumMeshes);

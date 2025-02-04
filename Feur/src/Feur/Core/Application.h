@@ -19,6 +19,8 @@ typedef struct FE_App
 	FE_EntityComponentTypeID modelComp;
 	FE_EntityComponentTypeID tr3DComp;
 	FE_ECSSystemContext ecsContext;
+
+	FE_EventRegistry eventRegistry;
 } FE_App;
 
 void FE_DECL StartApp_impl();
@@ -34,14 +36,18 @@ void FE_DECL AppUpdate(Double deltaTime);
 
 void FE_DECL ConsumeDeltaTime(Double deltaTime);
 
+// TODO : add as a task
 void FE_DECL AddLayerApp(Layer* newLayer);
-void FE_DECL InsertLayerApp(Layer* newLayer, Uint32 position);
+void FE_DECL AddOverlayLayerApp(Layer* newLayer);
+void FE_DECL RemoveLayerApp(LayerStack* layerStack, Layer* value);
 void FE_DECL PopLayerApp();
 void FE_DECL LoadWindow();
 void FE_DECL PullWindowEvent();
 void FE_DECL AppOnEvent(FE_Event event);
 Bool FE_DECL OnWindowResizing(FE_EventData* windowResizeEvent);
 Bool FE_DECL OnWindowClose(FE_EventData* windowResizeEvent);
+
+void* FE_DECL GetFrameImageViewApp();
 
 void FE_DECL ShutdownApp();
 void FE_DECL QuitApp();

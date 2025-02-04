@@ -44,7 +44,7 @@ FE_ListInsert_impl(&(fe_list).impl, (Byte**)&(fe_list).data, (const void*)&value
 //with 'fe_list' an FE_List(type); 'type' same type of *fe_list.data; 'value' type of 'type';
 #define FE_ListPushValue(fe_list, type, value) { \
 type temp = value; \
-FE_CORE_ASSERT(FE_ListPushArray_impl(&(fe_list).impl, (Byte**)&(fe_list).data, (const void*)&(type)temp, 1, sizeof(*(fe_list).data)), "failed to push value fe_list"); \
+FE_CORE_ASSERT(FE_ListPushArray_impl(&(fe_list).impl, (Byte**)&(fe_list).data, (const void*)&temp, 1, sizeof(*(fe_list).data)), "failed to push value fe_list"); \
 }
 //with 'fe_list' an FE_List(type); 'value' type of 'type'
 #define FE_ListPushArray(fe_list, arrayDataPtr, countToPush) FE_CORE_ASSERT(FE_ListPushArray_impl(&(fe_list).impl, (Byte**)&(fe_list).data, (const void*)arrayDataPtr, countToPush, sizeof(*(fe_list).data)), "failed to push array fe_list")

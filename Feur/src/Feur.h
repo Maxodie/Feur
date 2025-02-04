@@ -33,6 +33,7 @@
 
 //Renderer
 #include "Feur/Renderer/Camera.h"
+#include "Feur/Renderer/Shader.h"
 #include "Feur/Renderer/Models/Mesh.h"
 #include "Feur/Renderer/Buffers.h"
 #include "Feur/Renderer/RendererAPI.h"

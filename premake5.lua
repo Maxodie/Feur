@@ -43,7 +43,7 @@ group "Dependencies"
 group "Feur"
 
 project "Feur"
-	location "Feur/build"
+	location "Feur"
 	kind "StaticLib"
 	language "C"
 	cdialect "C17"

@@ -1,26 +1,6 @@
 #include "fepch.h"
 #include "Feur/Core/Utils/FeString.h"
 
-char* FE_DECL FE_StringFormatV(const char* format, va_list* va_listp)
-{
-	if (format == NULL || va_listp == NULL)
-	{
-		FE_CORE_LOG_ERROR("failed format, format or va_list is null");
-		return NULL;
-	}
-
-	SizeT length = vsnprintf(NULL, 0, format, *va_listp);
-	char* buffer = FE_MemoryGeneralAlloc(length + 1);
-	if (!buffer)
-	{
-		return NULL;
-	}
-
-	vsnprintf(buffer, length + 1, format, *va_listp);
-	buffer[length] = '\0';
-	return buffer;
-}
-
 char* FE_DECL FE_StringFormatAlloc(const char* format, ...)
 {
 	if (!format)
@@ -31,9 +11,40 @@ char* FE_DECL FE_StringFormatAlloc(const char* format, ...)
 
 	va_list list;
 	va_start(list, format);
-	char* result = FE_StringFormatV(format, &list);
+
+	SizeT length = vsnprintf(NULL, 0, format, list);
+	char* buffer = FE_MemoryGeneralAlloc(length + 1);
+
+	FE_StringWrite(buffer, length, format, &list);
 	va_end(list);
-	return result;
+	return buffer;
+}
+
+void FE_DECL FE_StringFormat(void* dst, const char* format, ...)
+{
+	if (dst == NULL)
+	{
+		return NULL;
+	}
+	va_list list;
+	va_start(list, format);
+
+	SizeT length = vsnprintf(NULL, 0, format, list);
+	FE_StringWrite(dst, length, format, &list);
+
+	va_end(list);
+}
+
+void FE_DECL FE_StringWrite(char* dst, SizeT length, const char* format, va_list* va_listp)
+{
+	if (format == NULL || va_listp == NULL)
+	{
+		FE_CORE_LOG_ERROR("failed format, format or va_list is null");
+		return NULL;
+	}
+
+	vsnprintf(dst, length + 1, format, *va_listp);
+	dst[length] = '\0';
 }
 
 void FE_DECL FE_StringFormatFree(char* str)

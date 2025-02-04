@@ -1364,8 +1364,8 @@ void nk_glfw3_vk_render(VkCommandBuffer cmdBuffer, enum nk_anti_aliasing AA) {
     VkImageView current_texture = NULL;
     uint32_t index_offset = 0;
     VkRect2D scissor = { 0 };
-   /* uint32_t wait_semaphore_count;
-    VkSemaphore* wait_semaphores;*/
+    /* uint32_t wait_semaphore_count;
+     VkSemaphore* wait_semaphores;*/
     VkPipelineStageFlags wait_stage =
         VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
     //VkSubmitInfo submit_info;
@@ -1375,19 +1375,19 @@ void nk_glfw3_vk_render(VkCommandBuffer cmdBuffer, enum nk_anti_aliasing AA) {
 
     memcpy(dev->mapped_uniform, &projection, sizeof(projection));
 
-   /* memset(&begin_info, 0, sizeof(VkCommandBufferBeginInfo));
-    begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;*/
+    /* memset(&begin_info, 0, sizeof(VkCommandBufferBeginInfo));
+     begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;*/
 
-    //command_buffer = dev->command_buffers[buffer_index];
+     //command_buffer = dev->command_buffers[buffer_index];
 
-    /*result = vkBeginCommandBuffer(command_buffer, &begin_info);
-   assert(result == VK_SUCCESS);
- */
-    /*memset(&viewport, 0, sizeof(VkViewport));
-    viewport.width = (float)glfw.width;
-    viewport.height = (float)glfw.height;
-    viewport.maxDepth = 1.0f;
-    vkCmdSetViewport(cmdBuffer, 0, 1, &viewport);*/
+     /*result = vkBeginCommandBuffer(command_buffer, &begin_info);
+    assert(result == VK_SUCCESS);
+  */
+  /*memset(&viewport, 0, sizeof(VkViewport));
+  viewport.width = (float)glfw.width;
+  viewport.height = (float)glfw.height;
+  viewport.maxDepth = 1.0f;
+  vkCmdSetViewport(cmdBuffer, 0, 1, &viewport);*/
 
     vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
         dev->pipeline);
@@ -1486,30 +1486,30 @@ void nk_glfw3_vk_render(VkCommandBuffer cmdBuffer, enum nk_anti_aliasing AA) {
     assert(result == VK_SUCCESS);
 
     return command_buffer;*/
-   /* if (wait_semaphore) {
-        wait_semaphore_count = 1;
-        wait_semaphores = &wait_semaphore;
-    }
-    else {
-        wait_semaphore_count = 0;
-        wait_semaphores = NULL;
-    }*/
+    /* if (wait_semaphore) {
+         wait_semaphore_count = 1;
+         wait_semaphores = &wait_semaphore;
+     }
+     else {
+         wait_semaphore_count = 0;
+         wait_semaphores = NULL;
+     }*/
 
 
-    /*memset(&submit_info, 0, sizeof(VkSubmitInfo));
-    submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submit_info.commandBufferCount = 1;
-    submit_info.pCommandBuffers = &command_buffer;
-    submit_info.pWaitDstStageMask = &wait_stage;
-    submit_info.waitSemaphoreCount = wait_semaphore_count;
-    submit_info.pWaitSemaphores = wait_semaphores;
-    submit_info.signalSemaphoreCount = 1;
-    submit_info.pSignalSemaphores = &dev->render_completed;
+     /*memset(&submit_info, 0, sizeof(VkSubmitInfo));
+     submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+     submit_info.commandBufferCount = 1;
+     submit_info.pCommandBuffers = &command_buffer;
+     submit_info.pWaitDstStageMask = &wait_stage;
+     submit_info.waitSemaphoreCount = wait_semaphore_count;
+     submit_info.pWaitSemaphores = wait_semaphores;
+     submit_info.signalSemaphoreCount = 1;
+     submit_info.pSignalSemaphores = &dev->render_completed;
 
-    result = vkQueueSubmit(graphics_queue, 1, &submit_info, NULL);
-    assert(result == VK_SUCCESS);
+     result = vkQueueSubmit(graphics_queue, 1, &submit_info, NULL);
+     assert(result == VK_SUCCESS);
 
-    return dev->render_completed;*/
+     return dev->render_completed;*/
 }
 
 NK_API void nk_glfw3_vk_char_callback(GLFWwindow* win, unsigned int codepoint) {

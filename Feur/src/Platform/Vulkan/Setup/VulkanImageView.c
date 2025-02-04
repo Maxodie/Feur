@@ -35,6 +35,7 @@ void VulkanCreateImageView(FE_VulkanInfo* vkInfo)
 		createInfo.image = vkInfo->swapChain.images.data[i];
 
 		VkResult result = vkCreateImageView(vkInfo->logicalDevice, &createInfo, NULL, &vkInfo->swapChain.imageViews.data[i]);
+		FE_CORE_LOG_DEBUG("image view : %p", vkInfo->swapChain.imageViews.data[i]);
 		FE_CORE_ASSERT(result == VK_SUCCESS, "failed to create image view ! - %d", result);
 	}
 }

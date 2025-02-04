@@ -6,6 +6,7 @@ FE_FORCEINLINE_FUN void FE_DECL FE_LayerStackInit(LayerStack* layerStack)
 {
 	FE_ListInit(layerStack->stackedlayers)
 	FE_ListReserve(layerStack->stackedlayers, 3);
+	layerStack->startOverlayIndex = 0;
 }
 
 FE_FORCEINLINE_FUN void FE_DECL FE_LayerStackPop(LayerStack* layerStack)
@@ -14,16 +15,25 @@ FE_FORCEINLINE_FUN void FE_DECL FE_LayerStackPop(LayerStack* layerStack)
 	FE_ListPop(layerStack->stackedlayers);
 }
 
-FE_FORCEINLINE_FUN void FE_DECL FE_LayerStackInsert(LayerStack* layerStack, Layer* value, Uint32 position)
+FE_FORCEINLINE_FUN void FE_DECL FE_LayerStackPushOvelay(LayerStack* layerStack, Layer* value)
 {
-	FE_ListInsert(layerStack->stackedlayers, value, position);
+	FE_ListPush(layerStack->stackedlayers, value);
 	layerStack->stackedlayers.data[layerStack->stackedlayers.impl.count - 1]->OnAttach(value);
+}
+
+FE_FORCEINLINE_FUN void FE_DECL FE_LayerStackRemoveLayer(LayerStack* layerStack, Layer* value)
+{
+	value->OnDetach();
+
+	FE_ListRemove(layerStack->stackedlayers, value);
 }
 
 FE_FORCEINLINE_FUN void FE_DECL FE_LayerStackPush(LayerStack* layerStack, Layer* value)
 {
-	FE_ListPush(layerStack->stackedlayers, value);
-	layerStack->stackedlayers.data[layerStack->stackedlayers.impl.count - 1]->OnAttach(value);
+	FE_ListInsert(layerStack->stackedlayers, value, layerStack->startOverlayIndex);
+	layerStack->stackedlayers.data[layerStack->startOverlayIndex]->OnAttach(value);
+
+	layerStack->startOverlayIndex++;
 }
 
 FE_FORCEINLINE_FUN SizeT FE_DECL FE_LayerStackGetCount(LayerStack* layerStack)

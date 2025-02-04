@@ -25,7 +25,7 @@ void VulkanCreateSwapChain(FE_VulkanInfo* vkInfo)
         .imageColorSpace = vkInfo->swapChain.details.selectedSurfaceFormat.colorSpace,
         .imageExtent = vkInfo->swapChain.extent,
         .imageArrayLayers = 1,
-        .imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, //VK_IMAGE_USAGE_TRANSFER_DST_BIT 
+        .imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, //VK_IMAGE_USAGE_TRANSFER_DST_BIT 
         .preTransform = vkInfo->swapChain.details.capabilities.currentTransform,
         .compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
         .presentMode = vkInfo->swapChain.details.selectedPresentMode,

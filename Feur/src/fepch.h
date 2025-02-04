@@ -27,6 +27,7 @@
 #include <string.h>
 #include <math.h>
 #include <limits.h>
+#include <float.h>
 //#include <time.h>
 
 #include "ILDA_utils/ILDA_utils.h"
@@ -54,9 +55,9 @@
 #include "Feur/Core/Layer.h"
 
 #include "Feur/Core/LayerStack.h"
-#include "Feur/Nuklear/NuklearLayer.h"
 
 #include "Feur/Renderer/Camera.h"
+#include "Feur/Renderer/Shader.h"
 #include "Feur/Renderer/Models/Mesh.h"
 #include "Feur/Renderer/Buffers.h"
 #include "Feur/Renderer/RendererAPI.h"
@@ -69,5 +70,7 @@
 #include "Feur/Renderer/Renderer3D.h"
 
 #include "Feur/Core/Utils/ECS/ECSSystems.h"
+
+#include "Feur/Nuklear/NuklearLayer.h"
 
 #include "Feur/Core/Application.h"

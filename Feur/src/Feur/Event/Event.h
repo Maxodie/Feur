@@ -22,6 +22,11 @@ typedef struct FE_EventData {
 	WindowData* windowData;
 } FE_EventData;
 
+typedef struct FE_EventTask
+{
+	void (*f)();
+} FE_EventTask;
+
 typedef struct FE_Event {
 	FE_EventType eventType;
 	FE_EventCategory eventCategory;
@@ -29,10 +34,32 @@ typedef struct FE_Event {
 	Bool isHandled;
 } FE_Event;
 
-typedef struct FE_EventDispatcher {
-	FE_Event event;
-	FE_EventType eventType;
-}FE_EventDispatcher;
+typedef Uint64 FE_EventID;
 
-void FE_DECL DispatchEvent(FE_EventDispatcher* eventDispatcher, FE_EventType eventType, void(*f)(FE_EventData*));
+typedef struct FE_EventRegistryTable
+{
+	FE_EventType eventType;
+	FE_EventID FE_EventID;
+	Bool (*callback)(FE_EventData*);
+} FE_EventRegistryTable;
+
+typedef struct FE_EventRegistry
+{
+	FE_List(FE_EventTask) tasks;
+	FE_List(FE_EventRegistryTable) table;
+	FE_EventID maxUuid;
+} FE_EventRegistry;
+
+
+void FE_DECL FE_EventSystemInit(FE_EventRegistry* registry);
+void FE_DECL FE_EventSystemClear(FE_EventRegistry* registry);
+
+FE_EventID FE_DECL FE_EventAttach(FE_EventRegistry* registry, FE_EventType eventType, Bool(*callback)(FE_EventData*));
+void FE_DECL FE_EventDetach(FE_EventRegistry* registry, FE_EventID id);
+
+void FE_DECL FE_EventDispatch(FE_EventRegistry* registry, FE_Event* event);
+
+void FE_DECL FE_EventPostTask(FE_EventRegistry* registry, void(*task)());
+void FE_DECL FE_EventPollTask(FE_EventRegistry* registry);
+
 Bool FE_DECL IsEventInCategory(const FE_EventCategory eventCategory, FE_Event* event);

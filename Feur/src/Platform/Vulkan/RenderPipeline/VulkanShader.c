@@ -13,17 +13,14 @@ void VulkanDestroyShaderCompiler(FE_VulkanInfo* vkInfo)
 	shaderc_compiler_release(vkInfo->shaderCompiler);
 }
 
-VkShaderModule VulkanCreateShaderModule(FE_VulkanInfo* vkInfo, const char* shaderName, VulkanShaderKind kind)
+VkShaderModule VulkanCreateShaderModule(FE_VulkanInfo* vkInfo, const char* shaderName, FE_VulkanShaderKind kind)
 {
-	char* fileName = FE_StringFormatAlloc("vulkan/%s.%s", shaderName, kind == VERTEX_SHADER ? "vert" : "frag");
-
-	FE_CORE_LOG_DEBUG("%s shader file", fileName);
+	FE_CORE_LOG_DEBUG("%s shader file", shaderName);
 
 	FE_File file;
-	if (!FE_FileSystemOpen(fileName, FILE_MODE_READ_BINARY, &file))
+	if (!FE_FileSystemOpen(shaderName, FILE_MODE_READ_BINARY, &file))
 	{
-		FE_StringFormatFree(fileName);
-		FE_CORE_LOG_ERROR("failed to open shader file : %s", fileName);
+		FE_CORE_LOG_ERROR("failed to open shader file : %s", shaderName);
 		return VK_NULL_HANDLE;
 	}
 
@@ -37,8 +34,7 @@ VkShaderModule VulkanCreateShaderModule(FE_VulkanInfo* vkInfo, const char* shade
 	{
 		FE_MemoryGeneralFree(fileBuffer);
 		FE_FileSystemClose(&file);
-		FE_StringFormatFree(fileName);
-		FE_CORE_LOG_ERROR("failed to read all the bytes from shader file : %s", fileName);
+		FE_CORE_LOG_ERROR("failed to read all the bytes from shader file : %s", shaderName);
 		return VK_NULL_HANDLE;
 	}
 
@@ -57,23 +53,21 @@ VkShaderModule VulkanCreateShaderModule(FE_VulkanInfo* vkInfo, const char* shade
 	default:
 		FE_MemoryGeneralFree(fileBuffer);
 		FE_FileSystemClose(&file);
-		FE_StringFormatFree(fileName);
-		FE_CORE_LOG_ERROR("failed to load shader kind for the shader : %s", fileName);
+		FE_CORE_LOG_ERROR("failed to load shader kind for the shader : %s", shaderName);
 		return VK_NULL_HANDLE;
 		break;
 	}
 
 	shaderc_compilation_result_t shaderCompilerResult = shaderc_compile_into_spv(
-		vkInfo->shaderCompiler, (const char*)fileBuffer, readSize, shaderKind, fileName, "main", NULL
+		vkInfo->shaderCompiler, (const char*)fileBuffer, readSize, shaderKind, shaderName, "main", NULL
 	);
 
 	FE_MemoryGeneralFree(fileBuffer);
 	FE_FileSystemClose(&file);
-	FE_StringFormatFree(fileName);
 
 	if (shaderCompilerResult == NULL)
 	{
-		FE_CORE_LOG_ERROR("failed to compile the shader file : %s to SPIR-V", fileName);
+		FE_CORE_LOG_ERROR("failed to compile the shader file : %s to SPIR-V", shaderName);
 		return VK_NULL_HANDLE;
 	}
 

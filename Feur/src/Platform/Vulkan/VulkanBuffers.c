@@ -88,11 +88,29 @@ void VulkanCreateUniformBuffer(FE_VulkanInfo* vkInfo)
 	vkInfo->uniformData.uniformBuffers = FE_MemoryGeneralAlloc(vkInfo->swapChain.maxFramesInFlight * bufferSize);
 	vkInfo->uniformData.uniformBuffersMapped = FE_MemoryGeneralAlloc(vkInfo->swapChain.maxFramesInFlight * bufferSize);
 
-	for (Uint32 i = 0; i < vkInfo->swapChain.maxFramesInFlight; i++) {
+	for (Uint32 i = 0; i < vkInfo->swapChain.maxFramesInFlight; i++) 
+	{
 		VulkanCreateBuffer(vkInfo, bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, &vkInfo->uniformData.uniformBuffers[i]);
-
 		vmaMapMemory(vkInfo->allocator, vkInfo->uniformData.uniformBuffers[i].allocation, &vkInfo->uniformData.uniformBuffersMapped[i]);
+
+		*vkInfo->uniformData.uniformBuffersMapped[i] = (FE_UniformBufferObject){ 
+			.ambientLightColor = (FE_Color){1, 1, 1, 0.2f},
+			.lightPosition = ILDA_vector3f_one, 
+			.lightColor = (FE_Color){1, 1, 1, 1},
+		};
 	}
+}
+
+void VulkanDestroyUniformBuffer(FE_VulkanInfo* vkInfo)
+{
+	for (SizeT i = 0; i < vkInfo->swapChain.maxFramesInFlight; i++)
+	{
+		vmaUnmapMemory(vkInfo->allocator, vkInfo->uniformData.uniformBuffers[i].allocation);
+		VulkanDestroyBuffer(vkInfo, &vkInfo->uniformData.uniformBuffers[i]);
+	}
+
+	FE_MemoryGeneralFree(vkInfo->uniformData.uniformBuffersMapped);
+	FE_MemoryGeneralFree(vkInfo->uniformData.uniformBuffers);
 }
 
 void VulkanCreateDrawIndexedIndirectCommandsBuffer(FE_VulkanInfo* vkInfo)
@@ -124,9 +142,10 @@ void VulkanAddDrawIndexedIndirectCommandsBuffer(FE_VulkanInfo* vkInfo, Uint32 in
 void VulkanUpdateUniformBuffer(FE_VulkanInfo* vkInfo, const FE_Camera3D* cam)
 {
 	FE_UniformBufferObject ubo = {
-		.model = cam->rotation,
-		.view = cam->view,
-		.proj = cam->perspective,
+		.mvp = cam->mvp,
+		.ambientLightColor = vkInfo->uniformData.uniformBuffersMapped[vkInfo->currentFrame]->ambientLightColor,
+		.lightColor = vkInfo->uniformData.uniformBuffersMapped[vkInfo->currentFrame]->lightColor,
+		.lightPosition = vkInfo->uniformData.uniformBuffersMapped[vkInfo->currentFrame]->lightPosition,
 	};
 
 	memcpy(vkInfo->uniformData.uniformBuffersMapped[vkInfo->currentFrame], &ubo, sizeof(ubo));

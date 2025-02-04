@@ -28,8 +28,10 @@ void FE_DECL RunApp_impl()
 		g_fe_App.ecsContext.dt = deltaTime;
 
 		PullWindowEvent();
+
 		AppUpdate(deltaTime);
 
+		FE_EventPollTask(&g_fe_App.eventRegistry);
 		ConsumeDeltaTime(deltaTime);
 	}
 
@@ -52,9 +54,10 @@ void FE_DECL StartApp()
 	FE_MemoryGeneralInit(FE_MEMORY_DEFAULT_STACK_ALLOCATION_SIZE);
 	g_fe_App.targetFps = 1000 / 165;
 	InitRendererAPISelection(&g_fe_App.rendererData);
+	FE_EventSystemInit(&g_fe_App.eventRegistry);
+
 	LoadWindow();
 	FE_InitInputAPI();
-	FE_LayerStackInit(&g_fe_App.layerStack);
 
 	if (!InitRenderer(&g_fe_App.rendererData))
 	{
@@ -68,6 +71,8 @@ void FE_DECL StartApp()
 	g_fe_App.guiInterface.Init(&g_fe_App.guiInterface);
 
 	AppInitECS();
+
+	FE_LayerStackInit(&g_fe_App.layerStack);
 }
 
 Double FE_DECL GetDeltaTime()
@@ -136,20 +141,35 @@ void FE_DECL AppUpdate(Double deltaTime)
 	GetWindowAPI()->Update(&g_fe_App.windowData);
 }
 
+struct FE_LayerStackLambdaTask
+{
+	Layer* layer;
+	Uint32 position;
+};
 
 void FE_DECL AddLayerApp(Layer* newLayer)
 {
 	FE_LayerStackPush(&g_fe_App.layerStack, newLayer);
 }
 
-void FE_DECL InsertLayerApp(Layer* newLayer, Uint32 position)
+void FE_DECL AddOverlayLayerApp(Layer* newLayer)
 {
-	FE_LayerStackInsert(&g_fe_App.layerStack, newLayer, position);
+	FE_LayerStackPushOvelay(&g_fe_App.layerStack, newLayer);
+}
+
+void FE_DECL RemoveLayerApp(LayerStack* layerStack, Layer* value)
+{
+	FE_LayerStackRemoveLayer(layerStack, value);
+}
+
+void PopLayerAppTask()
+{
+	FE_LayerStackPop(&g_fe_App.layerStack);
 }
 
 void FE_DECL PopLayerApp()
 {
-	FE_LayerStackPop(&g_fe_App.layerStack);
+	FE_EventPostTask(&g_fe_App.layerStack, PopLayerAppTask); // task void* parameter
 }
 
 void FE_DECL LoadWindow()
@@ -158,14 +178,14 @@ void FE_DECL LoadWindow()
 	CreateAppWindow(&g_fe_App.windowData);
 	g_fe_App.windowData.graphicsContext.Init(&g_fe_App.windowData);
 
+	FE_EventAttach(&g_fe_App.eventRegistry, FE_Event_WindowClose, OnWindowClose);
+	FE_EventAttach(&g_fe_App.eventRegistry, FE_Event_WindowResize, OnWindowResizing);
 	g_fe_App.windowData.EventCallback = AppOnEvent;
 }
 
 void FE_DECL AppOnEvent(FE_Event event)
 {
-	FE_EventDispatcher eventDispatcher = { .eventType = event.eventType, .event = event };
-	DispatchEvent(&eventDispatcher, FE_Event_WindowResize, OnWindowResizing);
-	DispatchEvent(&eventDispatcher, FE_Event_WindowClose, OnWindowClose);
+	FE_EventDispatch(&g_fe_App.eventRegistry, &event);
 
 	for (SizeT i = 0; i < FE_LayerStackGetCount(&g_fe_App.layerStack); i++)
 	{
@@ -192,13 +212,20 @@ Bool FE_DECL OnWindowResizing(FE_EventData* eventData)
 	RendererOnWindowResize(eventData->windowData->w, eventData->windowData->h);//not frame limited so it can use a lot of GPU performence now
 	g_fe_App.guiInterface.OnWindowResize(eventData->windowData->w, eventData->windowData->h);
 
-	return TRUE;
+	FE_ECSComputeSystem(FE_ECSComputeAspectRatioUpdate, g_fe_App.cam3DComp, &g_fe_App.ecsContext);
+
+	return FALSE;
 }
 
 Bool FE_DECL OnWindowClose(FE_EventData* eventData)
 {
 	g_IsAppRunning = FALSE;
-	return FALSE;
+	return TRUE;
+}
+
+void* FE_DECL GetFrameImageViewApp()
+{
+	return RenderCommandGetFrameImageView();
 }
 
 void FE_DECL PullWindowEvent()
@@ -208,15 +235,17 @@ void FE_DECL PullWindowEvent()
 
 void FE_DECL ShutdownApp()
 {
+	FE_LayerStackClear(&g_fe_App.layerStack);
+
 	FE_EntityDestroyRegistry(&g_fe_App.ecsRegistry);
 
 	g_fe_App.guiInterface.Shutdown();
 
-	FE_LayerStackClear(&g_fe_App.layerStack);
+	FE_EventSystemClear(&g_fe_App.eventRegistry);
 
 	FE_Renderer2DShutdown();
 	FE_Renderer3DShutdown();
-	FE_CORE_LOG_SUCCESS("2D Renderer shuted down");
+	FE_CORE_LOG_SUCCESS("2D/3D Renderers shuted down");
 	RendererShutdown(&g_fe_App.rendererData);
 	FE_CORE_LOG_SUCCESS("Renderer shuted down");
 	GetWindowAPI()->DestroyWindow(&g_fe_App.windowData);

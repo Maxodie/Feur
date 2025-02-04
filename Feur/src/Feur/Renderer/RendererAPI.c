@@ -9,6 +9,8 @@ static RendererAPI rendererAPI;
 void FE_DECL InitRendererAPISelection(RendererData* apiData)
 {
 	apiData->defaultClearColor = (FE_Color){ .r = 0.01f, .g = 0.01f, .b = 0.01f, .a = 1 };
+	apiData->pendingVertexShaderPath = "vulkan/VertexShader.vert";
+	apiData->pendingFragmentShaderPath = "vulkan/FragmentShader.frag";
 
 #ifdef FE_RENDER_SELECTED_API_OPENGL
 	rendererAPI.API_Type = FE_RENDERER_API_TYPE_OPENGL;
@@ -52,6 +54,14 @@ void FE_DECL InitRendererAPISelection(RendererData* apiData)
 		rendererAPI.Shutdown = VulkanShutdown_impl;
 
 		rendererAPI.OnWindowResized = VulkanOnWindowResized_impl;
+		
+		//images
+		rendererAPI.GetFrameImageView = VulkanGetFrameImageView;
+		//images
+
+		//shaders TODO : shader api
+		rendererAPI.UpdatePendingRenderPipelineShaders = VulkanUpdatePendingShaders_impl;
+		//shaders
 
 		//buffers
 		rendererAPI.bufferAPI.CreateVertexBuffer = VulkanCreateVertexBuffer_impl;
@@ -61,6 +71,7 @@ void FE_DECL InitRendererAPISelection(RendererData* apiData)
 
 		rendererAPI.bufferAPI.DestroyVertexBuffer = VulkanDestroyVertexBuffer_impl;
 		rendererAPI.bufferAPI.DestroyIndexBuffer = VulkanDestroyIndexBuffer_impl;
+
 
 		//GetRenderer_VertexArray_Buffer()->InitVaoBuffer = InitVulkan_VertexArrayBuffer;
 		break;

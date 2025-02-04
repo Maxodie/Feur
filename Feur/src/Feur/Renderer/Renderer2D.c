@@ -15,7 +15,7 @@ struct Renderer2DData
 	FE_Vertex3D* quadVertexPtr;
 	void* apiVertexBuffer;
 
-	ILDA_vector4f quadVertexPos[4];
+	ILDA_vector3f quadVertexPos[4];
 	ILDA_vector2f quadTexCoords[4];
 
 	SizeT quadIndexBufferCount;
@@ -39,10 +39,10 @@ struct Renderer2DData
 	.quadIndexPtr = NULL,
 	.apiIndexBuffer = NULL,
 	.quadVertexPos = {
-		{-0.5f, -0.5f, 0.0f, 1.0f},
-		{ 0.5f, -0.5f, 0.0f, 1.0f},
-		{ 0.5f,  0.5f, 0.0f, 1.0f},
-		{-0.5f,  0.5f, 0.0f, 1.0f},
+		{-0.5f, -0.5f, 0.0f},
+		{ 0.5f, -0.5f, 0.0f},
+		{ 0.5f,  0.5f, 0.0f},
+		{-0.5f,  0.5f, 0.0f},
 	},
 	.quadTexCoords = {
 		{0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f}
@@ -154,10 +154,10 @@ void FE_DECL FE_Renderer2DDrawQuad(const ILDA_vector3f* position, const ILDA_vec
 	static const Uint8 quadIndexCount = 6;
 
 	renderer2DData.quadIndexPtr[0] = renderer2DData.quadIndexOffset;
-	renderer2DData.quadIndexPtr[1] = renderer2DData.quadIndexOffset + 1;
+	renderer2DData.quadIndexPtr[1] = renderer2DData.quadIndexOffset + 3;
 	renderer2DData.quadIndexPtr[2] = renderer2DData.quadIndexOffset + 2;
 	renderer2DData.quadIndexPtr[3] = renderer2DData.quadIndexOffset + 2;
-	renderer2DData.quadIndexPtr[4] = renderer2DData.quadIndexOffset + 3;
+	renderer2DData.quadIndexPtr[4] = renderer2DData.quadIndexOffset + 1;
 	renderer2DData.quadIndexPtr[5] = renderer2DData.quadIndexOffset;
 	renderer2DData.quadIndexOffset += 4;
 
@@ -171,14 +171,13 @@ void FE_DECL FE_Renderer2DDrawQuad(const ILDA_vector3f* position, const ILDA_vec
 	ILDA_scale(&scale, &vec3);
 	ILDA_matrix4x4_mul_same(&transform, &scale);
 
-	ILDA_vector4f transformPos;
 	for (Uint8 i = 0; i < quadVertexCount; i++)
 	{
-		transformPos = ILDA_matrix4x4_mul_vector(&transform, &renderer2DData.quadVertexPos[i]);
-		renderer2DData.quadVertexPtr->position = (ILDA_vector3f){ transformPos.x, transformPos.y, transformPos.z };
+		renderer2DData.quadVertexPtr->transform = transform;
+		renderer2DData.quadVertexPtr->position = renderer2DData.quadVertexPos[i];
 		renderer2DData.quadVertexPtr->color = *color;
 		//renderer2DData.quadVertexPtr->texCoord = renderer2DData.quadTexCoords[i];
-		renderer2DData.quadVertexPtr->normal = (ILDA_vector3f){ 0 };
+		renderer2DData.quadVertexPtr->normal = (ILDA_vector3f){ 1.0f, 0.0f, 0.0f };
 
 		renderer2DData.quadVertexPtr ++;
 	}

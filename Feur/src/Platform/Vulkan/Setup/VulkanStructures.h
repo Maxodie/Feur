@@ -16,7 +16,7 @@ typedef struct FE_VulkanDescriptor
 typedef struct FE_VulkanUniformData
 {
 	FE_VulkanAllocatedBuffer* uniformBuffers;//static array
-	void** uniformBuffersMapped;//static array
+	FE_UniformBufferObject** uniformBuffersMapped;//static array
 } FE_VulkanUniformData;
 
 typedef struct FE_VulkanfeSwapChainSupportDetails 
@@ -108,6 +108,8 @@ typedef struct FE_VulkanInfo
 
 	//shaderc
 	shaderc_compiler_t shaderCompiler;
+	char cachedVertexShaderPath[255]; // TODO : create a path type to manage new length on copy dynamicly
+	char cachedFragmentShaderPath[255];
 
 	VkCommandPool graphicsCommandPool;
 	VkCommandBuffer* cmdBuffers;//static array
