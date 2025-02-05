@@ -59,7 +59,7 @@ Int64 FE_ListRemove_impl(FE_List_impl* list, Byte** data, const void* value, Siz
 
 	Uint32 id = 0;
 	Bool isFound = FALSE;
-	for (id = 0; id < list->count; id++)
+	for (id; id < list->count; id++)
 	{
 		isFound = memcmp((*data) + id * dataSize, value, dataSize) == 0;
 		if (isFound) break;

@@ -73,6 +73,8 @@ void FE_DECL StartApp()
 	AppInitECS();
 
 	FE_LayerStackInit(&g_fe_App.layerStack);
+
+	FE_FrameBufferSetup(&g_fe_App.frameBuffer, g_fe_App.windowData.w, g_fe_App.windowData.h);
 }
 
 Double FE_DECL GetDeltaTime()
@@ -105,7 +107,7 @@ void FE_DECL AppPrepareRender()
 	RenderCommandFrameCommandListBegin();
 	RenderCommandBeginRendering(&g_fe_App.rendererData.defaultClearColor);
 
-	RenderCommandSetRendererViewport(0, 0, g_fe_App.windowData.w, g_fe_App.windowData.h, 0, 1);
+	RenderCommandSetRendererViewport(g_fe_App.frameBuffer.posX, g_fe_App.frameBuffer.posY, g_fe_App.frameBuffer.w, g_fe_App.frameBuffer.h, 0, 1);
 	RenderCommandSetScissor(g_fe_App.windowData.w, g_fe_App.windowData.h);
 	RenderCommandBindPipeline();
 }
@@ -120,6 +122,7 @@ void FE_DECL AppUpdate(Double deltaTime)
 	}
 
 	NuklearGUIBeginRender();
+	RenderCommandSetRendererViewport(0, 0, g_fe_App.windowData.w, g_fe_App.windowData.h, 0, 1);
 
 	for (SizeT i = 0; i < FE_LayerStackGetCount(&g_fe_App.layerStack); i++)
 	{
@@ -240,6 +243,7 @@ void FE_DECL ShutdownApp()
 	FE_EntityDestroyRegistry(&g_fe_App.ecsRegistry);
 
 	g_fe_App.guiInterface.Shutdown();
+	NuklearGUIInterfaceShutdown(&g_fe_App.guiInterface);
 
 	FE_EventSystemClear(&g_fe_App.eventRegistry);
 

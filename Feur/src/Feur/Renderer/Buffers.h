@@ -10,3 +10,13 @@ typedef struct FE_BufferAPI
 	void (*DestroyVertexBuffer)(void* allocatedBuffer);
 	void (*DestroyIndexBuffer)(void* allocatedBuffer);
 } FE_BufferAPI;
+
+typedef struct FE_FrameBuffer 
+{
+	Uint32 posX;
+	Uint32 posY;
+	Uint32 w;
+	Uint32 h;
+} FE_FrameBuffer;
+
+void FE_DECL FE_FrameBufferSetup(FE_FrameBuffer* frameBuffer, Uint32 w, Uint32 h);

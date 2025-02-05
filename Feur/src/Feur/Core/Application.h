@@ -6,6 +6,7 @@ struct FE_EventData;
 typedef struct FE_App
 {
 	WindowData windowData;
+	FE_FrameBuffer frameBuffer;
 	RendererData rendererData;
 	LayerStack layerStack;
 

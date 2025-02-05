@@ -273,11 +273,13 @@ void OverlayUpdateSandboxLayerBase(Double dt)
 {
 }
 
+FE_GUIOverlay inspectorOverlay = { 0 };
+FE_GUIOverlay viewportOverlay = { 0 };
 void OverlayOnNuklearRender(NuklearGUIInterface* interface, Layer* layer)
 {
 	struct nk_context* context = (struct nk_context*)interface->handle;
 
-	if (FE_OverlayGUIBegin(interface, "#Nuklear Window", 500, 500, FE_WINDOW_TITLE | FE_WINDOW_SCALABLE | FE_WINDOW_MOVABLE))
+	if (FE_OverlayGUIBegin(&GetApp()->guiInterface, &inspectorOverlay))
 	{
 		nk_layout_row_dynamic(context, 20, 1);
 
@@ -338,7 +340,7 @@ void OverlayOnNuklearRender(NuklearGUIInterface* interface, Layer* layer)
 		}
 	}
 
-	FE_OverlayGUIEnd(interface);
+	FE_OverlayGUIEnd(&GetApp()->guiInterface, &inspectorOverlay);
 }
 
 void OverlayUpdateLayerBaseEventSandbox(FE_Event* event)
@@ -347,10 +349,20 @@ void OverlayUpdateLayerBaseEventSandbox(FE_Event* event)
 
 void OverlayOnAttachSandboxLayerBase(Layer* layer)
 {
+	FE_GridLayoutGUIInsertOverlay(&GetApp()->guiInterface, &inspectorOverlay, "#Nuklear Window", FE_OVERLAY_TITLE);
+	FE_GridLayoutGUIInsertOverlay(&GetApp()->guiInterface, &viewportOverlay, "#viewport", FE_OVERLAY_TITLE);
+	FE_GridLayoutGUIDockOverlay(&GetApp()->guiInterface, &viewportOverlay, 0, FE_OVERLAY_POSITION_CENTER);
+	FE_GridLayoutGUIDockOverlay(&GetApp()->guiInterface, &inspectorOverlay, viewportOverlay.overlayId, FE_OVERLAY_POSITION_LEFT);
+	FE_FrameBuffer* frameBuffer = &GetApp()->frameBuffer;
+	frameBuffer->w = viewportOverlay.rect.size.x;
+	frameBuffer->h = viewportOverlay.rect.size.y;
+	frameBuffer->posX = viewportOverlay.rect.position.x;
+	frameBuffer->posY = viewportOverlay.rect.position.y;
 }
 
 void OverlayEndLayer()
 {
+	FE_GridLayoutGUIRemoveOverlay(&GetApp()->guiInterface, &inspectorOverlay);
 }
 
 #endif
