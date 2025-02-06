@@ -49,7 +49,7 @@ void* FE_DECL FE_MemoryFreeListAllocatorAlloc(FE_MemoryFreeListAllocator* alloca
         else
         {
             //Else create a new FreeBlock containing remaining memory 
-            FreeBlock* next_block = (FreeBlock*)(currentFreeBlock + total_size);
+            FreeBlock* next_block = (FreeBlock*)((UintptrT)currentFreeBlock + total_size);
 
             next_block->size = currentFreeBlock->size - total_size;
             next_block->next = currentFreeBlock->next;
