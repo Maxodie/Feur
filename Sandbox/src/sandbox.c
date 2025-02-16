@@ -55,7 +55,7 @@ void StartSandbox()
 	AddLayerApp(&layer);
 	AddOverlayLayerApp(&overlayLayer);
 
-//	==========================    FE_list test 
+//	==========================    FE_list test
 	/*FE_List(Uint32) test = { 0 };
 	FE_ListInit(test);
 	FE_ListEmplace(test, Uint32, 59);
@@ -223,7 +223,7 @@ void LoadNewModelTask()
 
 void OnNuklearRender(NuklearGUIInterface* interface, Layer* layer)
 {
-	
+
 }
 
 
@@ -257,29 +257,88 @@ void UpdateLayerBaseEventSandbox(FE_Event* event)
 //	{
 //		FE_LOG_ERROR("ERROR::sandbox.c file buffer of %s is NULL !", filePath);
 //	}
-//	
+//
 //	fclose(fptr);
 //	return buffer;*/
 //}
 
-void EndLayer() 
+void EndLayer()
 {
 	FE_ECSComputeSystem(FE_ECSComputeFreeModels, GetApp()->modelComp, &GetApp()->ecsContext);
 }
 
 
+
+Uint32 inspectorOverlay = { 0 };
+Uint32 profilerOverlay = { 0 };
+Uint32 testOverlay = { 0 };
+Uint32 viewportOverlay = { 0 };
 //Overlay
 void OverlayUpdateSandboxLayerBase(Double dt)
 {
+	FE_GUIOverlay* viewport = FE_GUIQueryOverlayByID(&GetApp()->guiInterface, viewportOverlay);
+	FE_FrameBuffer* fb = &GetApp()->frameBuffer;
+	if (viewport->rect.size.x != fb->w || viewport->rect.size.y != fb->h ||
+		viewport->rect.position.x != fb->posX || viewport->rect.position.y != fb->posY)
+	{
+		FE_FrameBufferResize(
+			fb,
+			viewport->rect.position.x, viewport->rect.position.y,
+			viewport->rect.size.x, viewport->rect.size.y
+		);
+	}
 }
 
-FE_GUIOverlay inspectorOverlay = { 0 };
-FE_GUIOverlay viewportOverlay = { 0 };
 void OverlayOnNuklearRender(NuklearGUIInterface* interface, Layer* layer)
 {
 	struct nk_context* context = (struct nk_context*)interface->handle;
 
-	if (FE_OverlayGUIBegin(&GetApp()->guiInterface, &inspectorOverlay))
+	//if (FE_OverlayGUIBegin(interface, testOverlay))
+	//{
+	//	nk_layout_row_dynamic(context, 20, 1);
+
+	//	//stats
+	//	FE_StringFormat(bufferCountBuf, "ms : %f", currentUpdateDt);
+	//	nk_label(context, bufferCountBuf, NK_TEXT_LEFT);
+
+	//	FE_StringFormat(vertexCountBuf, "vertex count : %lld", totalVertexCount);
+	//	nk_label(context, vertexCountBuf, NK_TEXT_LEFT);
+
+	//	FE_StringFormat(indicesCountBuf, "index count : %lld", totalIndexCount);
+	//	nk_label(context, indicesCountBuf, NK_TEXT_LEFT);
+
+	//	FE_StringFormat(bufferCountBuf, "total vertex buffer count : %lld", FE_Renderer3DGetVertexBufferCount() + FE_Renderer2DGetVertexBufferCount());
+	//	nk_label(context, bufferCountBuf, NK_TEXT_LEFT);
+	//	//stats
+
+	//	FE_OverlayGUIEnd(interface, testOverlay);
+	//}
+
+
+
+	if (FE_OverlayGUIBegin(interface, profilerOverlay))
+	{
+		nk_layout_row_dynamic(context, 20, 1);
+
+		//stats
+		FE_StringFormat(bufferCountBuf, "ms : %f", currentUpdateDt);
+		nk_label(context, bufferCountBuf, NK_TEXT_LEFT);
+
+		FE_StringFormat(vertexCountBuf, "vertex count : %lld", totalVertexCount);
+		nk_label(context, vertexCountBuf, NK_TEXT_LEFT);
+
+		FE_StringFormat(indicesCountBuf, "index count : %lld", totalIndexCount);
+		nk_label(context, indicesCountBuf, NK_TEXT_LEFT);
+
+		FE_StringFormat(bufferCountBuf, "total vertex buffer count : %lld", FE_Renderer3DGetVertexBufferCount() + FE_Renderer2DGetVertexBufferCount());
+		nk_label(context, bufferCountBuf, NK_TEXT_LEFT);
+		//stats
+
+		FE_OverlayGUIEnd(interface, profilerOverlay);
+	}
+
+
+	if (FE_OverlayGUIBegin(interface, inspectorOverlay))
 	{
 		nk_layout_row_dynamic(context, 20, 1);
 
@@ -307,20 +366,6 @@ void OverlayOnNuklearRender(NuklearGUIInterface* interface, Layer* layer)
 			FE_EventPostTask(&GetApp()->eventRegistry, LoadNewModelTask);
 		}
 
-		//stats
-		FE_StringFormat(bufferCountBuf, "ms : %f", currentUpdateDt);
-		nk_label(context, bufferCountBuf, NK_TEXT_LEFT);
-
-		FE_StringFormat(vertexCountBuf, "vertex count : %lld", totalVertexCount);
-		nk_label(context, vertexCountBuf, NK_TEXT_LEFT);
-
-		FE_StringFormat(indicesCountBuf, "index count : %lld", totalIndexCount);
-		nk_label(context, indicesCountBuf, NK_TEXT_LEFT);
-
-		FE_StringFormat(bufferCountBuf, "total vertex buffer count : %lld", FE_Renderer3DGetVertexBufferCount() + FE_Renderer2DGetVertexBufferCount());
-		nk_label(context, bufferCountBuf, NK_TEXT_LEFT);
-
-		//stats
 		FE_PropertyGUITransformField(interface, cubeTransform);
 
 		nk_layout_row_dynamic(context, 20, 1);
@@ -338,9 +383,10 @@ void OverlayOnNuklearRender(NuklearGUIInterface* interface, Layer* layer)
 			nk_layout_row_dynamic(context, 25, 1);
 			nk_combo_end(context);
 		}
+
+		FE_OverlayGUIEnd(interface, inspectorOverlay);
 	}
 
-	FE_OverlayGUIEnd(&GetApp()->guiInterface, &inspectorOverlay);
 }
 
 void OverlayUpdateLayerBaseEventSandbox(FE_Event* event)
@@ -349,20 +395,27 @@ void OverlayUpdateLayerBaseEventSandbox(FE_Event* event)
 
 void OverlayOnAttachSandboxLayerBase(Layer* layer)
 {
-	FE_GridLayoutGUIInsertOverlay(&GetApp()->guiInterface, &inspectorOverlay, "#Nuklear Window", FE_OVERLAY_TITLE);
-	FE_GridLayoutGUIInsertOverlay(&GetApp()->guiInterface, &viewportOverlay, "#viewport", FE_OVERLAY_TITLE);
-	FE_GridLayoutGUIDockOverlay(&GetApp()->guiInterface, &viewportOverlay, 0, FE_OVERLAY_POSITION_CENTER);
-	FE_GridLayoutGUIDockOverlay(&GetApp()->guiInterface, &inspectorOverlay, viewportOverlay.overlayId, FE_OVERLAY_POSITION_LEFT);
-	FE_FrameBuffer* frameBuffer = &GetApp()->frameBuffer;
-	frameBuffer->w = viewportOverlay.rect.size.x;
-	frameBuffer->h = viewportOverlay.rect.size.y;
-	frameBuffer->posX = viewportOverlay.rect.position.x;
-	frameBuffer->posY = viewportOverlay.rect.position.y;
+	NuklearGUIInterface* api = &GetApp()->guiInterface;
+
+    FE_CORE_LOG_DEBUG("Start dock 1");
+	inspectorOverlay = FE_GUICreateOverlay(api, "#Nuklear Window");
+	viewportOverlay = FE_GUICreateOverlay(api, "#viewport");
+	profilerOverlay = FE_GUICreateOverlay(api, "#profiler");
+	//testOverlay = FE_GUICreateOverlay(api, "#test window");
+    FE_CORE_LOG_DEBUG("Start dock 2");
+
+	//FE_DockGUIDockOverlay(api, viewportOverlay, 0, FE_OVERLAY_POSITION_CENTER);
+	FE_DockGUIDockOverlay(api, inspectorOverlay, 0, FE_OVERLAY_POSITION_LEFT);
+	FE_DockGUIDockOverlay(api, profilerOverlay, 0, FE_OVERLAY_POSITION_LEFT);
+	//FE_DockGUIDockOverlay(api, testOverlay, viewportOverlay, FE_OVERLAY_POSITION_BOTTOM);
+	FE_DockGUIPrintCurrentState(api);
+    FE_CORE_LOG_DEBUG("Start dock 3");
+//	FE_GridLayoutGUIUndockOverlay(api, &inspectorOverlay);
 }
 
 void OverlayEndLayer()
 {
-	FE_GridLayoutGUIRemoveOverlay(&GetApp()->guiInterface, &inspectorOverlay);
+	//FE_GridLayoutGUIRemoveOverlay(&GetApp()->guiInterface, &inspectorOverlay);
 }
 
 #endif

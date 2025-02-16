@@ -1,10 +1,12 @@
 # Directories
+.cache/
 .vs/
 bin/
 bin-int/
 Binaries/
 Feur/vendor/SDL2/SDL/Intermediate/
 build/
+
 # Files
 *.user
 *.obj
@@ -15,3 +17,5 @@ build/
 *.vcxproj.filters
 *.vcxproj.user
 *.sln
+.clang
+Makefiles
