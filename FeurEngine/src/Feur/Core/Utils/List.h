@@ -10,7 +10,7 @@ typedef struct FE_List_impl {
 //FE_List must be freed with FE_ListClear(a)
 #define FE_List(type)  struct { FE_List_impl impl; type* data; }
 //with 'fe_list' an FE_List(type)
-#define FE_ListGet(fe_list)  { fe_list.impl, fe_list.data }
+#define FE_ListGet(fe_list, id) FE_ListGet_imp(&(fe_list).impl, (Byte*)fe_list.data, id, sizeof(*(fe_list).data))
 
 //Put list as a parameter
 #define FE_ListParameterPtr(type) FE_List_impl*
@@ -67,6 +67,8 @@ FE_CORE_ASSERT(FE_ListPushArray_impl(&(fe_list).impl, (Byte**)&(fe_list).data, (
 
 
 Bool FE_DECL FE_ListInit_impl(FE_List_impl* list, Byte** data);
+void* FE_DECL FE_ListGet_imp(FE_List_impl* list, Byte* data, SizeT id, SizeT dataSize);
+
 Bool FE_DECL FE_ListPop_impl(FE_List_impl* list, Byte** data);
 Int64 FE_DECL FE_ListRemove_impl(FE_List_impl* list, Byte** data, const void* value, SizeT dataSize);
 Bool FE_DECL FE_ListRemoveAt_impl(FE_List_impl* list, Byte** data, Uint32 id, SizeT dataSize);
@@ -78,7 +80,7 @@ Bool FE_DECL FE_ListPushArray_impl(FE_List_impl* list, Byte** data, const void* 
 
 Bool FE_DECL FE_ListReserve_impl(FE_List_impl* list, Byte** data, SizeT amount, SizeT dataSize);
 Bool FE_DECL FE_ListResize_impl(FE_List_impl* list, Byte** data, SizeT amount, SizeT dataSize);
-Bool FE_DECL FE_ListClear_impl(FE_List_impl* list, Byte** data); 
+Bool FE_DECL FE_ListClear_impl(FE_List_impl* list, Byte** data);
 
 Bool FE_DECL FE_ListRemoveDuplicate_impl(FE_List_impl* list, Byte** data, SizeT dataSize);
 

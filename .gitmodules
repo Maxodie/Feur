@@ -1,15 +1,15 @@
-[submodule "Feur/vendor/glfw/GLFW"]
-	path = Feur/vendor/glfw/GLFW
+[submodule "FeurEngine/vendor/glfw/GLFW"]
+	path = FeurEngine/vendor/glfw/GLFW
 	url = https://github.com/glfw/glfw
-[submodule "Feur/vendor/nuklear/Nuklear"]
-	path = Feur/vendor/nuklear/Nuklear
+[submodule "FeurEngine/vendor/nuklear/Nuklear"]
+	path = FeurEngine/vendor/nuklear/Nuklear
 	url = https://github.com/Immediate-Mode-UI/Nuklear
-[submodule "Feur/vendor/VulkanSDK/VulkanMemoryAllocator"]
-	path = Feur/vendor/VulkanSDK/VulkanMemoryAllocator
+[submodule "FeurEngine/vendor/VulkanSDK/VulkanMemoryAllocator"]
+	path = FeurEngine/vendor/VulkanSDK/VulkanMemoryAllocator
 	url = https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
-[submodule "Feur/vendor/Mathilda/Mathilda"]
-	path = Feur/vendor/Mathilda/Mathilda
+[submodule "FeurEngine/vendor/Mathilda/Mathilda"]
+	path = FeurEngine/vendor/Mathilda/Mathilda
 	url = https://github.com/Maxodie/Mathilda
-[submodule "Feur/vendor/assimp/assimp"]
-	path = Feur/vendor/assimp/assimp
+[submodule "FeurEngine/vendor/assimp/assimp"]
+	path = FeurEngine/vendor/assimp/assimp
 	url = https://github.com/assimp/assimp

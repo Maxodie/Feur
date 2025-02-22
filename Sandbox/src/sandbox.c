@@ -405,8 +405,8 @@ void OverlayOnAttachSandboxLayerBase(Layer* layer)
     FE_CORE_LOG_DEBUG("Start dock 2");
 
 	//FE_DockGUIDockOverlay(api, viewportOverlay, 0, FE_OVERLAY_POSITION_CENTER);
-	FE_DockGUIDockOverlay(api, inspectorOverlay, 0, FE_OVERLAY_POSITION_LEFT);
-	FE_DockGUIDockOverlay(api, profilerOverlay, 0, FE_OVERLAY_POSITION_LEFT);
+    FE_DockGUIDockOverlay(api, inspectorOverlay, 0, FE_OVERLAY_POSITION_LEFT);
+    FE_DockGUIDockOverlay(api, profilerOverlay, 0, FE_OVERLAY_POSITION_LEFT);
 	//FE_DockGUIDockOverlay(api, testOverlay, viewportOverlay, FE_OVERLAY_POSITION_BOTTOM);
 	FE_DockGUIPrintCurrentState(api);
     FE_CORE_LOG_DEBUG("Start dock 3");

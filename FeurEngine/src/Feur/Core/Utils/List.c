@@ -11,6 +11,23 @@ Bool FE_DECL FE_ListCheck(FE_List_impl* list, Byte** data)
 	return list != NULL && NULL != data && list->isInitialized == TRUE;
 }
 
+void* FE_DECL FE_ListGet_imp(FE_List_impl* list, Byte* data, SizeT id, SizeT dataSize)
+{
+	if (!FE_ListCheck(list, &data))
+	{
+		FE_CORE_LOG_ERROR("failed to get");
+		return NULL;
+	}
+
+    if(list->count > id && id >= 0)
+    {
+        return data + id * dataSize;
+    }
+
+	FE_CORE_LOG_ERROR("failed to get");
+    return NULL;
+}
+
 Bool FE_DECL FE_ListInit_impl(FE_List_impl* list, Byte** data)
 {
 	list->count = 0;
@@ -29,7 +46,7 @@ Bool FE_DECL FE_ListPop_impl(FE_List_impl* list, Byte** data)
 		FE_CORE_LOG_ERROR("failed to pop");
 		return FALSE;
 	}
-	
+
 	list->count--;
 
 	/*if (list->count == 0)
@@ -117,9 +134,9 @@ Bool FE_DECL FE_ListInsert_impl(FE_List_impl* list, Byte** data, const void* val
 
 
 	//data[dataSize * (list->count - 1)] = NULL;
-	
+
 	SizeT bytePos = dataSize * position;
-	
+
 	//for (SizeT i = dataSize * (list->count+1); i > bytePos; i--) //move data to the end of the array
 	//{
 	//	*((*data) + i) = *((*data) + (i - dataSize));
@@ -131,7 +148,7 @@ Bool FE_DECL FE_ListInsert_impl(FE_List_impl* list, Byte** data, const void* val
 	}
 
 	list->count++;
-	
+
 	memcpy((*data) + dataSize * position, value, dataSize);
 
 	return TRUE;

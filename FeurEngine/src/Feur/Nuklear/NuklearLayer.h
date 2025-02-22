@@ -27,10 +27,10 @@ typedef enum FE_GUIOverlayPositions
 
 typedef enum FE_GUIDockType
 {
-	FE_GUI_DOCK_UNKNOWN,
+    FE_GUI_DOCK_TAB,
 	FE_GUI_DOCK_VERTICAL,
 	FE_GUI_DOCK_HORIZONTAL,
-	FE_GUI_DOCK_TAB,
+    FE_GUI_DOCK_UNKNOWN,
 } FE_GUIDockType;
 
 typedef struct FE_GUIRect
@@ -55,7 +55,7 @@ typedef struct FE_GUIDock
 {
 	Bool isDestroyed;
 	FE_GUIRect rect;
-	SizeT linkedOverlayId;
+	Int32 linkedOverlayId;
 	FE_GUIDockType type;
 	SizeT id;
 	FE_List(SizeT) childrenDockId;
@@ -110,7 +110,7 @@ void FE_DECL FE_DockGUIUndockOverlay(NuklearGUIInterface* api, FE_GUIOverlay* ov
 
 // query
 FE_GUIOverlay* FE_DECL FE_GUIQueryOverlayByID(const NuklearGUIInterface* api, Uint32 overlayId);
-FE_GUIDock* FE_DECL FE_GUIQuesryDockByID(NuklearGUIInterface* api, SizeT dockId);
+FE_GUIDock* FE_DECL FE_GUIQueryDockByID(NuklearGUIInterface* api, SizeT dockId);
 
 // window
 Bool FE_DECL FE_OverlayGUIBegin(const NuklearGUIInterface* api, Uint32 overlayId);

@@ -45,6 +45,7 @@ message("==== Feur build (${CMAKE_BUILD_TYPE}) ====")
 set(FE_BIN_OUTPUT_DIR "/bin/${CMAKE_BUILD_TYPE}-${CMAKE_SYSTEM_NAME}-${ARCHITECTURE}")
 set(FE_OUTPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}${FE_BIN_OUTPUT_DIR}")
 
+
 set(CMAKE_C_FLAGS "")
 set(CMAKE_CXX_FLAGS "")
 set(CMAKE_C_FLAGS_DEBUG "")
@@ -54,7 +55,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "")
 set(CMAKE_C_FLAGS_DIST "")
 set(CMAKE_CXX_FLAGS_DIST "")
 
-project("Feur")
+project(Feur)
 include(FeurEngine/FeurEngine.cmake)
 include(Sandbox/Sandbox.cmake)
 include(FeurEngine/vendor/nuklear/Nuklear.cmake)

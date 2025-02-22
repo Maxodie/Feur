@@ -182,7 +182,7 @@ SizeT FE_DockGUISlice(NuklearGUIInterface* api, SizeT dockId, FE_GUIOverlayPosit
 		if (!childrenCount)
 		{
 			FE_GUIRect defaultRect = { { 0, 0}, { FE_GUIQueryDockByID(api, dockId)->rect.size.x, FE_GUIQueryDockByID(api, dockId)->rect.size.y / 2} };
-			Int32 firstContent = FE_DockGUICreate(api, FE_GUI_DOCK_UNKNOWN, &defaultRect);
+			SizeT firstContent = FE_DockGUICreate(api, FE_GUI_DOCK_UNKNOWN, &defaultRect);
 			FE_GUIQueryDockByID(api, firstContent)->linkedOverlayId = FE_GUIQueryDockByID(api, dockId)->linkedOverlayId;
 			FE_GUIQueryDockByID(api, dockId)->linkedOverlayId = -1;
 			FE_ListPush(FE_GUIQueryDockByID(api, dockId)->childrenDockId, firstContent);
@@ -219,7 +219,7 @@ SizeT FE_DockGUISlice(NuklearGUIInterface* api, SizeT dockId, FE_GUIOverlayPosit
 		if (!childrenCount)
 		{
 			FE_GUIRect defaultRect = { { 0, 0}, { FE_GUIQueryDockByID(api, dockId)->rect.size.x / 2, FE_GUIQueryDockByID(api, dockId)->rect.size.y} };
-			Int32 firstContent = FE_DockGUICreate(api, FE_GUI_DOCK_UNKNOWN, &defaultRect);
+			SizeT firstContent = FE_DockGUICreate(api, FE_GUI_DOCK_UNKNOWN, &defaultRect);
 			FE_GUIQueryDockByID(api, firstContent)->linkedOverlayId = FE_GUIQueryDockByID(api, dockId)->linkedOverlayId;
 			FE_GUIQueryDockByID(api, dockId)->linkedOverlayId = -1;
 			FE_ListPush(FE_GUIQueryDockByID(api, dockId)->childrenDockId, firstContent);

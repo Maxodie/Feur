@@ -188,7 +188,6 @@ target_compile_options(FeurEngine PRIVATE
   $<$<AND:$<CONFIG:Debug>,$<COMPILE_LANGUAGE:C>>:-g>
 
 
-  $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:C>>:-g>
   $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:C>>:-O2>
 
 
