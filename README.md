@@ -11,7 +11,6 @@
 
 ## Build :
 Feur is currently using CMake. By default it also generate a compile\_commands.json.
-Premake5 is depricated for now.
 
 There are 3 build types : Debug; Release; Dist
 ### Exemples :
