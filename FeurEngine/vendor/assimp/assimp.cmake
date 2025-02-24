@@ -41,9 +41,9 @@ add_library(TARGET_MODEL_LOADER INTERFACE)
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
   set_target_properties(assimp PROPERTIES
     OUTPUT_NAME assimp
-    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/FeurEngine/vendor/assimp/${FE_BIN_OUTPUT_DIR}/assimp"
-    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/FeurEngine/vendor/assimp/${FE_BIN_OUTPUT_DIR}/assimp"
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/FeurEngine/vendor/assimp/${FE_BIN_OUTPUT_DIR}/assimp"
+    ARCHIVE_OUTPUT_DIRECTORY "${FE_OUTPUT_DIR}/Assimp"
+    LIBRARY_OUTPUT_DIRECTORY "${FE_OUTPUT_DIR}/Assimp"
+    RUNTIME_OUTPUT_DIRECTORY "${FE_OUTPUT_DIR}/Assimp"
   )
 endif()
 
@@ -52,6 +52,9 @@ target_compile_options(assimp PRIVATE
 
 
   $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:C>>:-O2>
+
+
+  $<$<AND:$<CONFIG:Dist>,$<COMPILE_LANGUAGE:C>>:-O2>
 )
 
 target_link_libraries(TARGET_MODEL_LOADER INTERFACE assimp::assimp)

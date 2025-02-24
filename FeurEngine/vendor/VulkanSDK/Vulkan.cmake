@@ -1,6 +1,6 @@
 ﻿message("==== Vulkan build (${CMAKE_BUILD_TYPE}) ====")
 
-add_library("Vulkan" STATIC
+add_library(Vulkan STATIC
     FeurEngine/vendor/VulkanSDK/1.3.290.0/Include/dxc/WinAdapter.h
     FeurEngine/vendor/VulkanSDK/1.3.290.0/Include/dxc/dxcapi.h
         FeurEngine/vendor/VulkanSDK/1.3.290.0/Include/glslang/Include/ResourceLimits.h
@@ -73,30 +73,41 @@ add_library("Vulkan" STATIC
     FeurEngine/vendor/VulkanSDK/1.3.290.0/Source/SPIRV-Reflect/spirv_reflect.h
 )
 
-set_target_properties("Vulkan" PROPERTIES
-    OUTPUT_NAME "Vulkan"
-    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/FeurEngine/vendor/VulkanSDK/bin/Debug-windows-x86_64/Vulkan"
-    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/FeurEngine/vendor/VulkanSDK/bin/Debug-windows-x86_64/Vulkan"
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/FeurEngine/vendor/VulkanSDK/bin/Debug-windows-x86_64/Vulkan"
+set_target_properties(Vulkan PROPERTIES
+    OUTPUT_NAME Vulkan
+    ARCHIVE_OUTPUT_DIRECTORY "${FE_OUTPUT_DIR}/VulkanSDK"
+    LIBRARY_OUTPUT_DIRECTORY "${FE_OUTPUT_DIR}/VulkanSDK"
+    RUNTIME_OUTPUT_DIRECTORY "${FE_OUTPUT_DIR}/VulkanSDK"
 )
 
-target_include_directories("Vulkan" PRIVATE
+target_include_directories(Vulkan PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/FeurEngine/vendor/VulkanSDK/1.3.290.0/Include"
 )
 
-target_compile_definitions("Vulkan" PRIVATE
+target_compile_definitions(Vulkan PRIVATE
     $<$<CONFIG:Debug>:_CRT_SECURE_NO_WARNINGS>
     $<$<CONFIG:Debug>:WIN32>
     $<$<CONFIG:Debug>:_DEBUG>
     $<$<CONFIG:Debug>:DEBUG>
     $<$<CONFIG:Debug>:_WINDOWS>
+
+
+    $<$<CONFIG:Release>:_CRT_SECURE_NO_WARNINGS>
+    $<$<CONFIG:Release>:WIN32>
+    $<$<CONFIG:Release>:NDEBUG>
+    $<$<CONFIG:Release>:PROFILE>
+    $<$<CONFIG:Release>:_WINDOWS>
+
+
+    $<$<CONFIG:Dist>:_CRT_SECURE_NO_WARNINGS>
 )
 
-target_link_libraries("Vulkan"
+target_link_libraries(Vulkan
     "${CMAKE_CURRENT_SOURCE_DIR}/FeurEngine/vendor/VulkanSDK/1.3.290.0/Lib/vulkan-1.lib"
     "${CMAKE_CURRENT_SOURCE_DIR}/FeurEngine/vendor/VulkanSDK/1.3.290.0/Lib/shaderc_shared.lib"
 )
-target_compile_options("Vulkan" PRIVATE
+
+target_compile_options(Vulkan PRIVATE
     $<$<AND:$<CONFIG:Debug>,$<COMPILE_LANGUAGE:C>>:-m64>
     $<$<AND:$<CONFIG:Debug>,$<COMPILE_LANGUAGE:C>>:-ffast-math>
     $<$<AND:$<CONFIG:Debug>,$<COMPILE_LANGUAGE:C>>:-O2>
@@ -111,6 +122,20 @@ target_compile_options("Vulkan" PRIVATE
     $<$<AND:$<CONFIG:Debug>,$<COMPILE_LANGUAGE:CXX>>:-Wextra>
 
 
+    $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:C>>:-m64>
+    $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:C>>:-ffast-math>
+    $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:C>>:-O2>
+    $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:C>>:-g>
+    $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:C>>:-Wall>
+    $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:C>>:-Wextra>
+    $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:CXX>>:-m64>
+    $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:CXX>>:-ffast-math>
+    $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:CXX>>:-O2>
+    $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:CXX>>:-g>
+    $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:CXX>>:-Wall>
+    $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:CXX>>:-Wextra>
+
+
     $<$<AND:$<CONFIG:Dist>,$<COMPILE_LANGUAGE:C>>:-m64>
     $<$<AND:$<CONFIG:Dist>,$<COMPILE_LANGUAGE:C>>:-ffast-math>
     $<$<AND:$<CONFIG:Dist>,$<COMPILE_LANGUAGE:C>>:-Wall>
@@ -119,64 +144,4 @@ target_compile_options("Vulkan" PRIVATE
     $<$<AND:$<CONFIG:Dist>,$<COMPILE_LANGUAGE:CXX>>:-ffast-math>
     $<$<AND:$<CONFIG:Dist>,$<COMPILE_LANGUAGE:CXX>>:-Wall>
     $<$<AND:$<CONFIG:Dist>,$<COMPILE_LANGUAGE:CXX>>:-Wextra>
-)
-if(CMAKE_BUILD_TYPE STREQUAL Release)
-set_target_properties("Vulkan" PROPERTIES
-    OUTPUT_NAME "Vulkan"
-    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/FeurEngine/vendor/VulkanSDK/bin/Release-windows-x86_64/Vulkan"
-    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/FeurEngine/vendor/VulkanSDK/bin/Release-windows-x86_64/Vulkan"
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/FeurEngine/vendor/VulkanSDK/bin/Release-windows-x86_64/Vulkan"
-)
-endif()
-target_include_directories("Vulkan" PRIVATE
-  "${CMAKE_CURRENT_SOURCE_DIR}/FeurEngine/vendor/vulkan/1.3.290.0/Include"
-)
-target_compile_definitions("Vulkan" PRIVATE
-  $<$<CONFIG:Release>:_CRT_SECURE_NO_WARNINGS>
-  $<$<CONFIG:Release>:WIN32>
-  $<$<CONFIG:Release>:NDEBUG>
-  $<$<CONFIG:Release>:PROFILE>
-  $<$<CONFIG:Release>:_WINDOWS>
-)
-target_link_directories("Vulkan" PRIVATE
-)
-target_link_libraries("Vulkan"
-  "${CMAKE_CURRENT_SOURCE_DIR}/FeurEngine/vendor/VulkanSDK/1.3.290.0/Lib/vulkan-1.lib"
-  "${CMAKE_CURRENT_SOURCE_DIR}/FeurEngine/vendor/VulkanSDK/1.3.290.0/Lib/shaderc_shared.lib"
-)
-target_compile_options("Vulkan" PRIVATE
-  $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:C>>:-m64>
-  $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:C>>:-ffast-math>
-  $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:C>>:-O2>
-  $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:C>>:-g>
-  $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:C>>:-Wall>
-  $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:C>>:-Wextra>
-  $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:CXX>>:-m64>
-  $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:CXX>>:-ffast-math>
-  $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:CXX>>:-O2>
-  $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:CXX>>:-g>
-  $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:CXX>>:-Wall>
-  $<$<AND:$<CONFIG:Release>,$<COMPILE_LANGUAGE:CXX>>:-Wextra>
-)
-if(CMAKE_BUILD_TYPE STREQUAL Dist)
-  set_target_properties("Vulkan" PROPERTIES
-    OUTPUT_NAME "Vulkan"
-    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/FeurEngine/vendor/VulkanSDK/bin/Dist-windows-x86_64/Vulkan"
-    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/FeurEngine/vendor/VulkanSDK/bin/Dist-windows-x86_64/Vulkan"
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/FeurEngine/vendor/VulkanSDK/bin/Dist-windows-x86_64/Vulkan"
-  )
-endif()
-target_include_directories("Vulkan" PRIVATE
-  "${CMAKE_CURRENT_SOURCE_DIR}/FeurEngine/vendor/VulkanSDK/1.3.290.0/Include"
-)
-target_compile_definitions("Vulkan" PRIVATE
-  $<$<CONFIG:Dist>:_CRT_SECURE_NO_WARNINGS>
-)
-target_link_directories("Vulkan" PRIVATE
-)
-target_link_libraries("Vulkan"
-  "${CMAKE_CURRENT_SOURCE_DIR}/FeurEngine/vendor/VulkanSDK/1.3.290.0/Lib/vulkan-1.lib"
-  "${CMAKE_CURRENT_SOURCE_DIR}/FeurEngine/vendor/VulkanSDK/1.3.290.0/Lib/shaderc_shared.lib"
-)
-target_compile_options("Vulkan" PRIVATE
 )

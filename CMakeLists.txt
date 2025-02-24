@@ -2,10 +2,12 @@
 project(FeurEngine VERSION 1.0.0)
 cmake_policy(SET CMP0072 NEW)
 
-
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS "ON" CACHE STRING "export compile commands.")
+message("==== Feur export compile commands set to ${CMAKE_EXPORT_COMPILE_COMMANDS} ====")
+set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "${CMAKE_EXPORT_COMPILE_COMMANDS}")
 
 if(CMAKE_EXPORT_COMPILE_COMMANDS)
+    message("==== Feur create .clang file to store 'CompilationDatabase: build/' ====")
     file(WRITE ".clang"
         "CompileFlags:
             CompilationDatabase: build/"
