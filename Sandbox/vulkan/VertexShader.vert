@@ -3,9 +3,9 @@
 layout(binding = 0) uniform FE_UniformBufferObject
 {
     mat4 mvp;
-	vec4 ambientLightColor; 
+	vec4 ambientLightColor;
     vec3 lightPosition;
-	vec4 lightColor; 
+	vec4 lightColor;
 } ubo;
 
 layout(location = 0) in vec3 inPosition;

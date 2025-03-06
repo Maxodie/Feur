@@ -132,7 +132,7 @@ void VulkanBeginRendering_impl(FE_Color* clearColor)
 		(Uint32)vkInfo->swapChain.images.impl.count, vkInfo->imageBarriers
 	);
 
-	VkClearValue colorClearValue = { 
+	VkClearValue colorClearValue = {
 		.color = {
 			.float32[0] = clearColor->r,
 			.float32[1] = clearColor->g,
@@ -191,7 +191,7 @@ void VulkanSetScissor_impl(Uint32 width, Uint32 height)
 {
 	//if (!CanVulkanContinueRendering()) return;
 
-	VkRect2D scissor = { 
+	VkRect2D scissor = {
 		.offset.x = 0,
 		.offset.y = 0,
 		.extent.width = width,
@@ -353,7 +353,7 @@ void VulkanShutdown_impl()
 	VulkanDestroyUniformBuffer(vkInfo);
 
 	VulkanDestroyDescriptorSets(vkInfo);
-	VulkanDestroyDescriptorPool(vkInfo); 
+	VulkanDestroyDescriptorPool(vkInfo);
 
 	VulkanDestroyAllocator(vkInfo);
 	VulkanDestroySemaphoresAndFences(vkInfo);

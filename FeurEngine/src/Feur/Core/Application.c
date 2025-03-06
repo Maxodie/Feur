@@ -108,7 +108,7 @@ void FE_DECL AppPrepareRender()
 	RenderCommandBeginRendering(&g_fe_App.rendererData.defaultClearColor);
 
 	RenderCommandSetRendererViewport(g_fe_App.frameBuffer.posX, g_fe_App.frameBuffer.posY, g_fe_App.frameBuffer.w, g_fe_App.frameBuffer.h, 0, 1);
-	RenderCommandSetScissor(g_fe_App.windowData.w, g_fe_App.windowData.h);
+	RenderCommandSetScissor(g_fe_App.frameBuffer.w, g_fe_App.frameBuffer.h);
 	RenderCommandBindPipeline();
 }
 
@@ -219,8 +219,6 @@ Bool FE_DECL OnWindowResizing(FE_EventData* eventData)
 	eventData->windowData->isMinimized = FALSE;
 	RendererOnWindowResize(eventData->windowData->w, eventData->windowData->h);//not frame limited so it can use a lot of GPU performence now
     NuklearGUIOnWindowResize(&g_fe_App.guiInterface, eventData->windowData->w, eventData->windowData->h);
-
-	FE_ECSComputeSystem(FE_ECSComputeAspectRatioUpdate, g_fe_App.cam3DComp, &g_fe_App.ecsContext);
 
 	return FALSE;
 }

@@ -1,3 +1,4 @@
+#include "Feur/Core/Log/Log.h"
 #include "Feur/Nuklear/NuklearLayer.h"
 #ifdef _FEUR_TEST_VULKAN_SANDBOX_
 #include "Feur.h"
@@ -116,7 +117,7 @@ void OnAttachSandboxLayerBase(Layer* layer)
 	squar0 = FE_EntityCreate(&GetApp()->ecsRegistry);
 	compTransform0 = FE_EntityAttachComp(&GetApp()->ecsRegistry, squar0, GetApp()->tr3DComp);
 	compTransform0->position.x = 0.5f;
-	compTransform0->scale = (ILDA_vector3f){ .x = 1.1f, .y = 0.1f, .z = 1.0f };
+	compTransform0->scale = (ILDA_vector3f){ .x = 2.1f, .y = 0.1f, .z = 1.0f };
 
 	squar1 = FE_EntityCreate(&GetApp()->ecsRegistry);
 	compTransform1 = FE_EntityAttachComp(&GetApp()->ecsRegistry, squar1, GetApp()->tr3DComp);
@@ -127,8 +128,8 @@ void OnAttachSandboxLayerBase(Layer* layer)
 	{
 		cube3D = FE_EntityCreate(&GetApp()->ecsRegistry);
 		cubeTransform = FE_EntityAttachComp(&GetApp()->ecsRegistry, cube3D, GetApp()->tr3DComp);
-		cubeTransform->position.x = 1.f;
-		cubeTransform->scale = (ILDA_vector3f){ .x = 2.0f, .y = 1.0f, .z = 1.0f };
+		cubeTransform->position.x = 0.f;
+		cubeTransform->scale = (ILDA_vector3f){ .x = 1.0f, .y = 1.0f, .z = 1.0f };
 
 		cubeModelComponent = FE_EntityAttachComp(&GetApp()->ecsRegistry, cube3D, GetApp()->modelComp);
 		cubeModelComponent->model = cube;
@@ -278,13 +279,13 @@ void OverlayUpdateSandboxLayerBase(Double dt)
 {
 	FE_GUIOverlay* viewport = FE_GUIQueryOverlayByID(&GetApp()->guiInterface, viewportOverlay);
 	FE_FrameBuffer* fb = &GetApp()->frameBuffer;
-	if (viewport->rect.size.x != fb->w || viewport->rect.size.y != fb->h ||
-		viewport->rect.position.x != fb->posX || viewport->rect.position.y != fb->posY)
+	if ((Uint32)viewport->rect.size.x != fb->w || (Uint32)viewport->rect.size.y != fb->h ||
+		(Uint32)viewport->rect.position.x != fb->posX || (Uint32)viewport->rect.position.y != fb->posY)
 	{
 		FE_FrameBufferResize(
 			fb,
-			viewport->rect.position.x, viewport->rect.position.y,
-			viewport->rect.size.x, viewport->rect.size.y
+			(Uint32)viewport->rect.position.x, (Uint32)viewport->rect.position.y,
+			(Uint32)viewport->rect.size.x, (Uint32)viewport->rect.size.y
 		);
 	}
 }

@@ -7,4 +7,6 @@ void FE_DECL FE_FrameBufferResize(FE_FrameBuffer* frameBuffer, Uint32 posX, Uint
 	frameBuffer->w = w;
 	frameBuffer->posX = posX;
 	frameBuffer->posY = posY;
+
+	FE_ECSComputeSystem(FE_ECSComputeAspectRatioUpdate, GetApp()->cam3DComp, &GetApp()->ecsContext);
 }
