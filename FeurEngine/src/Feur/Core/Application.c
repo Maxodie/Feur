@@ -114,12 +114,17 @@ void FE_DECL AppPrepareRender()
 
 void FE_DECL AppUpdate(Double deltaTime)
 {
-	AppPrepareRender();
+    if(g_fe_App.windowData.isMinimized)
+    {
+        return;
+    }
 
-	for (int i = 0; i < g_fe_App.layerStack.stackedlayers.impl.count; i++)
-	{
-		g_fe_App.layerStack.stackedlayers.data[i]->OnUpdate(deltaTime);
-	}
+    AppPrepareRender();
+
+    for (int i = 0; i < g_fe_App.layerStack.stackedlayers.impl.count; i++)
+    {
+        g_fe_App.layerStack.stackedlayers.data[i]->OnUpdate(deltaTime);
+    }
 
 	NuklearGUIBeginRender();
 	RenderCommandSetRendererViewport(0, 0, g_fe_App.windowData.w, g_fe_App.windowData.h, 0, 1);
@@ -205,15 +210,15 @@ void FE_DECL AppOnEvent(FE_Event event)
 
 Bool FE_DECL OnWindowResizing(FE_EventData* eventData)
 {
-	if(eventData->windowData->w == 0 || eventData->windowData->h == 0)
-	{
-		eventData->windowData->isMinimized = TRUE;
-		return FALSE;
-	}
+    if(eventData->windowData->w == 0 || eventData->windowData->h == 0)
+    {
+        eventData->windowData->isMinimized = TRUE;
+        return FALSE;
+    }
 
 	eventData->windowData->isMinimized = FALSE;
 	RendererOnWindowResize(eventData->windowData->w, eventData->windowData->h);//not frame limited so it can use a lot of GPU performence now
-	g_fe_App.guiInterface.OnWindowResize(eventData->windowData->w, eventData->windowData->h);
+    NuklearGUIOnWindowResize(&g_fe_App.guiInterface, eventData->windowData->w, eventData->windowData->h);
 
 	FE_ECSComputeSystem(FE_ECSComputeAspectRatioUpdate, g_fe_App.cam3DComp, &g_fe_App.ecsContext);
 

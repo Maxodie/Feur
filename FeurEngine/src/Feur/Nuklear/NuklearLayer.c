@@ -56,9 +56,20 @@ Bool NuklearGUIInputLayerCheck(const NuklearGUIInterface* api)
     return (context->last_widget_state & NK_WIDGET_STATE_MODIFIED);
 }
 
+void FE_DECL NuklearGUIOnWindowResize(const NuklearGUIInterface* api, Uint32 width, Uint32 height)
+{
+	FE_CORE_ASSERT(api != NULL, "NuklearGUIInterface api is NULL");
+	api->OnWindowResize(width, height);
+
+    FE_GUIDock* dock = FE_ListGet(api->guiDockLayout.docks, 0);
+    FE_DockGUIChangeScale(api, dock, 0, 0, width, height);
+	FE_DockGUIRecursionInvalidateDock(api, FE_ListGet(api->guiDockLayout.docks, 0));
+}
+
 void FE_DockGUIPrintDockInfos(const NuklearGUIInterface* api, const FE_GUIDock* dock)
 {
 	FE_CORE_ASSERT(dock != NULL, "FE_GUIDock dock is NULL");
+	FE_CORE_ASSERT(api != NULL, "NuklearGUIInterface api is NULL");
 
 	FE_CORE_LOG_DEBUG("Dock Infos ======================================================");
 	FE_CORE_LOG_DEBUG("Dock IsDestroyed : %s", dock->isDestroyed ? "true" : "false");
@@ -140,6 +151,7 @@ SizeT FE_DockGUICreate(NuklearGUIInterface* api, FE_GUIDockType dockType, const 
             api->guiDockLayout.docks.data[i].rect = *rect;
 			api->guiDockLayout.docks.data[i].type = dockType;
 			api->guiDockLayout.docks.data[i].id = i;
+			api->guiDockLayout.docks.data[i].parentID = -1;
 			return i;
 		}
 	}
@@ -149,8 +161,9 @@ SizeT FE_DockGUICreate(NuklearGUIInterface* api, FE_GUIDockType dockType, const 
 		.linkedOverlayId = -1,
 		.rect = *rect,
 		.type = dockType,
-		.id = api->guiDockLayout.docks.impl.count
-	};
+		.id = api->guiDockLayout.docks.impl.count,
+		.parentID = -1,
+    };
 
 	FE_ListInit(rootDock.childrenDockId);
 	FE_ListPush(api->guiDockLayout.docks, rootDock);
@@ -162,7 +175,6 @@ SizeT FE_DockGUISlice(NuklearGUIInterface* api, SizeT dockId, FE_GUIOverlayPosit
 	FE_CORE_ASSERT(api != NULL, "NuklearGUIInterface api is NULL");
 
 	FE_GUIRect newSliceRect = { 0 };
-	Float32 coefDif = 0.0f;
 	SizeT childrenCount = 0;
 	SizeT slicedDockId = -1;
 
@@ -176,22 +188,18 @@ SizeT FE_DockGUISlice(NuklearGUIInterface* api, SizeT dockId, FE_GUIOverlayPosit
 	case FE_GUI_DOCK_VERTICAL:
 		FE_CORE_ASSERT(position == FE_OVERLAY_POSITION_TOP || position == FE_OVERLAY_POSITION_BOTTOM, "given overlay position is incompatible with the dock type");
 		childrenCount = FE_GUIQueryDockByID(api, dockId)->childrenDockId.impl.count;
-		coefDif = (FE_GUIQueryDockByID(api, dockId)->rect.size.y * sliceProportion / (Float32)(childrenCount ? childrenCount : 1));
 		newSliceRect = FE_GUIQueryDockByID(api, dockId)->rect;
 
 		if (!childrenCount)
 		{
-			FE_GUIRect defaultRect = { { 0, 0}, { FE_GUIQueryDockByID(api, dockId)->rect.size.x, FE_GUIQueryDockByID(api, dockId)->rect.size.y / 2} };
+			FE_GUIRect defaultRect = { { 0, 0}, { FE_GUIQueryDockByID(api, dockId)->rect.size.x, FE_GUIQueryDockByID(api, dockId)->rect.size.y * (1 - sliceProportion)} };
 			Int32 firstContent = FE_DockGUICreate(api, FE_GUI_DOCK_UNKNOWN, &defaultRect);
-			FE_GUIQueryDockByID(api, firstContent)->linkedOverlayId = FE_GUIQueryDockByID(api, dockId)->linkedOverlayId;
+            FE_GUIDock* firstContentDock = FE_GUIQueryDockByID(api, firstContent);
+			firstContentDock->linkedOverlayId = FE_GUIQueryDockByID(api, dockId)->linkedOverlayId;
+            firstContentDock->parentID = dockId;
 			FE_GUIQueryDockByID(api, dockId)->linkedOverlayId = -1;
 			FE_ListPush(FE_GUIQueryDockByID(api, dockId)->childrenDockId, firstContent);
 			childrenCount++;
-		}
-
-		for (SizeT i = 0; i < childrenCount; i++)
-		{
-			api->guiDockLayout.docks.data[FE_GUIQueryDockByID(api, dockId)->childrenDockId.data[i]].rect.size.y -= coefDif;
 		}
 
 		newSliceRect.size.y = FE_GUIQueryDockByID(api, dockId)->rect.size.y * sliceProportion;
@@ -213,25 +221,21 @@ SizeT FE_DockGUISlice(NuklearGUIInterface* api, SizeT dockId, FE_GUIOverlayPosit
 	case FE_GUI_DOCK_HORIZONTAL:
 		FE_CORE_ASSERT(position == FE_OVERLAY_POSITION_LEFT || position == FE_OVERLAY_POSITION_RIGHT, "given overlay position is incompatible with the dock type");
 		childrenCount = FE_GUIQueryDockByID(api, dockId)->childrenDockId.impl.count;
-		coefDif = (FE_GUIQueryDockByID(api, dockId)->rect.size.x * sliceProportion / (Float32)(childrenCount ? childrenCount : 1));
 		newSliceRect = FE_GUIQueryDockByID(api, dockId)->rect;
 
 		if (!childrenCount)
 		{
-			FE_GUIRect defaultRect = { { 0, 0}, { FE_GUIQueryDockByID(api, dockId)->rect.size.x / 2, FE_GUIQueryDockByID(api, dockId)->rect.size.y} };
+			FE_GUIRect defaultRect = { { 0, 0}, { FE_GUIQueryDockByID(api, dockId)->rect.size.x * (1 - sliceProportion), FE_GUIQueryDockByID(api, dockId)->rect.size.y} };
 			Int32 firstContent = FE_DockGUICreate(api, FE_GUI_DOCK_UNKNOWN, &defaultRect);
-			FE_GUIQueryDockByID(api, firstContent)->linkedOverlayId = FE_GUIQueryDockByID(api, dockId)->linkedOverlayId;
+            FE_GUIDock* firstContentDock = FE_GUIQueryDockByID(api, firstContent);
+			firstContentDock->linkedOverlayId = FE_GUIQueryDockByID(api, dockId)->linkedOverlayId;
+            firstContentDock->parentID = dockId;
 			FE_GUIQueryDockByID(api, dockId)->linkedOverlayId = -1;
 			FE_ListPush(FE_GUIQueryDockByID(api, dockId)->childrenDockId, firstContent);
 			childrenCount++;
 		}
 
-		for (SizeT i = 0; i < childrenCount; i++)
-		{
-			api->guiDockLayout.docks.data[FE_GUIQueryDockByID(api, dockId)->childrenDockId.data[i]].rect.size.x -= coefDif;
-		}
-
-		newSliceRect.size.x = FE_GUIQueryDockByID(api, dockId)->rect.size.x * sliceProportion;
+		newSliceRect.size.x *= sliceProportion;
 
 		if (childrenCount > 0 && position == FE_OVERLAY_POSITION_RIGHT)
 		{
@@ -254,30 +258,20 @@ SizeT FE_DockGUISlice(NuklearGUIInterface* api, SizeT dockId, FE_GUIOverlayPosit
 		break;
 	}
 
-	if(linkedOverlayNewPosition == 1)
-	{
-		FE_ListInsert(FE_GUIQueryDockByID(api, dockId)->childrenDockId, slicedDockId, 0);
-	}
+    if(linkedOverlayNewPosition == 1)
+    {
+        FE_ListInsert(FE_GUIQueryDockByID(api, dockId)->childrenDockId, slicedDockId, 0);
+    }
+    else
+    {
+        FE_ListPush(FE_GUIQueryDockByID(api, dockId)->childrenDockId, slicedDockId);
+    }
+
+    FE_GUIQueryDockByID(api, slicedDockId)->parentID = dockId;
 
 	FE_DockGUIRecursionInvalidateDock(api, FE_GUIQueryDockByID(api, dockId));
 
 	return slicedDockId;
-}
-
-void FE_DockGUIDestroyCheckChildrenRecusrion(NuklearGUIInterface* api, FE_GUIDock* dock)
-{
-	FE_CORE_ASSERT(api != NULL, "NuklearGUIInterface api is NULL");
-	FE_CORE_ASSERT(dock != NULL, "FE_GUIDock dock is NULL");
-
-	for (SizeT i = 0; i < dock->childrenDockId.impl.count; i++)
-	{
-		FE_DockGUIDestroyCheckChildrenRecusrion(api, dock);
-
-		if (api->guiDockLayout.docks.data[dock->childrenDockId.data[i]].isDestroyed)
-		{
-			FE_ListRemove(dock->childrenDockId, dock->childrenDockId.data[i]);
-		}
-	}
 }
 
 void FE_DockGUIDestroy(NuklearGUIInterface* api, SizeT dockId)
@@ -285,7 +279,19 @@ void FE_DockGUIDestroy(NuklearGUIInterface* api, SizeT dockId)
 	FE_CORE_ASSERT(api != NULL, "NuklearGUIInterface api is NULL");
 
 	api->guiDockLayout.docks.data[dockId].isDestroyed = TRUE;
-	FE_DockGUIDestroyCheckChildrenRecusrion(api, api->guiDockLayout.docks.data);
+    FE_GUIDock* currentDock = NULL;
+
+    for(SizeT i = 0; i < api->guiDockLayout.docks.impl.count; i++)
+    {
+        currentDock = FE_ListGet(api->guiDockLayout.docks, i);
+        for(SizeT y = 0; y < currentDock->childrenDockId.impl.count; y++)
+        {
+            if (api->guiDockLayout.docks.data[currentDock->childrenDockId.data[y]].isDestroyed)
+            {
+                FE_ListRemove(currentDock->childrenDockId, currentDock->childrenDockId.data[y]);
+            }
+        }
+    }
 }
 
 Uint32 FE_GUICreateOverlay(NuklearGUIInterface* api, const char* name)
@@ -294,7 +300,7 @@ Uint32 FE_GUICreateOverlay(NuklearGUIInterface* api, const char* name)
 	FE_CORE_ASSERT(name != NULL, "const char* name is NULL");
 
 	FE_GUIOverlay newOverlay = {
-		.flags = FE_OVERLAY_TITLE | FE_OVERLAY_MOVABLE,
+		.flags = FE_OVERLAY_TITLE | FE_OVERLAY_BORDER,
 		.name = name,
 		.rect = (FE_GUIRect){ { 0, 0 }, { GetApp()->windowData.w, GetApp()->windowData.h }},
 		.id = api->overlayGUIMaxID++,
@@ -313,61 +319,95 @@ void FE_DockGUIDestroyOverlay(NuklearGUIInterface* api, FE_GUIOverlay* overlayTo
 	overlayToRemove->isDestroyed = TRUE;
 }
 
+Float32 FE_DockGUIInvalidateOverflowCoefCalculation(SizeT childID, Float32 lastRectSize, Float32 lastRectPosition, Float32 dockRectPosition, Float32 dockRectSize, SizeT dockChildrenCount)
+{
+    Float32 result = (lastRectSize + lastRectPosition - dockRectPosition - dockRectSize) / dockRectSize / (Float32)dockChildrenCount;
+    result = (Int32)(result * 1000.f - childID * .5f);
+    return result / 1000.f;
+}
+
+void FE_DockGUIInvalidateDockOneDimention(NuklearGUIInterface* api, FE_GUIDock* dock, FE_GUIDock* childDock, Bool isVertical, FE_GUIRect* rect, Float32 overflowCoef, Float32* currentPos)
+{
+	FE_CORE_ASSERT(api != NULL, "NuklearGUIInterface api is NULL");
+	FE_CORE_ASSERT(dock != NULL, "Given dock is NULL");
+	FE_CORE_ASSERT(dock->isDestroyed == FALSE, "Given dock has been destroyed");
+	FE_CORE_ASSERT(childDock != NULL, "Given childDock is NULL");
+	FE_CORE_ASSERT(childDock->isDestroyed == FALSE, "Given childDock has been destroyed");
+	FE_CORE_ASSERT(currentPos != NULL, "Given currentPos is NULL");
+
+    Float32 coef;
+
+    if(isVertical)
+    {
+        coef = childDock->rect.size.y / dock->lastRect.size.y - overflowCoef;
+        coef = ILDA_clamp(coef, 0.1f, 0.9f);
+
+        childDock->rect.position.y = dock->rect.position.y + *currentPos;
+        childDock->rect.size.y = dock->rect.size.y * coef;
+        *currentPos += childDock->rect.size.y;
+
+        childDock->rect.position.x = dock->rect.position.x;
+        childDock->rect.size.x = dock->rect.size.x;
+    }
+    else
+    {
+        coef = childDock->rect.size.x / dock->lastRect.size.x - overflowCoef;
+        coef = ILDA_clamp(coef, 0.1f, 0.9f);
+
+        childDock->rect.position.x = dock->rect.position.x + *currentPos;
+        childDock->rect.size.x = dock->rect.size.x * coef;
+        *currentPos += childDock->rect.size.x;
+
+        childDock->rect.position.y = dock->rect.position.y;
+        childDock->rect.size.y = dock->rect.size.y;
+    }
+
+    if (childDock->linkedOverlayId >= 0)
+    {
+        FE_GUIQueryOverlayByID(api, childDock->linkedOverlayId)->rect = childDock->rect;
+    }
+}
+
 void FE_DockGUIInvalidateDockRect(NuklearGUIInterface* api, FE_GUIDock* dock)
 {
 	FE_CORE_ASSERT(api != NULL, "NuklearGUIInterface api is NULL");
 	FE_CORE_ASSERT(dock->isDestroyed == FALSE, "Given dock has been destroyed");
 
 	FE_GUIDock* childDock = NULL;
-	Float32 coef = 0.f;
-	Float32 currentPos = 0;
-	switch (dock->type)
+    switch (dock->type)
 	{
 	case FE_GUI_DOCK_VERTICAL:
-		coef = 0.f;
+        if(dock->childrenDockId.impl.count > 0)
+        {
+            FE_GUIRect* rect = &FE_GUIQueryDockByID(api, dock->childrenDockId.data[dock->childrenDockId.impl.count - 1])->rect;
+            Float32 overflowCoef;
+            FE_GUIDock* childDock = NULL;
+            Float32 currentPos = 0;
+            for (SizeT i = 0; i < dock->childrenDockId.impl.count; i++)
+            {
+                overflowCoef = FE_DockGUIInvalidateOverflowCoefCalculation(i, rect->size.y, rect->position.y, dock->lastRect.position.y, dock->lastRect.size.y, dock->childrenDockId.impl.count);
 
-		for (SizeT i = 0; i < dock->childrenDockId.impl.count; i++)
-		{
-			childDock = FE_GUIQueryDockByID(api, dock->childrenDockId.data[i]);
-			coef = childDock->rect.size.y / dock->rect.size.y;
-			coef = ILDA_clamp(coef, 0.1f, 0.9f);
-
-			childDock->rect.position.y = dock->rect.position.y + currentPos;
-			childDock->rect.size.y = dock->rect.size.y * coef;
-			currentPos += childDock->rect.size.y;
-
-			childDock->rect.position.x = dock->rect.position.x;
-			childDock->rect.size.x = dock->rect.size.x;
-
-			if (childDock->linkedOverlayId >= 0)
-			{
-				FE_GUIQueryOverlayByID(api, childDock->linkedOverlayId)->rect = childDock->rect;
-			}
-		}
-
+                childDock = FE_GUIQueryDockByID(api, dock->childrenDockId.data[i]);
+                FE_DockGUIInvalidateDockOneDimention(api, dock, childDock, TRUE, rect, overflowCoef, &currentPos);
+            }
+        }
 
 		break;
 	case FE_GUI_DOCK_HORIZONTAL:
-		coef = 0.f;
-		currentPos = 0;
-		for (SizeT i = 0; i < dock->childrenDockId.impl.count; i++)
-		{
-			childDock = FE_GUIQueryDockByID(api, dock->childrenDockId.data[i]);
-			coef = childDock->rect.size.x / dock->rect.size.x;
-			coef = ILDA_clamp(coef, 0.1f, 0.9f);
+        if(dock->childrenDockId.impl.count > 0)
+        {
+            FE_GUIRect* rect = &FE_GUIQueryDockByID(api, dock->childrenDockId.data[dock->childrenDockId.impl.count - 1])->rect;
+            Float32 overflowCoef;
+            FE_GUIDock* childDock = NULL;
+            Float32 currentPos = 0;
+            for (SizeT i = 0; i < dock->childrenDockId.impl.count; i++)
+            {
+                overflowCoef = FE_DockGUIInvalidateOverflowCoefCalculation(i, rect->size.x, rect->position.x, dock->lastRect.position.x, dock->lastRect.size.x, dock->childrenDockId.impl.count);
 
-			childDock->rect.position.x = dock->rect.position.x + currentPos;
-			childDock->rect.size.x = dock->rect.size.x * coef;
-			currentPos += childDock->rect.size.x;
-
-			childDock->rect.position.y = dock->rect.position.y;
-			childDock->rect.size.y = dock->rect.size.y;
-
-			if (childDock->linkedOverlayId >= 0)
-			{
-				FE_GUIQueryOverlayByID(api,  childDock->linkedOverlayId)->rect = childDock->rect;
-			}
-		}
+                childDock = FE_GUIQueryDockByID(api, dock->childrenDockId.data[i]);
+                FE_DockGUIInvalidateDockOneDimention(api, dock, childDock, FALSE, rect, overflowCoef, &currentPos);
+            }
+        }
 		break;
 	case FE_GUI_DOCK_TAB:
         if(dock->linkedOverlayId >= 0)
@@ -395,6 +435,7 @@ void FE_DockGUIInvalidateDockRect(NuklearGUIInterface* api, FE_GUIDock* dock)
 		break;
 	}
 
+    dock->lastRect = dock->rect;
 
 	//if (linkedOverlayId == 0)
 	//{
@@ -463,6 +504,21 @@ void FE_DockGUIInvalidateDockRect(NuklearGUIInterface* api, FE_GUIDock* dock)
 
 }
 
+void FE_DECL FE_DockGUIChangeScale(NuklearGUIInterface* api, FE_GUIDock* dock, Float32 x, Float32 y, Float32 width, Float32 height)
+{
+	FE_CORE_ASSERT(api != NULL, "NuklearGUIInterface api is NULL");
+	FE_CORE_ASSERT(dock != NULL, "FE_GUIDock dock is NULL");
+	FE_CORE_ASSERT(dock->isDestroyed == FALSE, "Given dock has been destroyed");
+
+    dock->rect.position.x = x;
+    dock->rect.position.y = y;
+
+    dock->rect.size.x = width;
+    dock->rect.size.y = height;
+
+    FE_DockGUIRecursionInvalidateDock(api, dock);
+}
+
 void FE_DockGUIRecursionInvalidateDock(NuklearGUIInterface* api, FE_GUIDock* dock)
 {
 	FE_CORE_ASSERT(api != NULL, "NuklearGUIInterface api is NULL");
@@ -476,17 +532,84 @@ void FE_DockGUIRecursionInvalidateDock(NuklearGUIInterface* api, FE_GUIDock* doc
 	}
 }
 
-void FE_DockGUIInvalidateDocks(NuklearGUIInterface* api)
-{
-	FE_DockGUIRecursionInvalidateDock(api, api->guiDockLayout.docks.data);
-}
+/*void FE_DockGUIUpdateScale(NuklearGUIInterface* api, FE_GUIDock* dock, FE_GUIOverlay* overlay)*/
+/*{*/
+/*	FE_CORE_ASSERT(api != NULL, "NuklearGUIInterface api is NULL");*/
+/*	FE_CORE_ASSERT(dock != NULL, "FE_GUIDock dock is NULL");*/
+/*	FE_CORE_ASSERT(dock->isDestroyed == FALSE, "Given dock has been destroyed");*/
+/*	FE_CORE_ASSERT(overlay != NULL, "FE_GUIOverlay dock is NULL");*/
+/*	FE_CORE_ASSERT(overlay->isDestroyed == FALSE, "Given overlay has been destroyed");*/
+/**/
+/*    const ILDA_vector2d* mousePos = GetCursorPosition();*/
+/**/
+/*    Bool cursorInbox = FE_IS_INBOX(mousePos->x, mousePos->y, 0, 0, GetApp()->windowData.w, GetApp()->windowData.h);*/
+/**/
+/*    if (cursorInbox)*/
+/*    {*/
+/*        Bool leftMouseDown = ((struct nk_context*)api->handle)->input.mouse.buttons[NK_BUTTON_LEFT].down;*/
+/*        Bool isH = FALSE;*/
+/*        Bool isMin = FALSE;*/
+/**/
+/*        if (FE_IS_ON_RIGHT_EDGE(mousePos->x, mousePos->y, overlay->rect.position.x, overlay->rect.position.y,*/
+/*            overlay->rect.size.x, overlay->rect.size.y, FE_GUI_EDGE_MOUSE_DETECTION_TRESHOLD))*/
+/*        {*/
+/*            GetWindowAPI()->SetCursorShape(&GetApp()->windowData, FE_CURSOR_SHAPE_HRESIZE_CURSOR);*/
+/*            isH = TRUE;*/
+/*        }*/
+/*        else if (FE_IS_ON_LEFT_EDGE(mousePos->x, mousePos->y, overlay->rect.position.x, overlay->rect.position.y,*/
+/*            overlay->rect.size.y, FE_GUI_EDGE_MOUSE_DETECTION_TRESHOLD))*/
+/*        {*/
+/*            GetWindowAPI()->SetCursorShape(&GetApp()->windowData, FE_CURSOR_SHAPE_HRESIZE_CURSOR);*/
+/*            isMin = TRUE;*/
+/*            isH = TRUE;*/
+/*        }*/
+/*        else  if (FE_IS_ON_BOTTOM_EDGE(mousePos->x, mousePos->y, overlay->rect.position.x, overlay->rect.position.y,*/
+/*            overlay->rect.size.x, overlay->rect.size.y, FE_GUI_EDGE_MOUSE_DETECTION_TRESHOLD))*/
+/*        {*/
+/*            GetWindowAPI()->SetCursorShape(&GetApp()->windowData, FE_CURSOR_SHAPE_VRESIZE_CURSOR);*/
+/*            isH = 2;*/
+/*        }*/
+/*        else  if (FE_IS_ON_TOP_EDGE(mousePos->x, mousePos->y, overlay->rect.position.x, overlay->rect.position.y,*/
+/*             overlay->rect.size.y, FE_GUI_EDGE_MOUSE_DETECTION_TRESHOLD))*/
+/*        {*/
+/*            GetWindowAPI()->SetCursorShape(&GetApp()->windowData, FE_CURSOR_SHAPE_VRESIZE_CURSOR);*/
+/*            isMin = TRUE;*/
+/*            isH = 2;*/
+/*        }*/
+/**/
+/*        if (leftMouseDown)*/
+/*        {*/
+/*            if (isH && isMin)*/
+/*            {*/
+/*                Double distanceX = fabs(mousePos->x - overlay->rect.position.x);*/
+/*                overlay->rect.position.x = (Float32)mousePos->x;*/
+/*                overlay->rect.size.x += (Float32)distanceX;*/
+/*            }*/
+/*            else if (isH)*/
+/*            {*/
+/*                Double distanceX = (mousePos->x - (overlay->rect.position.x + overlay->rect.size.x));*/
+/*                overlay->rect.size.x += (Float32)distanceX;*/
+/*            }*/
+/*            else if (isMin && isH == 2)*/
+/*            {*/
+/*                Double distanceY = fabs(overlay->rect.position.y - mousePos->y);*/
+/*                overlay->rect.position.y = (Float32)mousePos->y;*/
+/*                overlay->rect.size.y += (Float32)distanceY;*/
+/*            }*/
+/*            else if(isH == 2)*/
+/*            {*/
+/*                Double distanceY = (overlay->rect.position.y + overlay->rect.size.y - mousePos->y);*/
+/*                overlay->rect.size.y += (Float32)distanceY;*/
+/*            }*/
+/*        }*/
+/*    }*/
+/*}*/
 
 void FE_DockGUIDockOverlay(NuklearGUIInterface* api, Uint32 overlayToDockId, Uint32 baseDockSpaceId, FE_GUIOverlayPositions overlayPosition)
 {
 	FE_CORE_ASSERT(api != NULL, "NuklearGUIInterface api is NULL");
 
 	FE_GUIOverlay* overlayToDock = FE_GUIQueryOverlayByID(api, overlayToDockId);
-	FE_GUIRect* newRect = &overlayToDock->rect;
 	FE_GUIDockType newDockType = FE_GUI_DOCK_UNKNOWN;
 	Float32 sliceProportion = 0.0f;
 
@@ -514,9 +637,9 @@ void FE_DockGUIDockOverlay(NuklearGUIInterface* api, Uint32 overlayToDockId, Uin
 		break;
 	}
 
+    FE_GUIDock* baseDock = FE_GUIQueryDockByID(api, baseDockSpaceId);
 	if (api->guiDockLayout.docks.impl.count > baseDockSpaceId && !api->guiDockLayout.docks.data[baseDockSpaceId].isDestroyed)
 	{
-		FE_GUIDock* baseDock = FE_GUIQueryDockByID(api, baseDockSpaceId);
 		if (baseDock->type == FE_GUI_DOCK_UNKNOWN)
 		{
 			baseDock->type = newDockType;
@@ -529,7 +652,7 @@ void FE_DockGUIDockOverlay(NuklearGUIInterface* api, Uint32 overlayToDockId, Uin
 		FE_CORE_ASSERT(FALSE, "The given dock base does not exists");
 	}
 
-	if (newDockType != FE_GUI_DOCK_TAB && FE_GUIQueryDockByID(api, baseDockSpaceId)->linkedOverlayId >= 0)
+	if (newDockType != FE_GUI_DOCK_TAB && (baseDock->linkedOverlayId >= 0 || baseDock->childrenDockId.impl.count > 0))
 	{
 		SizeT newSliceId = FE_DockGUISlice(api, baseDockSpaceId, overlayPosition, sliceProportion);
 		api->guiDockLayout.docks.data[newSliceId].linkedOverlayId = overlayToDockId;
@@ -541,46 +664,54 @@ void FE_DockGUIDockOverlay(NuklearGUIInterface* api, Uint32 overlayToDockId, Uin
 		FE_GUIQueryDockByID(api, baseDockSpaceId)->linkedOverlayId = overlayToDockId;
 	}
 
+    FE_GUIQueryOverlayByID(api, overlayToDockId)->flags &= ~FE_OVERLAY_MOVABLE;
 	FE_DockGUIInvalidateDockRect(api, FE_GUIQueryDockByID(api, baseDockSpaceId));
 }
 
-void FE_DockGUIUndockOverlay(NuklearGUIInterface* api, FE_GUIOverlay* overlayToUndock)
+void FE_DockGUIUndockOverlay(NuklearGUIInterface* api, Uint32 overlayToUndockID)
 {
 	FE_CORE_ASSERT(api != NULL, "NuklearGUIInterface api is NULL");
-	FE_CORE_ASSERT(overlayToUndock != NULL, "FE_GUIOverlay overlayToUndock is NULL");
 
-	//if (overlayToUndock->linkedDockId > 0)
-	//{
-	//	FE_GUIOverlay* linkedOverlay = FE_GridLayoutQueryOverlayById(api, overlayToUndock->linkedDockId);
+    FE_GUIDock* dock = NULL;
 
-	//	if (overlayToUndock->rect.position.x < linkedOverlay->rect.position.x)
-	//	{
-	//		linkedOverlay->rect.position.x -= overlayToUndock->rect.size.x;
-	//		linkedOverlay->rect.size.x += overlayToUndock->rect.size.x;
-	//	}
-	//	else if (overlayToUndock->rect.position.y < linkedOverlay->rect.position.y)
-	//	{
-	//		linkedOverlay->rect.position.y -= overlayToUndock->rect.size.y;
-	//		linkedOverlay->rect.size.y += overlayToUndock->rect.size.y;
-	//	}
-	//	else if (overlayToUndock->rect.position.x > linkedOverlay->rect.position.x)
-	//	{
-	//		linkedOverlay->rect.size.x += overlayToUndock->rect.size.x;
-	//	}
-	//	else
-	//	{
-	//		linkedOverlay->rect.size.y += overlayToUndock->rect.size.y;
-	//	}
- //
+    for(SizeT i = 0; i < api->guiDockLayout.docks.impl.count; i++)
+    {
+        if(FE_GUIQueryDockByID(api, i)->linkedOverlayId == overlayToUndockID)
+        {
+            dock = FE_GUIQueryDockByID(api, i);
+            break;
+        }
+    }
 
-	//	linkedOverlay->linkedDockId = 0;
-	//}
+    if(dock != NULL && dock->parentID >= 0)
+    {
+        FE_GUIQueryOverlayByID(api, overlayToUndockID)->flags |= FE_OVERLAY_MOVABLE;
+        FE_GUIDock* parentDock = FE_GUIQueryDockByID(api, dock->parentID);
+        FE_ListRemove(parentDock->childrenDockId, dock->id);
+        if(parentDock->childrenDockId.impl.count == 1)
+        {
+            FE_GUIDock* firstContentDock = FE_GUIQueryDockByID(api, *(SizeT*)FE_ListGet(parentDock->childrenDockId, 0));
+            if(firstContentDock->linkedOverlayId < 0)
+            {
+                parentDock->childrenDockId.data = firstContentDock->childrenDockId.data;
+                parentDock->childrenDockId.impl = firstContentDock->childrenDockId.impl;
+                parentDock->type = firstContentDock->type;
+                for(SizeT i = 0; i < parentDock->childrenDockId.impl.count; i++)
+                {
+                    FE_GUIQueryDockByID(api, *(SizeT*)FE_ListGet(parentDock->childrenDockId, i))->parentID = parentDock->id;
+                }
+            }
+            else
+            {
+                parentDock->linkedOverlayId = firstContentDock->linkedOverlayId;
+                parentDock->type = FE_GUI_DOCK_UNKNOWN;
+            }
 
-	//overlayToUndock->linkedDockId = 0;
-	//overlayToUndock->isReady = FALSE;
-	//FE_OverlayGUISetVisibility(overlayToUndock, FALSE);
+            FE_DockGUIDestroy(api, firstContentDock->id);
+        }
+        FE_DockGUIRecursionInvalidateDock(api, parentDock);
+    }
 
-	//FE_ListRemove(api->guiDockLayout.dockRoot, overlayToUndock);
 }
 
 FE_GUIOverlay* FE_GUIQueryOverlayByID(const NuklearGUIInterface* api, Uint32 overlayId)
@@ -630,72 +761,8 @@ Bool FE_OverlayGUIBegin(const NuklearGUIInterface* api, Uint32 overlayId)
 
 	if (!overlay->isDestroyed && overlay->isVisible)
 	{
-		const ILDA_vector2d* mousePos = GetCursorPosition();
-
-		Bool cursorInbox = FE_IS_INBOX(mousePos->x, mousePos->y, 0, 0, GetApp()->windowData.w, GetApp()->windowData.h);
-
-		if (cursorInbox)
-		{
-			Bool leftMouseDown = ((struct nk_context*)api->handle)->input.mouse.buttons[NK_BUTTON_LEFT].down;
-			Bool isH = FALSE;
-			Bool isMin = FALSE;
-
-			if (FE_IS_ON_RIGHT_EDGE(mousePos->x, mousePos->y, overlay->rect.position.x, overlay->rect.position.y,
-				overlay->rect.size.x, overlay->rect.size.y, FE_GUI_EDGE_MOUSE_DETECTION_TRESHOLD))
-			{
-				GetWindowAPI()->SetCursorShape(&GetApp()->windowData, FE_CURSOR_SHAPE_HRESIZE_CURSOR);
-				isH = TRUE;
-			}
-			else if (FE_IS_ON_LEFT_EDGE(mousePos->x, mousePos->y, overlay->rect.position.x, overlay->rect.position.y,
-				overlay->rect.size.y, FE_GUI_EDGE_MOUSE_DETECTION_TRESHOLD))
-			{
-				GetWindowAPI()->SetCursorShape(&GetApp()->windowData, FE_CURSOR_SHAPE_HRESIZE_CURSOR);
-				isMin = TRUE;
-				isH = TRUE;
-			}
-			else  if (FE_IS_ON_BOTTOM_EDGE(mousePos->x, mousePos->y, overlay->rect.position.x, overlay->rect.position.y,
-				overlay->rect.size.x, overlay->rect.size.y, FE_GUI_EDGE_MOUSE_DETECTION_TRESHOLD))
-			{
-				GetWindowAPI()->SetCursorShape(&GetApp()->windowData, FE_CURSOR_SHAPE_VRESIZE_CURSOR);
-				isH = 2;
-			}
-			else  if (FE_IS_ON_TOP_EDGE(mousePos->x, mousePos->y, overlay->rect.position.x, overlay->rect.position.y,
-				 overlay->rect.size.y, FE_GUI_EDGE_MOUSE_DETECTION_TRESHOLD))
-			{
-				GetWindowAPI()->SetCursorShape(&GetApp()->windowData, FE_CURSOR_SHAPE_VRESIZE_CURSOR);
-				isMin = TRUE;
-				isH = 2;
-			}
-
-			if (leftMouseDown)
-			{
-				if (isH && isMin)
-				{
-					Double distanceX = fabs(mousePos->x - overlay->rect.position.x);
-					overlay->rect.position.x = (Float32)mousePos->x;
-					overlay->rect.size.x += (Float32)distanceX;
-				}
-				else if (isH)
-				{
-					Double distanceX = (mousePos->x - (overlay->rect.position.x + overlay->rect.size.x));
-					overlay->rect.size.x += (Float32)distanceX;
-				}
-				else if (isMin && isH == 2)
-				{
-					Double distanceY = fabs(overlay->rect.position.y - mousePos->y);
-					overlay->rect.position.y = (Float32)mousePos->y;
-					overlay->rect.size.y += (Float32)distanceY;
-				}
-				else if(isH == 2)
-				{
-					Double distanceY = (overlay->rect.position.y + overlay->rect.size.y - mousePos->y);
-					overlay->rect.size.y += (Float32)distanceY;
-				}
-			}
-
-			overlay->isReady = nk_begin(((struct nk_context*)api->handle), overlay->name, nk_rect(overlay->rect.position.x, overlay->rect.position.y, overlay->rect.size.x, overlay->rect.size.y), overlay->flags);
-		}
-
+        /*FE_DockGUIUpdateScale(api, FE_ListGet(api->guiDockLayout.docks, 0), overlay);*/
+        overlay->isReady = nk_begin(((struct nk_context*)api->handle), overlay->name, nk_rect(overlay->rect.position.x, overlay->rect.position.y, overlay->rect.size.x, overlay->rect.size.y), overlay->flags);
 
 		return overlay->isReady;
 	}

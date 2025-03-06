@@ -1,3 +1,4 @@
+#include "Feur/Nuklear/NuklearLayer.h"
 #ifdef _FEUR_TEST_VULKAN_SANDBOX_
 #include "Feur.h"
 
@@ -271,7 +272,6 @@ void EndLayer()
 
 Uint32 inspectorOverlay = { 0 };
 Uint32 profilerOverlay = { 0 };
-Uint32 testOverlay = { 0 };
 Uint32 viewportOverlay = { 0 };
 //Overlay
 void OverlayUpdateSandboxLayerBase(Double dt)
@@ -292,29 +292,6 @@ void OverlayUpdateSandboxLayerBase(Double dt)
 void OverlayOnNuklearRender(NuklearGUIInterface* interface, Layer* layer)
 {
 	struct nk_context* context = (struct nk_context*)interface->handle;
-
-	//if (FE_OverlayGUIBegin(interface, testOverlay))
-	//{
-	//	nk_layout_row_dynamic(context, 20, 1);
-
-	//	//stats
-	//	FE_StringFormat(bufferCountBuf, "ms : %f", currentUpdateDt);
-	//	nk_label(context, bufferCountBuf, NK_TEXT_LEFT);
-
-	//	FE_StringFormat(vertexCountBuf, "vertex count : %lld", totalVertexCount);
-	//	nk_label(context, vertexCountBuf, NK_TEXT_LEFT);
-
-	//	FE_StringFormat(indicesCountBuf, "index count : %lld", totalIndexCount);
-	//	nk_label(context, indicesCountBuf, NK_TEXT_LEFT);
-
-	//	FE_StringFormat(bufferCountBuf, "total vertex buffer count : %lld", FE_Renderer3DGetVertexBufferCount() + FE_Renderer2DGetVertexBufferCount());
-	//	nk_label(context, bufferCountBuf, NK_TEXT_LEFT);
-	//	//stats
-
-	//	FE_OverlayGUIEnd(interface, testOverlay);
-	//}
-
-
 
 	if (FE_OverlayGUIBegin(interface, profilerOverlay))
 	{
@@ -401,16 +378,21 @@ void OverlayOnAttachSandboxLayerBase(Layer* layer)
 	inspectorOverlay = FE_GUICreateOverlay(api, "#Nuklear Window");
 	viewportOverlay = FE_GUICreateOverlay(api, "#viewport");
 	profilerOverlay = FE_GUICreateOverlay(api, "#profiler");
-	//testOverlay = FE_GUICreateOverlay(api, "#test window");
     FE_CORE_LOG_DEBUG("Start dock 2");
 
-	//FE_DockGUIDockOverlay(api, viewportOverlay, 0, FE_OVERLAY_POSITION_CENTER);
-    FE_DockGUIDockOverlay(api, inspectorOverlay, 0, FE_OVERLAY_POSITION_LEFT);
-    FE_DockGUIDockOverlay(api, profilerOverlay, 0, FE_OVERLAY_POSITION_LEFT);
-	//FE_DockGUIDockOverlay(api, testOverlay, viewportOverlay, FE_OVERLAY_POSITION_BOTTOM);
-	FE_DockGUIPrintCurrentState(api);
-    FE_CORE_LOG_DEBUG("Start dock 3");
-//	FE_GridLayoutGUIUndockOverlay(api, &inspectorOverlay);
+    FE_DockGUIDockOverlay(api, viewportOverlay, 0, FE_OVERLAY_POSITION_LEFT);
+
+    FE_GUIOverlay* overlay = FE_GUIQueryOverlayByID(api, inspectorOverlay);
+    overlay->rect.size.x /= 4.f;
+    FE_DockGUIDockOverlay(api, inspectorOverlay, 0, FE_OVERLAY_POSITION_RIGHT);
+
+    overlay = FE_GUIQueryOverlayByID(api, profilerOverlay);
+    overlay->rect.size.y /= 4.f;
+    FE_DockGUIDockOverlay(api, profilerOverlay, 1, FE_OVERLAY_POSITION_BOTTOM);
+
+    /*FE_DockGUIPrintCurrentState(api);*/
+    /*FE_DockGUIUndockOverlay(api, profilerOverlay);*/
+    /*FE_DockGUIPrintCurrentState(api);*/
 }
 
 void OverlayEndLayer()

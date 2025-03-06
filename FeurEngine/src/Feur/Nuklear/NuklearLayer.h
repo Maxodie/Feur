@@ -55,9 +55,11 @@ typedef struct FE_GUIDock
 {
 	Bool isDestroyed;
 	FE_GUIRect rect;
+	FE_GUIRect lastRect;
 	Int32 linkedOverlayId;
 	FE_GUIDockType type;
 	SizeT id;
+	Int64 parentID;
 	FE_List(SizeT) childrenDockId;
 } FE_GUIDock;
 
@@ -91,6 +93,8 @@ void FE_DECL NuklearGUIBeginRender();
 void FE_DECL NuklearGUIEndRender();
 Bool FE_DECL NuklearGUIInputLayerCheck(const NuklearGUIInterface* api);
 
+void FE_DECL NuklearGUIOnWindowResize(const NuklearGUIInterface* api, Uint32 width, Uint32 height);
+
 // visualization
 void FE_DECL FE_DockGUIPrintCurrentState(NuklearGUIInterface* api);
 
@@ -102,11 +106,12 @@ SizeT FE_DECL FE_DockGUICreate(NuklearGUIInterface* api, FE_GUIDockType dockType
 SizeT FE_DECL FE_DockGUISlice(NuklearGUIInterface* api, SizeT dockId, FE_GUIOverlayPositions position, Float32 sliceProportion);
 void FE_DECL FE_DockGUIDestroy(NuklearGUIInterface* api, SizeT dockId);
 
-void FE_DECL FE_DockGUIInvalidateDocks(NuklearGUIInterface* api);
 void FE_DECL FE_DockGUIInvalidateDockRect(NuklearGUIInterface* api, FE_GUIDock* dock);
 
+void FE_DECL FE_DockGUIChangeScale(NuklearGUIInterface* api, FE_GUIDock* dock, Float32 x, Float32 y, Float32 width, Float32 height);
+
 void FE_DECL FE_DockGUIDockOverlay(NuklearGUIInterface* api, Uint32 overlayToDockId, Uint32 baseDockSpaceId, FE_GUIOverlayPositions overlayPosition);
-void FE_DECL FE_DockGUIUndockOverlay(NuklearGUIInterface* api, FE_GUIOverlay* overlayToUndock);
+void FE_DECL FE_DockGUIUndockOverlay(NuklearGUIInterface* api, Uint32 overlayToUndockID);
 
 // query
 FE_GUIOverlay* FE_DECL FE_GUIQueryOverlayByID(const NuklearGUIInterface* api, Uint32 overlayId);
